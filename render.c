@@ -278,8 +278,11 @@ typedef struct {
 	int az;
 	int sx;
 	int sy;
+	int color;
+	int color_mode;
 	int radius;
 	int sradius;
+	int obstacle;
 	int visible;
 	int render;
 	int background;
@@ -404,9 +407,12 @@ object_t new_object(){
 		.az = 0,
 		.sx = 0,
 		.sy = 0,
+		.color = 0,
+		.color_mode = 0,
 		.radius = 10,
 		.sradius = 10,
 		//bools
+		.obstacle = 0,
 		.visible = 1,
 		.render = 1,
 		.background = 0,
@@ -555,6 +561,23 @@ void load_object(
 	transform_object(&object);
 	set_radius(&object);
 	set_bounding_box(&object);
+	
+	object.x = x;
+	object.y = y;
+	object.z = z;
+	
+	object.color = color;
+	object.color_mode = color_mode;
+	object.obstacle = obstacle;
+	
+	//~ if(obstacle)
+		//~ add_obstacle_to_list();
+	
+	if ( color_mode==k_colorize_static || 
+		color_mode==k_colorize_dynamic || 
+		color_mode==k_multi_color_static ){
+		//~ color_faces(&object);
+	}
 	
 }
 
