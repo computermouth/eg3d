@@ -1,3 +1,28 @@
+
+normally:
+float vertex[][3] = {
+ { 0.225753, -0.349145, 1.126564 },
+ { -0.705660, 1.023475, -0.190561 },
+ { -1.005028, -0.502516, 0.000000 },
+ { 0.245650, -0.743406, -0.865483 },
+ { 1.151270, 0.243187, -0.104220 }
+};
+
+unsigned char face[][3] = {
+ { 4, 1, 3 },
+ { 4, 3, 2 },
+ { 1, 5, 2 },
+ { 5, 1, 4 },
+ { 3, 1, 2 },
+ { 4, 2, 5 }
+};
+
+however, with pico8's constraints,
+original eg library converted floats to
+integer math representation by
+the following [in addition to encoding
+them in hex]:
+
 1.873639 * 256 = 479.651584
 int(479.651584) = 479
 479 / 256 = 1.871
@@ -6,3 +31,8 @@ int(479.651584) = 479
 int(-53.035008) = -53
 if(negative) 53--;
 -54 / 256 = 0.2109
+
+[negative values drop their decimal
+AND decrement due to the use of floor()
+in the python tooling script for
+blender .obj translation]
