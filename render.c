@@ -476,7 +476,7 @@ void transform_object(object_t * object){
 
 void set_radius(object_t * object){
 	
-	for(int i = 0; i < object-> num_vertices; i++){
+	for(int i = 0; i < object->num_vertices; i++){
 		int max_test = 
 			object->vertices[i][1] * object->vertices[i][1] + 
 			object->vertices[i][2] * object->vertices[i][2] + 
@@ -487,6 +487,26 @@ void set_radius(object_t * object){
 	}
 	object->radius=sqrt(object->radius);
 	
+}
+
+void set_bounding_box(object_t * object){
+	
+	for(int i = 0; i < object->num_vertices; i++){
+		if( object->min_x > object->vertices[i][1] )
+			object->min_x = object->vertices[i][1];
+		if( object->min_y > object->vertices[i][2] )
+			object->min_y = object->vertices[i][2];
+		if( object->min_z > object->vertices[i][3] )
+			object->min_z = object->vertices[i][3];
+		
+		if( object->max_x < object->vertices[i][1] )
+			object->max_x = object->vertices[i][1];
+		if( object->max_y < object->vertices[i][2] )
+			object->max_y = object->vertices[i][2];
+		if( object->max_z < object->vertices[i][3] )
+			object->max_z = object->vertices[i][3];
+	}
+
 }
 
 void load_object(
@@ -534,7 +554,7 @@ void load_object(
 	
 	transform_object(&object);
 	set_radius(&object);
-	
+	set_bounding_box(&object);
 	
 }
 
