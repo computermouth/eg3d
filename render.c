@@ -474,6 +474,21 @@ void transform_object(object_t * object){
 	}
 }
 
+void set_radius(object_t * object){
+	
+	for(int i = 0; i < object-> num_vertices; i++){
+		int max_test = 
+			object->vertices[i][1] * object->vertices[i][1] + 
+			object->vertices[i][2] * object->vertices[i][2] + 
+			object->vertices[i][3] * object->vertices[i][3];
+			
+		if( max_test > object->radius)
+			object->radius = max_test;
+	}
+	object->radius=sqrt(object->radius);
+	
+}
+
 void load_object(
 	float (*object_vertices)[3], unsigned short num_vertices,
 	unsigned char (*object_faces)[3], unsigned short num_faces,
@@ -508,6 +523,8 @@ void load_object(
 				object.base_faces[i][j] = object_faces[i][j];
 	}
 	
+	//move everything above into new_object, and pass it all this shit^^
+	
 	object.radius = 0;
 	object.ax = ax;
 	object.ay = ay;
@@ -516,6 +533,8 @@ void load_object(
 	object.num_faces = num_faces;
 	
 	transform_object(&object);
+	set_radius(&object);
+	
 	
 }
 
