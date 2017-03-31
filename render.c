@@ -48,14 +48,14 @@ float column_v_string[][3] = {
 	{ 0.0, 16.234, 1.473 },
 	{ -1.477, 16.234, 0 },
 	{ 0, 16.234, -1.477},
-	{ 1.473, 16.234, 0.0}
+	{ 1.473, 16.234, 0.0},
 	{ 0, 17.344, 2.535 },
 	{ -2.539, 17.344, 0 },
 	{ 0, 17.344, -2.539 },
 	{ 2.535, 17.344, 0}
 };
 
-unsigned column_f_string[][3] = {
+unsigned char column_f_string[][3] = {
 	{ 0x06, 0x02, 0x01 },
 	{ 0x07, 0x03, 0x02 },
 	{ 0x08, 0x04, 0x03 },
@@ -142,7 +142,7 @@ unsigned char hole_f_string[][3] = {
 	{ 0x01, 0x02, 0x0d },
 	{ 0x0c, 0x10, 0x09 },
 	{ 0x0c, 0x0b, 0x10 }
-}
+};
 
 float fountain_v_string[][3] = {
 	{ 0, 0.8164, -1.5 },
@@ -249,9 +249,9 @@ typedef struct {
 star_t star_list[150];
 
 typedef struct {
-	float * vertices;
-	char * base_faces;
-	char ** faces;
+	float (*vertices)[3];
+	unsigned char (*base_faces)[3];
+	unsigned char (*faces)[3];
 	float ** t_vertices;
 	int x;
 	int y;
@@ -336,8 +336,8 @@ void init_3d(){
 	if (object_list != NULL){ /*free it all*/ };
 	object_list = NULL;
 	
-	obstacle_list_t obs_l = { .fake = NULL };
-	particle_list_t p_l = { .fake = NULL };
+	//~ obstacle_list_t obs_l = { .fake = NULL };
+	//~ particle_list_t p_l = { .fake = NULL };
 	
 }
 
@@ -423,42 +423,29 @@ object_t new_object(){
 }
 
 void load_object(
-	float * object_vertices, unsigned short num_vertices,
-	char * object_faces, unsigned short num_faces,
+	float (*object_vertices)[3], unsigned short num_vertices,
+	unsigned char (*object_faces)[3], unsigned short num_faces,
 	int x, int y, int z, int ax, int ay, int az,
 	int obstacle, int color_mode, int color){
 	
 	object_t object = new_object();
 	
-	object.vertices = malloc(sizeof (float) * num_vertices);
+	object.vertices = malloc(sizeof (float[3]) * num_vertices);
 	for(int i = 0; i < num_vertices; i++)
-		object.vertices[i] = object_vertices[i];
+		for(int j = 0; j < 3; j++)
+			object.vertices[i][j] = object_vertices[i][j];
 	
-	object.faces = (char **)malloc(sizeof (char *) * num_faces);
+	object.faces = malloc(sizeof (unsigned char[3]) * num_faces);
+	for(int i = 0; i < num_faces; i++)
+		for(int j = 0; j < 3; j++)
+			object.faces[i][j] = object_faces[i][j];
 	
-	if (color_mode == k_preset_color){
-		//use native faces
-		for(int i = 0; i < num_faces; i++)
-			object.faces[i] = (char *)malloc(sizeof (char) * 1);
-		
-	} else {
+	if (color_mode != k_preset_color){
 		//make a backup copy of faces
-		object.base_faces = malloc(sizeof (char) * num_faces);
+		object.base_faces = malloc(sizeof (unsigned char[3]) * num_faces);
 		for(int i = 0; i < num_faces; i++)
-			object.base_faces[i] = object_faces[i];
-		//in the lua code, the following chunk
-		//just turns object.faces into a 2d array
-		
-		//with object.faces always being a 2d array
-		//only here does it have multiple rows
-		for(int i = 0; i < num_faces; i++)
-			object.faces[i] = (char *)malloc(sizeof (char) * num_faces);
-		
-		for(int i = 0; i < num_faces; i++){
-			for(int j = 0; j < num_faces; j++){
-				object.faces[i][j]=object_faces[i][j];
-			}
-		}
+			for(int j = 0; j < 3; j++)
+				object.base_faces[i][j] = object_faces[i][j];
 	}	
 	
 }
