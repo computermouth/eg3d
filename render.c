@@ -17,6 +17,15 @@ int k_colorize_dynamic = 2;
 int k_multi_color_static = 3;
 int k_multi_color_dynamic = 4;
 int k_preset_color = 5;
+float mat00 = 0;
+float mat10 = 0;
+float mat20 = 0;
+float mat01 = 0;
+float mat11 = 0;
+float mat21 = 0;
+float mat02 = 0;
+float mat12 = 0;
+float mat22 = 0;
 
 float pyramid_v_string[][3] = {
 	{ 0.0, -2.062, -4.0 },
@@ -252,7 +261,9 @@ typedef struct {
 	float (*vertices)[3];
 	unsigned char (*base_faces)[3];
 	unsigned char (*faces)[3];
-	float ** t_vertices;
+	float (*t_vertices)[3];
+	int num_vertices;
+	int num_faces;
 	int x;
 	int y;
 	int z;
@@ -377,6 +388,8 @@ object_t new_object(){
 		.base_faces = NULL,
 		.faces = NULL,
 		.t_vertices = NULL,
+		.num_faces = 0,
+		.num_vertices = 0,
 		.x = 0,
 		.y = 0,
 		.z = 0,
@@ -422,6 +435,45 @@ object_t new_object(){
 	return obj;
 }
 
+void generate_matrix_transform(int xa, int ya, int za){
+
+	
+	int sx=sin(xa);
+	int sy=sin(ya);
+	int sz=sin(za);
+	int cx=cos(xa);
+	int cy=cos(ya);
+	int cz=cos(za);
+	
+	mat00=cz*cy;
+	mat10=-sz;
+	mat20=cz*sy;
+	mat01=cx*sz*cy+sx*sy;
+	mat11=cx*cz;
+	mat21=cx*sz*sy-sx*cy;
+	mat02=sx*sz*cy-cx*sy;
+	mat12=sx*cz;
+	mat22=sx*sz*sy+cx*cy;
+
+}
+
+void rotate_point(float (*v)[3], float (*t)[3]){
+	*t[0] = ((float)*v[0] * mat00 + (float)*v[1] *mat10 + (float)*v[2] * mat20);
+	*t[1] = ((float)*v[0] * mat01 + (float)*v[1] *mat11 + (float)*v[2] * mat21);
+	*t[2] = ((float)*v[0] * mat02 + (float)*v[1] *mat12 + (float)*v[2] * mat22);
+}
+
+void transform_object(object_t * object){
+	//shouldn't this not be happening if all the axes are 0?
+	if(object->visible){
+		generate_matrix_transform(object->ax, object->ay, object->az);
+		for(int i = 0; i < object->num_vertices; i++){
+			//pass direct access to objects verts
+			rotate_point(&object->vertices[i], &object->t_vertices[i]);
+		}
+	}
+}
+
 void load_object(
 	float (*object_vertices)[3], unsigned short num_vertices,
 	unsigned char (*object_faces)[3], unsigned short num_faces,
@@ -430,23 +482,40 @@ void load_object(
 	
 	object_t object = new_object();
 	
+	//copy verts
 	object.vertices = malloc(sizeof (float[3]) * num_vertices);
 	for(int i = 0; i < num_vertices; i++)
 		for(int j = 0; j < 3; j++)
 			object.vertices[i][j] = object_vertices[i][j];
 	
+	//copy for translated verts
+	object.t_vertices = malloc(sizeof (float[3]) * num_vertices);
+	for(int i = 0; i < num_vertices; i++)
+		for(int j = 0; j < 3; j++)
+			object.t_vertices[i][j] = object_vertices[i][j];
+	
+	//copy faces
 	object.faces = malloc(sizeof (unsigned char[3]) * num_faces);
 	for(int i = 0; i < num_faces; i++)
 		for(int j = 0; j < 3; j++)
 			object.faces[i][j] = object_faces[i][j];
 	
+	//base faces for shading
 	if (color_mode != k_preset_color){
-		//make a backup copy of faces
 		object.base_faces = malloc(sizeof (unsigned char[3]) * num_faces);
 		for(int i = 0; i < num_faces; i++)
 			for(int j = 0; j < 3; j++)
 				object.base_faces[i][j] = object_faces[i][j];
-	}	
+	}
+	
+	object.radius = 0;
+	object.ax = ax;
+	object.ay = ay;
+	object.az = az;
+	object.num_vertices = num_vertices;
+	object.num_faces = num_faces;
+	
+	transform_object(&object);
 	
 }
 
