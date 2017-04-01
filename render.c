@@ -17,6 +17,7 @@ int k_colorize_dynamic = 2;
 int k_multi_color_static = 3;
 int k_multi_color_dynamic = 4;
 int k_preset_color = 5;
+float k_ambient = .3;
 float mat00 = 0;
 float mat10 = 0;
 float mat20 = 0;
@@ -26,6 +27,56 @@ float mat21 = 0;
 float mat02 = 0;
 float mat12 = 0;
 float mat22 = 0;
+
+unsigned  double_color_list[32][10] = {
+	{0,0,0,0,0,0,0,0,0,0},
+	{0,0,0,0,0,0,0,0,0,0},
+
+	{0,0,1,1,1,1,13,13,12,12},
+	{0,0,0,1,1,1,1,13,13,12},
+	
+	{2,2,2,2,8,8,14,14,14,15},
+	{0,1,1,2,2,8,8,8,14,14},
+	
+	{1,1,1,1,3,3,11,11,10,10},
+	{0,1,1,1,1,3,3,11,11,10},
+	
+	{1,1,2,2,4,4,9,9,10,10},
+	{0,1,1,2,2,4,4,9,9,10},
+	
+	{0,0,1,1,5,5,13,13,6,6},
+	{0,0,0,1,1,5,5,13,13,6},
+	
+	{1,1,5,5,6,6,6,6,7,7},
+	{0,1,1,5,5,6,6,6,6,7},
+	
+	{5,5,6,6,7,7,7,7,7,7},
+	{0,5,5,6,6,7,7,7,7,7},
+	
+	{2,2,2,2,8,8,14,14,15,15},
+	{0,2,2,2,2,8,8,14,14,15},
+	
+	{2,2,4,4,9,9,15,15,7,7},
+	{0,2,2,4,4,9,9,15,15,7},
+	
+	{4,4,9,9,10,10,7,7,7,7},
+	{0,4,4,9,9,10,10,7,7,7},
+	
+	{1,1,3,3,11,11,10,10,7,7},
+	{0,1,1,3,3,11,11,10,10,7},
+	
+	{13,13,13,12,12,12,6,6,7,7},
+	{0,5,13,13,12,12,12,6,6,7},
+	
+	{1,1,5,5,13,13,6,6,7,7},
+	{0,1,1,5,5,13,13,6,6,7},
+	
+	{2,2,2,2,14,14,15,15,7,7},
+	{0,2,2,2,2,14,14,15,15,7},
+	
+	{4,4,9,9,15,15,7,7,7,7},
+	{0,4,4,9,9,15,15,7,7,7}
+};
 
 float pyramid_v_string[][3] = {
 	{ 0.0, -2.062, -4.0 },
@@ -307,6 +358,8 @@ int object_list_length = 0;
 object_t * obstacle_list = NULL;
 int obstacle_list_used = 0;
 int obstacle_list_length = 0;
+object_t * hole = NULL;
+object_t * pyramids[5] = { NULL };
 
 void init_player(){
 	player.min_x = -4.5;
@@ -367,14 +420,15 @@ void init_stars(){
 	}
 }
 
-void add_object_to_list(object_t new_obj){
+void add_object_to_list(object_t * new_obj){
 	
 	if (object_list_used == object_list_length){
 		object_list_length += 2;
-		object_list = realloc(object_list, (sizeof(* object_list)) * object_list_length);
+		object_list = realloc(object_list, (sizeof(object_t)) * object_list_length);
 	}
 	
-	object_list[object_list_used] = new_obj;
+	// pointer of object_list[index] is now new_object's pointer
+	*(object_list + object_list_used) = *new_obj;
 	
 	object_list_used++;
 }
@@ -384,14 +438,14 @@ void del_object_from_list(int i){
 	object_list_used--;
 }
 
-void add_obstacle_to_list(object_t new_obj){
+void add_obstacle_to_list(object_t * new_obj){
 	
 	if (obstacle_list_used == obstacle_list_length){
 		obstacle_list_length += 2;
-		obstacle_list = realloc(obstacle_list, (sizeof(* obstacle_list)) * obstacle_list_length);
+		obstacle_list = realloc(obstacle_list, (sizeof(object_t)) * obstacle_list_length);
 	}
 	
-	obstacle_list[obstacle_list_used] = new_obj;
+	*(obstacle_list + obstacle_list_used) = *new_obj;
 	
 	obstacle_list_used++;
 }
@@ -401,56 +455,58 @@ void del_obstacle_from_list(int i){
 	obstacle_list_used--;
 }
 
-object_t new_object(){
-	object_t obj = {
-		.vertices = NULL,
-		.base_faces = NULL,
-		.faces = NULL,
-		.t_vertices = NULL,
-		.num_faces = 0,
-		.num_vertices = 0,
-		.x = 0,
-		.y = 0,
-		.z = 0,
-		.rx = 0,
-		.ry = 0,
-		.rz = 0,
-		.tx = 0,
-		.ty = 0,
-		.tz = 0,
-		.ax = 0,
-		.ay = 0,
-		.az = 0,
-		.sx = 0,
-		.sy = 0,
-		.color = 0,
-		.color_mode = 0,
-		.radius = 10,
-		.sradius = 10,
+object_t * new_object(){
+	object_t * obj = malloc(sizeof (object_t));
+	
+	//~ object_t obj = {
+		obj->vertices = NULL;
+		obj->base_faces = NULL;
+		obj->faces = NULL;
+		obj->t_vertices = NULL;
+		obj->num_faces = 0;
+		obj->num_vertices = 0;
+		obj->x = 0;
+		obj->y = 0;
+		obj->z = 0;
+		obj->rx = 0;
+		obj->ry = 0;
+		obj->rz = 0;
+		obj->tx = 0;
+		obj->ty = 0;
+		obj->tz = 0;
+		obj->ax = 0;
+		obj->ay = 0;
+		obj->az = 0;
+		obj->sx = 0;
+		obj->sy = 0;
+		obj->color = 0;
+		obj->color_mode = 0;
+		obj->radius = 10;
+		obj->sradius = 10;
 		//bools
-		.obstacle = 0,
-		.visible = 1,
-		.render = 1,
-		.background = 0,
-		.collision_x = 1,
-		.collision_y = 0,
-		.collision_down = 0,
-		.collision_up = 0,
-		.collision_left = 0,
-		.ring = 0,
+		obj->obstacle = 0;
+		obj->visible = 1;
+		obj->render = 1;
+		obj->background = 0;
+		obj->collision_x = 1;
+		obj->collision_y = 0;
+		obj->collision_down = 0;
+		obj->collision_up = 0;
+		obj->collision_left = 0;
+		obj->ring = 0;
 		//end bools
-		.min_x = 100,
-		.min_y = 100,
-		.min_z = 100,
-		.max_x = -100,
-		.max_y = -100,
-		.max_z = -100,
-		.vx = 0,
-		.vy = 0,
-		.vz = 0,
-		.age = 0,
-		.health = 2
-	};
+		obj->min_x = 100;
+		obj->min_y = 100;
+		obj->min_z = 100;
+		obj->max_x = -100;
+		obj->max_y = -100;
+		obj->max_z = -100;
+		obj->vx = 0;
+		obj->vy = 0;
+		obj->vz = 0;
+		obj->age = 0;
+		obj->health = 2;
+	//~ };
 	
 	add_object_to_list(obj);
 	
@@ -553,6 +609,13 @@ float vector_dot_3d(float ax, float ay, float az, float bx, float by, float bz){
 	return (ax * bx + ay * by + az * bz);
 }
 
+void color_shade(unsigned char color, float brightness, unsigned char * f4, unsigned char * f5){
+	int b = (int)(brightness*10) & 0xffff;
+	unsigned char c = (color + 1) * 2;
+	*f4 = double_color_list[c - 1][b];
+	*f5 = double_color_list[c][b];
+}
+
 void color_faces(object_t * object){
 	
 	for(int i = 0; i < object->num_faces; i++){
@@ -579,70 +642,75 @@ void color_faces(object_t * object){
 		
 		float b = vector_dot_3d(nx, ny, nz, light1_x, light1_y, light1_z);
 		
-		if(object.color_mode == k_multi_color_dynamic){
-			
+		float mid;
+		if ( b <= 0 ) mid = 0 + k_ambient;
+		else if ( b >= 1) mid = (1-k_ambient) + k_ambient;
+		else mid = b * (1-k_ambient) + k_ambient;
+		
+		if(object->color_mode == k_multi_color_dynamic){
+			color_shade(object->base_faces[i][4], mid, &face[4], &face[5]);
 		} else {
-			
+			color_shade(object->color, mid, &face[4], &face[5]);			
 		}
 		
 	}
 	
 }
 
-void load_object(
+object_t * load_object(
 	float (*object_vertices)[3], unsigned short num_vertices,
 	unsigned char (*object_faces)[3], unsigned short num_faces,
 	int x, int y, int z, int ax, int ay, int az,
 	int obstacle, int color_mode, int color){
 	
-	object_t object = new_object();
+	object_t * object = new_object();
 	
 	//copy verts
-	object.vertices = malloc(sizeof (float[3]) * num_vertices);
+	object->vertices = malloc(sizeof (float[3]) * num_vertices);
 	for(int i = 0; i < num_vertices; i++)
 		for(int j = 0; j < 3; j++)
-			object.vertices[i][j] = object_vertices[i][j];
+			object->vertices[i][j] = object_vertices[i][j];
 	
 	//copy for translated verts
-	object.t_vertices = malloc(sizeof (float[3]) * num_vertices);
+	object->t_vertices = malloc(sizeof (float[3]) * num_vertices);
 	for(int i = 0; i < num_vertices; i++)
 		for(int j = 0; j < 3; j++)
-			object.t_vertices[i][j] = object_vertices[i][j];
+			object->t_vertices[i][j] = object_vertices[i][j];
 	
 	//copy faces
-	object.faces = malloc(sizeof (unsigned char[3]) * num_faces);
+	object->faces = malloc(sizeof (unsigned char[3]) * num_faces);
 	for(int i = 0; i < num_faces; i++)
 		for(int j = 0; j < 3; j++)
-			object.faces[i][j] = object_faces[i][j];
+			object->faces[i][j] = object_faces[i][j];
 	
 	//base faces for shading
 	if (color_mode != k_preset_color){
-		object.base_faces = malloc(sizeof (unsigned char[3]) * num_faces);
+		object->base_faces = malloc(sizeof (unsigned char[3]) * num_faces);
 		for(int i = 0; i < num_faces; i++)
 			for(int j = 0; j < 3; j++)
-				object.base_faces[i][j] = object_faces[i][j];
+				object->base_faces[i][j] = object_faces[i][j];
 	}
 	
 	//move everything above into new_object, and pass it all this shit^^
 	
-	object.radius = 0;
-	object.ax = ax;
-	object.ay = ay;
-	object.az = az;
-	object.num_vertices = num_vertices;
-	object.num_faces = num_faces;
+	object->radius = 0;
+	object->ax = ax;
+	object->ay = ay;
+	object->az = az;
+	object->num_vertices = num_vertices;
+	object->num_faces = num_faces;
 	
-	transform_object(&object);
-	set_radius(&object);
-	set_bounding_box(&object);
+	transform_object(object);
+	set_radius(object);
+	set_bounding_box(object);
 	
-	object.x = x;
-	object.y = y;
-	object.z = z;
+	object->x = x;
+	object->y = y;
+	object->z = z;
 	
-	object.color = color;
-	object.color_mode = color_mode;
-	object.obstacle = obstacle;
+	object->color = color;
+	object->color_mode = color_mode;
+	object->obstacle = obstacle;
 	
 	if(obstacle)
 		add_obstacle_to_list(object);
@@ -650,15 +718,17 @@ void load_object(
 	if ( color_mode==k_colorize_static || 
 		color_mode==k_colorize_dynamic || 
 		color_mode==k_multi_color_static ){
-		color_faces(&object);
+		color_faces(object);
 	}
 	
+	return object;
 }
 
 void load_temple(){
 	
 	init_stars();
 	
+	// create 5 columns
 	for(int i = 0; i < 5; i++){
 		unsigned char l = 30;
 		unsigned char x = sin(i/5)*l;
@@ -670,8 +740,39 @@ void load_temple(){
 			(sizeof(column_f_string)/sizeof(char)),
 			x, 0, z, 0, 0, 0, 1, k_colorize_static, 9
 		);
-		
-		
+	}
+	
+	//load fountain
+	load_object(
+		fountain_v_string,
+		(sizeof(fountain_v_string)/sizeof(float)),
+		fountain_f_string,
+		(sizeof(fountain_f_string)/sizeof(char)),
+		0,0,0,0,.08,0,1,k_colorize_static,14
+	);
+	
+	//load hole
+	hole = load_object(
+		hole_v_string,
+		(sizeof(hole_v_string)/sizeof(float)),
+		hole_f_string,
+		(sizeof(hole_f_string)/sizeof(char)),
+		0,11,0,.125,.125,.125,0,k_colorize_dynamic,12
+	);
+	
+	// create 5 pyramids
+	for(int i = 0; i < 5; i++){
+		unsigned char l = 25;
+		float a = i/5+.125;
+		unsigned char x = sin(a)*l;
+		unsigned char z = cos(a)*l;
+		pyramids[i] = load_object(
+			pyramid_v_string,
+			(sizeof(pyramid_v_string)/sizeof(float)),
+			pyramid_f_string,
+			(sizeof(pyramid_f_string)/sizeof(char)),
+			x, 0, z, 0, 0, 0, 0, k_colorize_static, 13
+		);
 	}
 	
 }
