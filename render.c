@@ -399,17 +399,29 @@ void init_3d(){
 	init_player();
 	init_light();
 	
-	if (object_list != NULL){ /*free it all*/ };
-	object_list = NULL;
+	if (object_list != NULL){
+		for(int i = 0; i < object_list_used; i++){
+			for(int j = 0; j < (object_list + i)->num_vertices; j++){
+				free((object_list + i)->vertices);
+				free((object_list + i)->t_vertices);
+			}
+			for(int j = 0; j < (object_list + i)->num_faces; j++){
+				free((object_list + i)->faces);
+				free((object_list + i)->base_faces);
+			}
+		}
+		object_list_used = 0;
+		object_list = NULL;
+	}
 	
-	//~ obstacle_list_t obs_l = { .fake = NULL };
-	//~ particle_list_t p_l = { .fake = NULL };
+	particle_list_t p_l = { .fake = NULL };
 	
 }
 
 void load_scene(void (*init_func)(), void (*update_func)(), void (*background_func)()){
 	scene_update_func = update_func;
 	scene_background_func = background_func;
+	init_3d();
 	init_func();
 }
 
@@ -458,55 +470,53 @@ void del_obstacle_from_list(int i){
 object_t * new_object(){
 	object_t * obj = malloc(sizeof (object_t));
 	
-	//~ object_t obj = {
-		obj->vertices = NULL;
-		obj->base_faces = NULL;
-		obj->faces = NULL;
-		obj->t_vertices = NULL;
-		obj->num_faces = 0;
-		obj->num_vertices = 0;
-		obj->x = 0;
-		obj->y = 0;
-		obj->z = 0;
-		obj->rx = 0;
-		obj->ry = 0;
-		obj->rz = 0;
-		obj->tx = 0;
-		obj->ty = 0;
-		obj->tz = 0;
-		obj->ax = 0;
-		obj->ay = 0;
-		obj->az = 0;
-		obj->sx = 0;
-		obj->sy = 0;
-		obj->color = 0;
-		obj->color_mode = 0;
-		obj->radius = 10;
-		obj->sradius = 10;
-		//bools
-		obj->obstacle = 0;
-		obj->visible = 1;
-		obj->render = 1;
-		obj->background = 0;
-		obj->collision_x = 1;
-		obj->collision_y = 0;
-		obj->collision_down = 0;
-		obj->collision_up = 0;
-		obj->collision_left = 0;
-		obj->ring = 0;
-		//end bools
-		obj->min_x = 100;
-		obj->min_y = 100;
-		obj->min_z = 100;
-		obj->max_x = -100;
-		obj->max_y = -100;
-		obj->max_z = -100;
-		obj->vx = 0;
-		obj->vy = 0;
-		obj->vz = 0;
-		obj->age = 0;
-		obj->health = 2;
-	//~ };
+	obj->vertices = NULL;
+	obj->base_faces = NULL;
+	obj->faces = NULL;
+	obj->t_vertices = NULL;
+	obj->num_faces = 0;
+	obj->num_vertices = 0;
+	obj->x = 0;
+	obj->y = 0;
+	obj->z = 0;
+	obj->rx = 0;
+	obj->ry = 0;
+	obj->rz = 0;
+	obj->tx = 0;
+	obj->ty = 0;
+	obj->tz = 0;
+	obj->ax = 0;
+	obj->ay = 0;
+	obj->az = 0;
+	obj->sx = 0;
+	obj->sy = 0;
+	obj->color = 0;
+	obj->color_mode = 0;
+	obj->radius = 10;
+	obj->sradius = 10;
+	//bools
+	obj->obstacle = 0;
+	obj->visible = 1;
+	obj->render = 1;
+	obj->background = 0;
+	obj->collision_x = 1;
+	obj->collision_y = 0;
+	obj->collision_down = 0;
+	obj->collision_up = 0;
+	obj->collision_left = 0;
+	obj->ring = 0;
+	//end bools
+	obj->min_x = 100;
+	obj->min_y = 100;
+	obj->min_z = 100;
+	obj->max_x = -100;
+	obj->max_y = -100;
+	obj->max_z = -100;
+	obj->vx = 0;
+	obj->vy = 0;
+	obj->vz = 0;
+	obj->age = 0;
+	obj->health = 2;
 	
 	add_object_to_list(obj);
 	
@@ -515,7 +525,6 @@ object_t * new_object(){
 
 void generate_matrix_transform(int xa, int ya, int za){
 
-	
 	int sx=sin(xa);
 	int sy=sin(ya);
 	int sz=sin(za);
