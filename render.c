@@ -245,10 +245,6 @@ player_t player;
 
 typedef struct {
 	void *fake;
-} obstacle_list_t;
-
-typedef struct {
-	void *fake;
 } particle_list_t;
 
 typedef struct {
@@ -308,6 +304,9 @@ typedef struct {
 object_t * object_list = NULL;
 int object_list_used = 0;
 int object_list_length = 0;
+object_t * obstacle_list = NULL;
+int obstacle_list_used = 0;
+int obstacle_list_length = 0;
 
 void init_player(){
 	player.min_x = -4.5;
@@ -330,7 +329,7 @@ void normalize(float * norm_x, float * norm_y, float * norm_z){
 	*norm_z *= 4;
 	
 	float inv_dist=1/sqrt((*norm_x) * (*norm_x)
-		+ (*norm_y) * (*norm_y)
+		+ (*norm_y) * (*norm_y) 
 		+ (*norm_z) * (*norm_z));
 	
 	*norm_x *= inv_dist;
@@ -383,6 +382,23 @@ void add_object_to_list(object_t new_obj){
 void del_object_from_list(int i){
 	object_list[i] = object_list[object_list_used -1];
 	object_list_used--;
+}
+
+void add_obstacle_to_list(object_t new_obj){
+	
+	if (obstacle_list_used == obstacle_list_length){
+		obstacle_list_length += 2;
+		obstacle_list = realloc(obstacle_list, (sizeof(* obstacle_list)) * obstacle_list_length);
+	}
+	
+	obstacle_list[obstacle_list_used] = new_obj;
+	
+	obstacle_list_used++;
+}
+
+void del_obstacle_from_list(int i){
+	obstacle_list[i] = obstacle_list[obstacle_list_used -1];
+	obstacle_list_used--;
 }
 
 object_t new_object(){
@@ -515,6 +531,64 @@ void set_bounding_box(object_t * object){
 
 }
 
+void vector_cross_3d(
+			float px, float py, float pz,
+			float ax, float ay, float az,
+			float bx, float by, float bz,
+			float * nx, float * ny, float * nz){
+	
+	ax = px * -1;
+	ay = py * -1;
+	az = pz * -1;
+	bx = px * -1;
+	by = py * -1;
+	bz = pz * -1;
+	
+	*nx = ay * bz - az * by;
+	*ny = az * bx - ax * bz;
+	*nz = ax * by - ay * bx;
+}
+
+float vector_dot_3d(float ax, float ay, float az, float bx, float by, float bz){
+	return (ax * bx + ay * by + az * bz);
+}
+
+void color_faces(object_t * object){
+	
+	for(int i = 0; i < object->num_faces; i++){
+		unsigned char * face = object->faces[i];
+		float p1x = object->t_vertices[face[1]][1];
+		float p1y = object->t_vertices[face[1]][2];
+		float p1z = object->t_vertices[face[1]][3];
+		float p2x = object->t_vertices[face[2]][1];
+		float p2y = object->t_vertices[face[2]][2];
+		float p2z = object->t_vertices[face[2]][3];
+		float p3x = object->t_vertices[face[3]][1];
+		float p3y = object->t_vertices[face[3]][2];
+		float p3z = object->t_vertices[face[3]][3];
+		
+		float nx, ny, nz;
+		vector_cross_3d(
+			p1x, p1y, p1z,
+			p2x, p2y, p2z,
+			p3x, p3y, p3z,
+			&nx, &ny, &nz
+		);
+		
+		normalize(&nx, &ny, &nz);
+		
+		float b = vector_dot_3d(nx, ny, nz, light1_x, light1_y, light1_z);
+		
+		if(object.color_mode == k_multi_color_dynamic){
+			
+		} else {
+			
+		}
+		
+	}
+	
+}
+
 void load_object(
 	float (*object_vertices)[3], unsigned short num_vertices,
 	unsigned char (*object_faces)[3], unsigned short num_faces,
@@ -570,13 +644,13 @@ void load_object(
 	object.color_mode = color_mode;
 	object.obstacle = obstacle;
 	
-	//~ if(obstacle)
-		//~ add_obstacle_to_list();
+	if(obstacle)
+		add_obstacle_to_list(object);
 	
 	if ( color_mode==k_colorize_static || 
 		color_mode==k_colorize_dynamic || 
 		color_mode==k_multi_color_static ){
-		//~ color_faces(&object);
+		color_faces(&object);
 	}
 	
 }
