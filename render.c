@@ -7,14 +7,19 @@
 
 SDL_Window * window = NULL;
 SDL_Renderer * renderer = NULL;
-const int SCREEN_WIDTH = 128;
-const int SCREEN_HEIGHT = 128;
+int SCREEN_WIDTH = 128;
+int SCREEN_HEIGHT = 128;
+int k_x_center = 64;
+int k_y_center = 64;
 
 unsigned char quit = 0;
 unsigned int cur_frame = 0;
 float light1_x = .1;
 float light1_y = .35;
 float light1_z = .2;
+float t_light_x = 0;
+float t_light_y = 0;
+float t_light_z = 0;
 void (*scene_update_func)();
 void (*scene_background_func)();
 int k_colorize_static = 1;
@@ -22,7 +27,11 @@ int k_colorize_dynamic = 2;
 int k_multi_color_static = 3;
 int k_multi_color_dynamic = 4;
 int k_preset_color = 5;
+int k_screen_scale = 80;
 float k_ambient = .3;
+float k_friction = .7;
+int z_clip = -3;
+int z_max = -50;
 float mat00 = 0;
 float mat10 = 0;
 float mat20 = 0;
@@ -32,6 +41,18 @@ float mat21 = 0;
 float mat02 = 0;
 float mat12 = 0;
 float mat22 = 0;
+float cam_x = 0;
+float cam_y = 0;
+float cam_z = 0;
+float cam_mat00 = 0;
+float cam_mat10 = 0;
+float cam_mat20 = 0;
+float cam_mat01 = 0;
+float cam_mat11 = 0;
+float cam_mat21 = 0;
+float cam_mat02 = 0;
+float cam_mat12 = 0;
+float cam_mat22 = 0;
 
 unsigned  double_color_list[32][10] = {
 	{0,0,0,0,0,0,0,0,0,0},
@@ -293,6 +314,9 @@ typedef struct {
 	float x;
 	float y;
 	float z;
+	float ax;
+	float ay;
+	float az;
 	float vx;
 	float vy;
 	float vz;
@@ -322,18 +346,18 @@ typedef struct {
 	int rx;
 	int ry;
 	int rz;
-	int tx;
-	int ty;
-	int tz;
+	float tx;
+	float ty;
+	float tz;
 	int ax;
 	int ay;
 	int az;
-	int sx;
-	int sy;
+	float sx;
+	float sy;
 	int color;
 	int color_mode;
-	int radius;
-	int sradius;
+	float radius;
+	float sradius;
 	int obstacle;
 	int visible;
 	int render;
@@ -376,6 +400,9 @@ void init_player(){
 	player.x = 0;
 	player.y = 8;
 	player.z = 15;
+	player.ax = 0;
+	player.ay = 0;
+	player.az = 0;
 	player.vx = 0;
 	player.vy = 0;
 	player.vz = 0;
@@ -546,6 +573,27 @@ void generate_matrix_transform(int xa, int ya, int za){
 	mat02=sx*sz*cy-cx*sy;
 	mat12=sx*cz;
 	mat22=sx*sz*sy+cx*cy;
+
+}
+
+void generate_cam_matrix_transform(int xa, int ya, int za){
+
+	int sx=sin(xa);
+	int sy=sin(ya);
+	int sz=sin(za);
+	int cx=cos(xa);
+	int cy=cos(ya);
+	int cz=cos(za);
+	
+	cam_mat00=cz*cy;
+	cam_mat10=-sz;
+	cam_mat20=cz*sy;
+	cam_mat01=cx*sz*cy+sx*sy;
+	cam_mat11=cx*cz;
+	cam_mat21=cx*sz*sy-sx*cy;
+	cam_mat02=sx*sz*cy-cx*sy;
+	cam_mat12=sx*cz;
+	cam_mat22=sx*sz*sy+cx*cy;
 
 }
 
@@ -812,11 +860,166 @@ void init(){
 	
 }
 
-void update(){
+unsigned char intersect_bounding_box( object_t * obj){
+	return (
+		(obj->min_x+obj->x < player.max_x+player.x) && (obj->max_x+obj->x > player.min_x+player.x) &&
+		(obj->min_y+obj->y < player.max_y+player.y) && (obj->max_y+obj->y > player.min_y+player.y) &&
+		(obj->min_z+obj->z < player.max_z+player.z) && (obj->max_z+obj->z > player.min_z+player.z)
+	);
+}
+
+void update_player(){
+	float old_x = player.x;
+	float old_y = player.y;
+	float old_z = player.z;
+	
+	// this repeats to check per each vector, which movement to reject
+	// could be optimized by passing player vars and only loop once
+	player.x += player.vx;	
+	for(int i = 0; i < obstacle_list_used; i++){
+		if(intersect_bounding_box((object_list + i))){
+			player.vx = 0;
+			player.x = old_x;
+		}
+	}
+	
+	player.y += player.vy;
+	for(int i = 0; i < obstacle_list_used; i++){
+		if(intersect_bounding_box((object_list + i))){
+			player.vy = 0;
+			player.y = old_y;
+		}
+	}
+	
+	player.z += player.vz;
+	for(int i = 0; i < obstacle_list_used; i++){
+		if(intersect_bounding_box((object_list + i))){
+			player.vz = 0;
+			player.z = old_z;
+		}
+	}
+	
+	player.vx *= k_friction;
+	player.vy *= k_friction;
+	player.vz *= k_friction;
 	
 }
 
+void update_camera(){
+	float cam_x = player.x;
+	float cam_y = player.y;
+	float cam_z = player.z;
+	
+	float cam_ax = player.ax;
+	float cam_ay = player.ay;
+	float cam_az = player.az;
+	
+	generate_cam_matrix_transform(cam_ax, cam_ay, cam_az);
+}
+
+void update(){
+	
+	// INPUT HANDLING
+	//~ if(btnp(4))then
+		//~ scene_index+=1
+		//~ if(scene_index>#scene_list)scene_index=1
+		//~ load_scene(scene_list[scene_index][1],scene_list[scene_index][2],scene_list[scene_index][3])
+	//~ end
+
+	//~ handle_buttons() -- handle default buttons for player-- this can be overwritten obviously.
+	
+	update_player();
+	update_camera();
+	scene_update_func();
+	
+}
+
+void rotate_cam_point(float x, float y, float z, float * tx, float * ty, float * tz){
+	
+	*tx = (x)*cam_mat00+(y)*cam_mat10+(z)*cam_mat20;
+	*ty = (x)*cam_mat01+(y)*cam_mat11+(z)*cam_mat21;
+	*tz = (x)*cam_mat02+(y)*cam_mat12+(z)*cam_mat22;
+	
+}
+
+void project_point(int x, int y, int z, float * sx, float * sy){
+	
+	*sx = x * k_screen_scale / z + k_x_center;
+	*sy = y * k_screen_scale / z + k_x_center;
+	
+}
+
+void project_radius(float radius, float tz, float * sradius){	
+	*sradius = radius * k_screen_scale/abs(tz);
+}
+
+void is_visible(object_t * obj){
+	obj->visible = (
+		obj->tz + obj->radius  > z_max	&& 
+		obj->tz - obj->radius  < z_clip &&
+		obj->sx + obj->sradius > 0 && 
+		obj->sx - obj->sradius < SCREEN_WIDTH &&
+		obj->sy + obj->sradius > 0 && 
+		obj->sy - obj->sradius < SCREEN_HEIGHT
+	);
+}
+
+void update_visible(object_t * object){
+	object->visible = 0;
+	
+	float px = object->x - cam_x;
+	float py = object->y - cam_y;
+	float pz = object->z - cam_z;
+	
+	rotate_cam_point(px, py, pz, &object->tx, &object->ty, &object->tz);
+	project_point(object->tx, object->ty, object->tz, &object->sx, &object->sy);
+	project_radius(object->radius, object->tz, &object->sradius);
+	is_visible(object);
+	
+}
+
+void cam_transform_object(object_t * obj){
+	if(obj->visible){
+		for(int i = 0; i < obj->num_vertices; i++){
+			obj->t_vertices[i][0] + (obj->x - cam_x);
+			obj->t_vertices[i][1] + (obj->x - cam_x);
+			obj->t_vertices[i][2] + (obj->x - cam_x);
+			
+			rotate_cam_point(
+				obj->t_vertices[i][0],
+				obj->t_vertices[i][1],
+				obj->t_vertices[i][2], 
+				&obj->tx,
+				&obj->ty,
+				&obj->tz
+			);
+		}
+	}
+}
+
+void update_light(){
+	rotate_cam_point(light1_x, light1_y, light1_z, &t_light_x, &t_light_y, &t_light_z);
+}
+
+void update_3d(){
+	
+	for(int i = 0; i < object_list_used; i++){
+		object_t * tmp_o = (object_list+i);
+		update_visible(tmp_o);
+		transform_object(tmp_o);
+		cam_transform_object(tmp_o);
+		update_light();
+	}
+}
+
 void draw(){
+	
+	cur_frame += 1;
+	scene_background_func();
+	
+	update_3d();
+	
+	// left off here
 	
 }
 
