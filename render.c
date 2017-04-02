@@ -5,6 +5,11 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
 
+SDL_Window * window = NULL;
+SDL_Renderer * renderer = NULL;
+const int SCREEN_WIDTH = 128;
+const int SCREEN_HEIGHT = 128;
+
 unsigned char quit = 0;
 unsigned int cur_frame = 0;
 float light1_x = .1;
@@ -789,10 +794,20 @@ void load_temple(){
 void update_temple(){}
 void draw_temple_background(){}
 
+void init_sdl(){
+	
+	SDL_Init ( SDL_INIT_VIDEO );
+	window = SDL_CreateWindow("eg3d", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+	renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED );
+	SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
+	SDL_RenderClear( renderer );
+	
+}
+
 void init(){
 	
 	init_3d();
-	
+	init_sdl();
 	load_scene(&load_temple, &update_temple, &draw_temple_background);
 	
 }
@@ -817,6 +832,10 @@ int main(){
 	}
 	
 	if(object_list != NULL) free(object_list);
+	
+	SDL_DestroyRenderer( renderer );
+	SDL_DestroyWindow( window );
+	SDL_Quit();
 	
 	return 0;
 }
