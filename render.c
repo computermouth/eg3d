@@ -1022,10 +1022,24 @@ void quicksort_object(int start, int end){
 		return;
 	
 	int pivot = start;
-	for(int i = start; i < endi; i++){
-		
+	for(int i = start + 1; i < end; i++){
+		if((object_list + i)->tz <= (object_list + pivot)->tz){
+			if(i == pivot + 1){
+				object_t * tmp = (object_list + pivot);
+				*(object_list + pivot) = *(object_list + pivot + 1);
+				*(object_list + pivot + 1) = *tmp;
+			} else {
+				object_t * tmp = (object_list + pivot);
+				object_t * tmp_plus_1 = (object_list + pivot + 1);
+				*(object_list + pivot) = *(object_list + i);
+				*(object_list + pivot + 1) = *tmp;
+				*(object_list + i) = *tmp_plus_1;
+			}
+			pivot++;
+		}
 	}
-	
+	quicksort_object(start, pivot - 1);
+	quicksort_object(pivot + 1, end);	
 }
 
 void draw_3d(){
