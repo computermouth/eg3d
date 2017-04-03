@@ -1012,6 +1012,27 @@ void update_3d(){
 	}
 }
 
+typedef struct {
+	
+}triangle_t;
+triangle_t * triangle_list = NULL;
+
+void quicksort_object(int start, int end){
+	if((end - start) < 1)
+		return;
+	
+	int pivot = start;
+	for(int i = start; i < endi; i++){
+		
+	}
+	
+}
+
+void draw_3d(){
+	
+	quicksort_object(0, object_list_used);
+}
+
 void draw(){
 	
 	cur_frame += 1;
@@ -1020,6 +1041,7 @@ void draw(){
 	update_3d();
 	
 	// left off here
+	draw_3d();
 	
 }
 
