@@ -1,9 +1,13 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include <time.h>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
+
+#define MIN(a,b) (((a)<(b))?(a):(b))
+#define MAX(a,b) (((a)>(b))?(a):(b))
 
 SDL_Window * window = NULL;
 SDL_Renderer * renderer = NULL;
@@ -903,8 +907,50 @@ void load_temple(){
 	
 }
 
-void update_temple(){}
-void draw_temple_background(){}
+void update_temple(){
+	hole->ax += -.004;
+	hole->az += .001;
+	hole->ax += .002;
+	hole->y = 11 + sin(cur_frame/100);
+	
+	for(int i = 0; i < 5; i++){
+		int l = 35;
+		float a = i / 5 + .125 + cur_frame / 1000;
+		float x = sin(a)*l;
+		float z = cos(a)*l;
+		pyramids[i]->x = sin(a)*l;
+		pyramids[i]->z = cos(a)*l;
+		pyramids[i]->y = 10 + sin(a - cur_frame/ 200) * 4;
+		pyramids[i]->ax += .003;
+		pyramids[i]->ay += .002;
+		pyramids[i]->az += .004;
+	}
+}
+
+void draw_stars(){
+	SDL_SetRenderDrawColor( renderer, 15 * 16, 15 * 16, 15 * 16, 0xFF );
+	for(int i = 0; i < 150; i++){
+		SDL_RenderDrawPoint(renderer, star_list[i].x, star_list[i].y);
+	}
+}
+
+void draw_temple_background(){
+	
+	SDL_Rect rectfill = { 0, 0, 127, 64 };
+	SDL_SetRenderDrawColor( 
+		renderer, 14 * 16 , 14 * 16, 14 * 16, 
+		0xFF );		
+	SDL_RenderFillRect( renderer, &rectfill );
+	
+	draw_stars();
+	
+	SDL_Rect rectfill_lower = { 0, 64, 127, 127 };
+	SDL_SetRenderDrawColor( 
+		renderer, 5 * 16 , 5 * 16, 5 * 16, 
+		0xFF );		
+	SDL_RenderFillRect( renderer, &rectfill_lower );
+	
+}
 
 void init_sdl(){
 	
@@ -1344,6 +1390,152 @@ void render_object(object_t * object){
 	
 }
 
+void shade_trifill(triangle_t * tri){
+	//hell, are these supposed to be ints?
+	int x1 = ((int)tri->p1x & 0xffff);
+	int x2 = ((int)tri->p2x & 0xffff);
+	int y1 = ((int)tri->p1y & 0xffff);
+	int y2 = ((int)tri->p2y & 0xffff);
+	int x3 = ((int)tri->p3x & 0xffff);
+	int y3 = ((int)tri->p3y & 0xffff);
+	
+	int tmp = 0;
+	
+	if(y1 > y2){
+		tmp = y1;
+		y1 = y2;
+		y2 = y1;
+		
+		tmp = x1;
+		x1 = x2;
+		x2 = tmp;
+	}
+	
+	if(y1 > y3){
+		tmp = y1;
+		y1 = y3;
+		y3 = tmp;
+		
+		tmp = x1;
+		x1 = x3;
+		x3 = tmp;
+	}
+	
+	if(y2 > y3){
+		tmp = y2;
+		y2 = y3;
+		y3 = tmp;
+		
+		tmp = x2;
+		x2 = x3;
+		x3 = tmp;
+	}
+	
+	int nsx, nex, min_y, max_y = 0;
+	
+	if( y1 != y2 ){
+		float delta_sx = (x3 - x1)/(y3 - y1);
+		float delta_ex = (x2 - x1)/(y2 - y1);
+		
+		if(y1 > 0){
+			nsx = x1;
+			nex = x1;
+			min_y = y1;
+		} else {
+			//top edge clip
+			nsx = x1 - delta_sx * y1;
+			nex = x1 - delta_ex * y1;
+			min_y = 0;
+		}
+		
+		max_y = MIN(y2, 128);
+		
+		for(int i = min_y; i < max_y - 1; i++){
+			
+			if ( (i & 1) == 0 ){
+				SDL_Rect rectfill = { nsx, i, nex, i };
+				SDL_SetRenderDrawColor( 
+					renderer, tri->c1 * 16 , tri->c1 * 16, tri->c1 * 16, 
+					0xFF );		
+				SDL_RenderFillRect( renderer, &rectfill );
+			} else {
+				SDL_Rect rectfill = { nsx, i, nex, i };
+				SDL_SetRenderDrawColor( 
+					renderer, tri->c2 * 16 , tri->c2 * 16, tri->c2 * 16, 
+					0xFF );		
+				SDL_RenderFillRect( renderer, &rectfill );
+			}
+			
+			nsx += delta_sx;
+			nex += delta_ex;			
+		}
+		
+	} else {
+		//top edge is horizontal
+		nsx = x1;
+		nex = x2;
+	}
+	
+	if(y3 != y2){
+		float delta_sx = (x3 - x1) / (y3 - y1);
+		float delta_ex = (x3 - x2) / (y3 - y2);
+		
+		min_y = y2;
+		max_y = MIN(y3,128);
+		
+		if(y2 < 0){
+			nex = x2 - delta_ex * y2;
+			nsx = x1 - delta_sx * y1;
+			min_y = 0;
+		}
+		
+		for(int i = min_y; i < max_y; i++){
+			
+			if ( (i & 1) == 0 ){
+				SDL_Rect rectfill = { nsx, i, nex, i };
+				SDL_SetRenderDrawColor( 
+					renderer, tri->c1 * 16 , tri->c1 * 16, tri->c1 * 16, 
+					0xFF );		
+				SDL_RenderFillRect( renderer, &rectfill );
+			} else {
+				SDL_Rect rectfill = { nsx, i, nex, i };
+				SDL_SetRenderDrawColor( 
+					renderer, tri->c2 * 16 , tri->c2 * 16, tri->c2 * 16, 
+					0xFF );		
+				SDL_RenderFillRect( renderer, &rectfill );
+			}
+			
+			nsx += delta_sx;
+			nex += delta_ex;			
+		}
+		
+	} else {
+		//where bottom edge is horizontal???
+		//where is the original value Y coming into scope here????
+		int i = 0; // just to get it to compile, I guess.
+		if ( (i & 1) == 0 ){
+			SDL_Rect rectfill = { nsx, i, nex, i };
+			SDL_SetRenderDrawColor( 
+				renderer, tri->c1 * 16 , tri->c1 * 16, tri->c1 * 16, 
+				0xFF );		
+			SDL_RenderFillRect( renderer, &rectfill );
+		} else {
+			SDL_Rect rectfill = { nsx, i, nex, i };
+			SDL_SetRenderDrawColor( 
+				renderer, tri->c2 * 16 , tri->c2 * 16, tri->c2 * 16, 
+				0xFF );		
+			SDL_RenderFillRect( renderer, &rectfill );
+		}
+	}
+	
+}
+
+void draw_triangle_list(){
+	for(int i = 0; i < triangle_list_length; i++){
+		shade_trifill(triangle_list+i);
+	}
+}
+
 void draw_3d(){
 	
 	quicksort_object_list(0, object_list_used);
@@ -1356,7 +1548,7 @@ void draw_3d(){
 	
 	quicksort_triangle_list(0, triangle_list_used);
 	
-	//~ draw_triangle_list();
+	draw_triangle_list();
 	
 }
 
@@ -1367,7 +1559,6 @@ void draw(){
 	
 	update_3d();
 	
-	// left off here
 	draw_3d();
 	
 }
