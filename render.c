@@ -28,6 +28,8 @@ int k_multi_color_static = 3;
 int k_multi_color_dynamic = 4;
 int k_preset_color = 5;
 int k_screen_scale = 80;
+int k_color1 = 4;
+int k_color2 = 5;
 float k_ambient = .3;
 float k_friction = .7;
 int z_clip = -3;
@@ -337,7 +339,7 @@ typedef struct {
 	float (*vertices)[3];
 	unsigned char (*base_faces)[3];
 	unsigned char (*faces)[3];
-	float (*t_vertices)[3];
+	float (*t_vertices)[5];
 	int num_vertices;
 	int num_faces;
 	int x;
@@ -381,12 +383,32 @@ typedef struct {
 	int health;
 } object_t;
 
+
+
+typedef struct {
+	float p1x;
+	float p1y;
+	float p2x;
+	float p2y;
+	float p3x;
+	float p3y;
+	float tz;
+	int c1;
+	int c2;
+}triangle_t;
+
+triangle_t * triangle_list = NULL;
+int triangle_list_used = 0;
+int triangle_list_length = 0;
+
 object_t * object_list = NULL;
 int object_list_used = 0;
 int object_list_length = 0;
+
 object_t * obstacle_list = NULL;
 int obstacle_list_used = 0;
 int obstacle_list_length = 0;
+
 object_t * hole = NULL;
 object_t * pyramids[5] = { NULL };
 
@@ -499,6 +521,26 @@ void del_obstacle_from_list(int i){
 	obstacle_list_used--;
 }
 
+
+
+void add_triangle_to_list(triangle_t * new_tri){
+	
+	if (triangle_list_used == triangle_list_length){
+		triangle_list_length += 2;
+		triangle_list = realloc(triangle_list, (sizeof(triangle_t)) * triangle_list_length);
+	}
+	
+	// pointer of triangle_list[index] is now new_triangle's pointer
+	*(triangle_list + triangle_list_used) = *new_tri;
+	
+	triangle_list_used++;
+}
+
+void del_triangle_from_list(int i){
+	triangle_list[i] = triangle_list[triangle_list_used -1];
+	triangle_list_used--;
+}
+
 object_t * new_object(){
 	object_t * obj = malloc(sizeof (object_t));
 	
@@ -555,6 +597,28 @@ object_t * new_object(){
 	return obj;
 }
 
+triangle_t * new_triangle(
+	float p1x, float p1y, float p2x, float p2y, float p3x, float p3y,
+	float tz, int c1, int c2
+	){
+	
+	triangle_t * tri = malloc(sizeof (triangle_t));
+	
+	tri->p1x = p1x;
+	tri->p1y = p1y;
+	tri->p2x = p2x;
+	tri->p2y = p2y;
+	tri->p3x = p3x;
+	tri->p3y = p3y;
+	tri->tz = tz;
+	tri->c1 = c1;
+	tri->c2 = c2;
+	
+	add_triangle_to_list(tri);
+	
+	return tri;
+}
+
 void generate_matrix_transform(int xa, int ya, int za){
 
 	int sx=sin(xa);
@@ -597,7 +661,7 @@ void generate_cam_matrix_transform(int xa, int ya, int za){
 
 }
 
-void rotate_point(float (*v)[3], float (*t)[3]){
+void rotate_point(float (*v)[3], float (*t)[5]){
 	*t[0] = ((float)*v[0] * mat00 + (float)*v[1] *mat10 + (float)*v[2] * mat20);
 	*t[1] = ((float)*v[0] * mat01 + (float)*v[1] *mat11 + (float)*v[2] * mat21);
 	*t[2] = ((float)*v[0] * mat02 + (float)*v[1] *mat12 + (float)*v[2] * mat22);
@@ -650,10 +714,10 @@ void set_bounding_box(object_t * object){
 }
 
 void vector_cross_3d(
-			float px, float py, float pz,
-			float ax, float ay, float az,
-			float bx, float by, float bz,
-			float * nx, float * ny, float * nz){
+	float px, float py, float pz,
+	float ax, float ay, float az,
+	float bx, float by, float bz,
+	float * nx, float * ny, float * nz){
 	
 	ax = px * -1;
 	ay = py * -1;
@@ -1012,12 +1076,7 @@ void update_3d(){
 	}
 }
 
-typedef struct {
-	
-}triangle_t;
-triangle_t * triangle_list = NULL;
-
-void quicksort_object(int start, int end){
+void quicksort_object_list(int start, int end){
 	if((end - start) < 1)
 		return;
 	
@@ -1038,13 +1097,267 @@ void quicksort_object(int start, int end){
 			pivot++;
 		}
 	}
-	quicksort_object(start, pivot - 1);
-	quicksort_object(pivot + 1, end);	
+	quicksort_object_list(start, pivot - 1);
+	quicksort_object_list(pivot + 1, end);	
+}
+
+void quicksort_triangle_list(int start, int end){
+	if((end - start) < 1)
+		return;
+	
+	int pivot = start;
+	for(int i = start + 1; i < end; i++){
+		if((triangle_list + i)->tz <= (triangle_list + pivot)->tz){
+			if(i == pivot + 1){
+				triangle_t * tmp = (triangle_list + pivot);
+				*(triangle_list + pivot) = *(triangle_list + pivot + 1);
+				*(triangle_list + pivot + 1) = *tmp;
+			} else {
+				triangle_t * tmp = (triangle_list + pivot);
+				triangle_t * tmp_plus_1 = (triangle_list + pivot + 1);
+				*(triangle_list + pivot) = *(triangle_list + i);
+				*(triangle_list + pivot + 1) = *tmp;
+				*(triangle_list + i) = *tmp_plus_1;
+			}
+			pivot++;
+		}
+	}
+	quicksort_triangle_list(start, pivot - 1);
+	quicksort_triangle_list(pivot + 1, end);	
+}
+
+void three_point_sort(
+	float * p1x, float * p1y, float * p1z, 
+	float * p2x, float * p2y, float * p2z, 
+	float * p3x, float * p3y, float * p3z){
+	
+	float tmp;
+	if (p1z > p2z){
+		tmp = *p1z;
+		*p1z = *p2z;
+		*p2z = tmp;
+		
+		tmp = *p1x;
+		*p1x = *p2x;
+		*p2x = tmp;
+		
+		tmp = *p1y; 
+		*p1y = *p2y;
+		*p2y = tmp;
+	}
+	if (p1z > p3z){
+		tmp = *p1z;
+		*p1z = *p3z;
+		*p3z = tmp;
+		
+		tmp = *p1x;
+		*p1x = *p3x;
+		*p3x = tmp;
+		
+		tmp = *p1y; 
+		*p1y = *p3y;
+		*p3y = tmp;
+	}
+	if (p2z > p3z){
+		tmp = *p2z;
+		*p2z = *p3z;
+		*p3z = tmp;
+		
+		tmp = *p2x;
+		*p2x = *p3x;
+		*p3x = tmp;
+		
+		tmp = *p2y; 
+		*p2y = *p3y;
+		*p3y = tmp;
+	}
+	
+}
+
+void z_clip_line(
+	float p1x, float p1y, float p1z, float p2x, float p2y, float p2z, float clip,
+	float * nx, float * ny, float * nz){
+	
+	if( p1z > p2z ){
+		float tmp;
+		tmp = p1x;
+		p1x = p2x;
+		p2x = tmp;
+		
+		tmp = p1z;
+		p1z = p2z;
+		p2z = tmp;
+		
+		tmp = p1y;
+		p1y = p2y;
+		p2y = tmp;		
+	}
+	
+	if ( clip > p1z && clip <= p2z ){
+		
+		float alpha = abs((p1z-clip)/(p2z-p1z));
+		
+		*nx = p1x * (1.0 - alpha) + p2x * alpha;
+		*ny = p1y * (1.0 - alpha) + p2y * alpha;
+		*nz = p1z * (1.0 - alpha) + p2z * alpha;
+	}
+}
+
+void render_object(object_t * object){
+	for(int i = 0; i < object->num_vertices; i++){
+		object->t_vertices[i][3] = object->t_vertices[i][0] * k_screen_scale / object->t_vertices[i][4] + k_x_center;
+		object->t_vertices[i][4] = object->t_vertices[i][0] * k_screen_scale / object->t_vertices[i][4] + k_x_center;
+	}
+	
+	for(int i = 0; i < object->num_faces; i++){
+		float * p1 = object->t_vertices[object->faces[i][0]];
+		float * p2 = object->t_vertices[object->faces[i][1]];
+		float * p3 = object->t_vertices[object->faces[i][2]];
+		
+		float p1x = p1[0];
+		float p1y = p1[1];
+		float p1z = p1[2];
+		float p2x = p2[0];
+		float p2y = p2[1];
+		float p2z = p2[2];
+		float p3x = p3[0];
+		float p3y = p3[1];
+		float p3z = p3[2];
+		
+		float cz = .01 * (p1z + p2z + p3z) / 3;
+		float cx = .01 * (p1x + p2x + p3x) / 3;
+		float cy = .01 * (p1y + p2y + p3y) / 3;
+		float z_paint = (-1 * cx)*cx - cy*cy - cz*cz;
+		
+		if(object->background == 1)
+			z_paint -= 1000;
+		
+		object->faces[i][5] = z_paint;
+		
+		if( p1z > z_max || p2z > z_max || p3z > z_max ){
+			if( p1z < z_clip || p2z < z_clip || p3z < z_clip ){
+				float s1x = p1[3];
+				float s1y = p1[4];
+				float s2x = p2[3];
+				float s2y = p2[4];
+				float s3x = p3[3];
+				float s3y = p3[4];
+				
+				if ( (s1x > 0 && s2x > 0 && s3x > 0) && (s1x < 128 && s2x < 128 && s3x < 128) ){
+					if(( (s1x-s2x)*(s3y-s2y)-(s1y-s2y)*(s3x-s2x)) < 0){
+						if(object->color_mode==k_colorize_dynamic){
+							p2x -= p1x;
+							p2y -= p1y;
+							p2z -= p1z;
+							
+							float nx = p2y * p3z - p2z * p3y;
+							float ny = p2z * p3x - p2x * p3z;
+							float nz = p2x * p3y - p2y * p3x;
+							
+							nx *= 4;
+							ny *= 4;
+							nz *= 4;
+							
+							float inv_dist = 1 / sqrt(nx * nx + ny * ny + nz * nz);
+							nx *= inv_dist;
+							ny *= inv_dist;
+							nz *= inv_dist;
+							
+							float mid, b;
+							b = nx*t_light_x+ny*t_light_y+nz*t_light_z;
+							if ( b <= 0 ) mid = 0 + k_ambient;
+							else if ( b >= 1) mid = (1-k_ambient) + k_ambient;
+							else mid = b * (1-k_ambient) + k_ambient;
+							
+							color_shade(object->faces[i][4], mid, &object->faces[i][4], &object->faces[i][5]);
+						}
+						
+						new_triangle(s1x, s1y, s2x, s2y, s3x, s3y, z_paint, object->faces[i][k_color1], object->faces[i][k_color2]);						
+					}
+				}				
+			} else if (p1z < z_clip || p2z < z_clip || p3z < z_clip) {
+				three_point_sort(&p1x, &p1y, &p1z, &p2x, &p2y, &p2z, &p3x, &p3y, &p3z);
+				
+				if(p1z < z_clip && p2z < z_clip){
+					
+					float n2x, n2y, n2z = 0;
+					z_clip_line(p2x, p2y, p2z, p3z, p3y, p3z, z_clip,
+						&n2x, &n2y, &n2z);
+					
+					float n3x, n3y, n3z = 0;
+					z_clip_line(p3x, p3y, p3z, p1z, p1y, p1z, z_clip,
+						&n3x, &n3y, &n3z);
+					
+					float s1x, s1y = 0;
+					project_point(p1x, p1y, p1z, &s1x, &s1y);
+					float s2x, s2y = 0;
+					project_point(p2x, p2y, p2z, &s2x, &s2y);
+					float s3x, s3y = 0;
+					project_point(n2x, n2y, n2z, &s3x, &s3y);
+					float s4x, s4y = 0;
+					project_point(n3x, n3y, n3z, &s4x, &s4y);
+					
+					if( (s1x > 0 && s2x > 0 && s4x > 0) &&
+						(s4x < 128 && s4x < 128 && s4x < 128)){
+						
+						new_triangle(s1x, s1y, s2x, s2y, s4x, s4y, z_paint, object->faces[i][k_color1], object->faces[i][k_color2]);
+						
+					}
+					
+					if( (s2x > 0 && s3x > 0 && s4x > 0) &&
+						(s2x < 128 && s3x < 128 && s4x < 128)){
+						
+						new_triangle(s2x, s2y, s4x, s4y, s3x, s3y, z_paint, object->faces[i][k_color1], object->faces[i][k_color2]);
+						
+					}
+					
+					
+				} else {
+					
+					float n1x, n1y, n1z = 0;
+					z_clip_line(p1x, p1y, p1z, p2x, p2y, p2z, z_clip,
+						&n1x, &n1y, &n1z);
+					
+					float n2x, n2y, n2z = 0;
+					z_clip_line(p1x, p1y, p1z, p3x, p3y, p3z, z_clip,
+						&n2x, &n2y, &n2z);
+					
+					float s1x, s1y = 0;
+					project_point(p1x, p1y, p1z, &s1x, &s1y);
+					float s2x, s2y = 0;
+					project_point(n1x, n1y, n1z, &s2x, &s2y);
+					float s3x, s3y = 0;
+					project_point(n2x, n2y, n2z, &s3x, &s3y);
+					
+					
+					if( (s1x > 0 && s2x > 0 && s3x > 0) &&
+						(s1x < 128 && s2x < 128 && s3x < 128)){
+						
+						new_triangle(s1x, s1y, s2x, s2y, s3x, s3y, z_paint, object->faces[i][k_color1], object->faces[i][k_color2]);
+						
+					}
+					
+				}
+			}
+		}
+	}
+	
 }
 
 void draw_3d(){
 	
-	quicksort_object(0, object_list_used);
+	quicksort_object_list(0, object_list_used);
+	for(int i = 0; i < object_list_used; i++){
+		if( (object_list + i)->visible == 1 &&
+			(object_list + i)->background != 1){
+			render_object( (object_list + i) );
+		}
+	}
+	
+	quicksort_triangle_list(0, triangle_list_used);
+	
+	//~ draw_triangle_list();
+	
 }
 
 void draw(){
@@ -1070,7 +1383,9 @@ int main(){
 		draw();
 	}
 	
-	if(object_list != NULL) free(object_list);
+	if(object_list != NULL)   free(object_list);
+	if(obstacle_list != NULL) free(obstacle_list);
+	if(triangle_list != NULL) free(triangle_list);
 	
 	SDL_DestroyRenderer( renderer );
 	SDL_DestroyWindow( window );
