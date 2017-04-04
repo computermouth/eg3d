@@ -3,14 +3,14 @@
 #include <math.h>
 #include <time.h>
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL2_gfxPrimitives.h>
+//~ #include <SDL2/SDL.h>
+//~ #include <SDL2/SDL2_gfxPrimitives.h>
 
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAX(a,b) (((a)>(b))?(a):(b))
 
-SDL_Window * window = NULL;
-SDL_Renderer * renderer = NULL;
+//~ SDL_Window * window = NULL;
+//~ SDL_Renderer * renderer = NULL;
 int SCREEN_WIDTH = 128;
 int SCREEN_HEIGHT = 128;
 int k_x_center = 64;
@@ -340,10 +340,10 @@ typedef struct {
 star_t star_list[150];
 
 typedef struct {
-	float (*vertices)[3];
-	unsigned char (*base_faces)[3];
-	unsigned char (*faces)[3];
-	float (*t_vertices)[5];
+	float * vertices[3];
+	unsigned char * base_faces[3];
+	unsigned char * faces[3];
+	float * t_vertices[3];
 	int num_vertices;
 	int num_faces;
 	int x;
@@ -490,7 +490,7 @@ void init_stars(){
 	}
 }
 
-void add_object_to_list(object_t * new_obj){
+object_t * add_object_to_list(){
 	
 	if (object_list_used == object_list_length){
 		object_list_length += 2;
@@ -498,9 +498,14 @@ void add_object_to_list(object_t * new_obj){
 	}
 	
 	// pointer of object_list[index] is now new_object's pointer
-	*(object_list + object_list_used) = *new_obj;
+	//~ *(object_list + object_list_used) = *new_obj;
 	
+	object_t * return_object = (object_list + object_list_used);
+	
+	printf("obj: %p\n", return_object);
 	object_list_used++;
+	
+	return return_object;
 }
 
 void del_object_from_list(int i){
@@ -546,12 +551,13 @@ void del_triangle_from_list(int i){
 }
 
 object_t * new_object(){
-	object_t * obj = malloc(sizeof (object_t));
+	object_t * obj = add_object_to_list();
 	
-	obj->vertices = NULL;
-	obj->base_faces = NULL;
-	obj->faces = NULL;
-	obj->t_vertices = NULL;
+	printf("obj: %p\n", obj);
+	//~ obj->vertices[0] =  NULL ;
+	//~ obj->base_faces[0] =  NULL ;
+	//~ obj->faces[0] =  NULL ;
+	//~ obj->t_vertices[0] =  NULL ;
 	obj->num_faces = 0;
 	obj->num_vertices = 0;
 	obj->x = 0;
@@ -595,8 +601,6 @@ object_t * new_object(){
 	obj->vz = 0;
 	obj->age = 0;
 	obj->health = 2;
-	
-	add_object_to_list(obj);
 	
 	return obj;
 }
@@ -665,17 +669,28 @@ void generate_cam_matrix_transform(int xa, int ya, int za){
 
 }
 
-void rotate_point(float (*v)[3], float (*t)[5]){
-	*t[0] = ((float)*v[0] * mat00 + (float)*v[1] *mat10 + (float)*v[2] * mat20);
-	*t[1] = ((float)*v[0] * mat01 + (float)*v[1] *mat11 + (float)*v[2] * mat21);
-	*t[2] = ((float)*v[0] * mat02 + (float)*v[1] *mat12 + (float)*v[2] * mat22);
+void rotate_point(float ** v, float ** t){
+	//~ printf("v[0]: %f\n", (float)*v[0]);
+	//~ printf("t[0]: %f\n", (float)*t[0]);
+	printf("v[0]: %f\tv[1]: %f\tv[2]: %f\t\n", **v+0, **v+1, **v+2);
+	return;
+	//~ *t[0] = ((float)*v[0] * mat00 + (float)*v[1] *mat10 + (float)*v[2] * mat20);
+	//~ *t[1] = ((float)*v[0] * mat01 + (float)*v[1] *mat11 + (float)*v[2] * mat21);
+	//~ *t[2] = ((float)*v[0] * mat02 + (float)*v[1] *mat12 + (float)*v[2] * mat22);
 }
 
 void transform_object(object_t * object){
 	//shouldn't this not be happening if all the axes are 0?
+	printf("k4\n");
+	printf("vis2: %d", object->visible);
 	if(object->visible){
+	printf("k4.25\n");
 		generate_matrix_transform(object->ax, object->ay, object->az);
+	printf("k4.5\n");
 		for(int i = 0; i < object->num_vertices; i++){
+	printf("k5\n");
+		//~ int i = 0;
+			printf("o[%d][0] %f\to[][1] %f\to[][2] %f\n", i, object->vertices[i][0], object->vertices[i][1], object->vertices[i][2]);
 			//pass direct access to objects verts
 			rotate_point(&object->vertices[i], &object->t_vertices[i]);
 		}
@@ -792,36 +807,56 @@ object_t * load_object(
 	unsigned char (*object_faces)[3], unsigned short num_faces,
 	int x, int y, int z, int ax, int ay, int az,
 	int obstacle, int color_mode, int color){
-	
+		
 	object_t * object = new_object();
+	printf("obj: %p\n", object);
+	printf("k1\n");
+	printf("vis: %d\n", object->visible);
 	
 	//copy verts
-	object->vertices = malloc(sizeof (float[3]) * num_vertices);
-	for(int i = 0; i < num_vertices; i++)
-		for(int j = 0; j < 3; j++)
+	//~ for(int i = 0; i < num_vertices; i++)
+		//~ object->vertices[i] = malloc(sizeof (float[3]));
+		*object->vertices = malloc(sizeof(float*) * 3);
+	for(int i = 0; i < num_vertices; i++){
+		for(int j = 0; j < 3; j++){
 			object->vertices[i][j] = object_vertices[i][j];
+		}
+	}
 	
+	return object;//REMOVE LATER
+	printf("vis: %d\n", object->visible);
 	//copy for translated verts
-	object->t_vertices = malloc(sizeof (float[3]) * num_vertices);
+	//~ for(int i = 0; i < num_vertices; i++)
+		//~ object->t_vertices[i] = malloc(sizeof (float[3]));
+		*object->t_vertices = malloc(sizeof(float*) * 3);
 	for(int i = 0; i < num_vertices; i++)
-		for(int j = 0; j < 3; j++)
+		for(int j = 0; j < 3; j++){
 			object->t_vertices[i][j] = object_vertices[i][j];
+		}
 	
+	printf("vis: %d\n", object->visible);
 	//copy faces
-	object->faces = malloc(sizeof (unsigned char[3]) * num_faces);
+	//~ for(int i = 0; i < num_vertices; i++)
+		//~ object->faces[i] = malloc(sizeof (unsigned char[3]));
+		*object->faces = malloc(sizeof(unsigned char*) * 3);
 	for(int i = 0; i < num_faces; i++)
 		for(int j = 0; j < 3; j++)
 			object->faces[i][j] = object_faces[i][j];
-	
+		
+	printf("vis: %d\n", object->visible);
 	//base faces for shading
 	if (color_mode != k_preset_color){
-		object->base_faces = malloc(sizeof (unsigned char[3]) * num_faces);
+		//~ for(int i = 0; i < num_vertices; i++)
+			//~ object->base_faces[i] = malloc(sizeof (unsigned char[3]));
+			*object->base_faces = malloc(sizeof(unsigned char*) * 3);
 		for(int i = 0; i < num_faces; i++)
 			for(int j = 0; j < 3; j++)
 				object->base_faces[i][j] = object_faces[i][j];
 	}
-	
+		
 	//move everything above into new_object, and pass it all this shit^^
+	
+	printf("vis: %d\n", object->visible);
 	
 	object->radius = 0;
 	object->ax = ax;
@@ -830,7 +865,10 @@ object_t * load_object(
 	object->num_vertices = num_vertices;
 	object->num_faces = num_faces;
 	
+	printf("vis: %d\n", object->visible);
 	transform_object(object);
+	
+	printf("k3\n");
 	set_radius(object);
 	set_bounding_box(object);
 	
@@ -859,51 +897,52 @@ void load_temple(){
 	init_stars();
 	
 	// create 5 columns
-	for(int i = 0; i < 5; i++){
+	//~ for(int i = 0; i < 5; i++){
+	int i = 0;
 		unsigned char l = 30;
 		unsigned char x = sin(i/5)*l;
 		unsigned char z = cos(i/5)*l;
 		load_object(
 			column_v_string,
-			(sizeof(column_v_string)/sizeof(float)),
+			(sizeof(column_v_string)/sizeof(column_v_string[0])),
 			column_f_string,
-			(sizeof(column_f_string)/sizeof(char)),
+			(sizeof(column_v_string)/sizeof(column_v_string[0])),
 			x, 0, z, 0, 0, 0, 1, k_colorize_static, 9
 		);
-	}
+	//~ }
 	
-	//load fountain
-	load_object(
-		fountain_v_string,
-		(sizeof(fountain_v_string)/sizeof(float)),
-		fountain_f_string,
-		(sizeof(fountain_f_string)/sizeof(char)),
-		0,0,0,0,.08,0,1,k_colorize_static,14
-	);
+	//~ //load fountain
+	//~ load_object(
+		//~ fountain_v_string,
+		//~ (sizeof(fountain_v_string)/sizeof(float)),
+		//~ fountain_f_string,
+		//~ (sizeof(fountain_f_string)/sizeof(char)),
+		//~ 0,0,0,0,.08,0,1,k_colorize_static,14
+	//~ );
 	
-	//load hole
-	hole = load_object(
-		hole_v_string,
-		(sizeof(hole_v_string)/sizeof(float)),
-		hole_f_string,
-		(sizeof(hole_f_string)/sizeof(char)),
-		0,11,0,.125,.125,.125,0,k_colorize_dynamic,12
-	);
+	//~ //load hole
+	//~ hole = load_object(
+		//~ hole_v_string,
+		//~ (sizeof(hole_v_string)/sizeof(float)),
+		//~ hole_f_string,
+		//~ (sizeof(hole_f_string)/sizeof(char)),
+		//~ 0,11,0,.125,.125,.125,0,k_colorize_dynamic,12
+	//~ );
 	
-	// create 5 pyramids
-	for(int i = 0; i < 5; i++){
-		unsigned char l = 25;
-		float a = i/5+.125;
-		unsigned char x = sin(a)*l;
-		unsigned char z = cos(a)*l;
-		pyramids[i] = load_object(
-			pyramid_v_string,
-			(sizeof(pyramid_v_string)/sizeof(float)),
-			pyramid_f_string,
-			(sizeof(pyramid_f_string)/sizeof(char)),
-			x, 0, z, 0, 0, 0, 0, k_colorize_static, 13
-		);
-	}
+	//~ // create 5 pyramids
+	//~ for(int i = 0; i < 5; i++){
+		//~ unsigned char l = 25;
+		//~ float a = i/5+.125;
+		//~ unsigned char x = sin(a)*l;
+		//~ unsigned char z = cos(a)*l;
+		//~ pyramids[i] = load_object(
+			//~ pyramid_v_string,
+			//~ (sizeof(pyramid_v_string)/sizeof(float)),
+			//~ pyramid_f_string,
+			//~ (sizeof(pyramid_f_string)/sizeof(char)),
+			//~ x, 0, z, 0, 0, 0, 0, k_colorize_static, 13
+		//~ );
+	//~ }
 	
 }
 
@@ -928,37 +967,37 @@ void update_temple(){
 }
 
 void draw_stars(){
-	SDL_SetRenderDrawColor( renderer, 15 * 16, 15 * 16, 15 * 16, 0xFF );
+	//~ SDL_SetRenderDrawColor( renderer, 15 * 16, 15 * 16, 15 * 16, 0xFF );
 	for(int i = 0; i < 150; i++){
-		SDL_RenderDrawPoint(renderer, star_list[i].x, star_list[i].y);
+		//~ SDL_RenderDrawPoint(renderer, star_list[i].x, star_list[i].y);
 	}
 }
 
 void draw_temple_background(){
 	
-	SDL_Rect rectfill = { 0, 0, 127, 64 };
-	SDL_SetRenderDrawColor( 
-		renderer, 14 * 16 , 14 * 16, 14 * 16, 
-		0xFF );		
-	SDL_RenderFillRect( renderer, &rectfill );
+	//~ SDL_Rect rectfill = { 0, 0, 127, 64 };
+	//~ SDL_SetRenderDrawColor( 
+		//~ renderer, 14 * 16 , 14 * 16, 14 * 16, 
+		//~ 0xFF );		
+	//~ SDL_RenderFillRect( renderer, &rectfill );
 	
 	draw_stars();
 	
-	SDL_Rect rectfill_lower = { 0, 64, 127, 127 };
-	SDL_SetRenderDrawColor( 
-		renderer, 5 * 16 , 5 * 16, 5 * 16, 
-		0xFF );		
-	SDL_RenderFillRect( renderer, &rectfill_lower );
+	//~ SDL_Rect rectfill_lower = { 0, 64, 127, 127 };
+	//~ SDL_SetRenderDrawColor( 
+		//~ renderer, 5 * 16 , 5 * 16, 5 * 16, 
+		//~ 0xFF );		
+	//~ SDL_RenderFillRect( renderer, &rectfill_lower );
 	
 }
 
 void init_sdl(){
 	
-	SDL_Init ( SDL_INIT_VIDEO );
-	window = SDL_CreateWindow("eg3d", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-	renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED );
-	SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
-	SDL_RenderClear( renderer );
+	//~ SDL_Init ( SDL_INIT_VIDEO );
+	//~ window = SDL_CreateWindow("eg3d", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+	//~ renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED );
+	//~ SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
+	//~ SDL_RenderClear( renderer );
 	
 }
 
@@ -1453,17 +1492,17 @@ void shade_trifill(triangle_t * tri){
 		for(int i = min_y; i < max_y - 1; i++){
 			
 			if ( (i & 1) == 0 ){
-				SDL_Rect rectfill = { nsx, i, nex, i };
-				SDL_SetRenderDrawColor( 
-					renderer, tri->c1 * 16 , tri->c1 * 16, tri->c1 * 16, 
-					0xFF );		
-				SDL_RenderFillRect( renderer, &rectfill );
+				//~ SDL_Rect rectfill = { nsx, i, nex, i };
+				//~ SDL_SetRenderDrawColor( 
+					//~ renderer, tri->c1 * 16 , tri->c1 * 16, tri->c1 * 16, 
+					//~ 0xFF );		
+				//~ SDL_RenderFillRect( renderer, &rectfill );
 			} else {
-				SDL_Rect rectfill = { nsx, i, nex, i };
-				SDL_SetRenderDrawColor( 
-					renderer, tri->c2 * 16 , tri->c2 * 16, tri->c2 * 16, 
-					0xFF );		
-				SDL_RenderFillRect( renderer, &rectfill );
+				//~ SDL_Rect rectfill = { nsx, i, nex, i };
+				//~ SDL_SetRenderDrawColor( 
+					//~ renderer, tri->c2 * 16 , tri->c2 * 16, tri->c2 * 16, 
+					//~ 0xFF );		
+				//~ SDL_RenderFillRect( renderer, &rectfill );
 			}
 			
 			nsx += delta_sx;
@@ -1492,17 +1531,17 @@ void shade_trifill(triangle_t * tri){
 		for(int i = min_y; i < max_y; i++){
 			
 			if ( (i & 1) == 0 ){
-				SDL_Rect rectfill = { nsx, i, nex, i };
-				SDL_SetRenderDrawColor( 
-					renderer, tri->c1 * 16 , tri->c1 * 16, tri->c1 * 16, 
-					0xFF );		
-				SDL_RenderFillRect( renderer, &rectfill );
+				//~ SDL_Rect rectfill = { nsx, i, nex, i };
+				//~ SDL_SetRenderDrawColor( 
+					//~ renderer, tri->c1 * 16 , tri->c1 * 16, tri->c1 * 16, 
+					//~ 0xFF );		
+				//~ SDL_RenderFillRect( renderer, &rectfill );
 			} else {
-				SDL_Rect rectfill = { nsx, i, nex, i };
-				SDL_SetRenderDrawColor( 
-					renderer, tri->c2 * 16 , tri->c2 * 16, tri->c2 * 16, 
-					0xFF );		
-				SDL_RenderFillRect( renderer, &rectfill );
+				//~ SDL_Rect rectfill = { nsx, i, nex, i };
+				//~ SDL_SetRenderDrawColor( 
+					//~ renderer, tri->c2 * 16 , tri->c2 * 16, tri->c2 * 16, 
+					//~ 0xFF );		
+				//~ SDL_RenderFillRect( renderer, &rectfill );
 			}
 			
 			nsx += delta_sx;
@@ -1514,17 +1553,17 @@ void shade_trifill(triangle_t * tri){
 		//where is the original value Y coming into scope here????
 		int i = 0; // just to get it to compile, I guess.
 		if ( (i & 1) == 0 ){
-			SDL_Rect rectfill = { nsx, i, nex, i };
-			SDL_SetRenderDrawColor( 
-				renderer, tri->c1 * 16 , tri->c1 * 16, tri->c1 * 16, 
-				0xFF );		
-			SDL_RenderFillRect( renderer, &rectfill );
+			//~ SDL_Rect rectfill = { nsx, i, nex, i };
+			//~ SDL_SetRenderDrawColor( 
+				//~ renderer, tri->c1 * 16 , tri->c1 * 16, tri->c1 * 16, 
+				//~ 0xFF );		
+			//~ SDL_RenderFillRect( renderer, &rectfill );
 		} else {
-			SDL_Rect rectfill = { nsx, i, nex, i };
-			SDL_SetRenderDrawColor( 
-				renderer, tri->c2 * 16 , tri->c2 * 16, tri->c2 * 16, 
-				0xFF );		
-			SDL_RenderFillRect( renderer, &rectfill );
+			//~ SDL_Rect rectfill = { nsx, i, nex, i };
+			//~ SDL_SetRenderDrawColor( 
+				//~ renderer, tri->c2 * 16 , tri->c2 * 16, tri->c2 * 16, 
+				//~ 0xFF );		
+			//~ SDL_RenderFillRect( renderer, &rectfill );
 		}
 	}
 	
@@ -1569,18 +1608,34 @@ int main(){
 	
 	init();
 	
-	while (!quit){
-		update();
-		draw();
-	}
+	//~ while (!quit){
+		//~ update();
+		//~ draw();
+	//~ }
 	
+	for(int i = 0; i < object_list_used; i++){
+		//~ if ((object_list+i)->faces		!= NULL) free((object_list+i)->faces);
+		//~ if ((object_list+i)->base_faces	!= NULL) free((object_list+i)->base_faces);
+		//~ if ((object_list+i)->vertices	!= NULL) free((object_list+i)->vertices);
+		//~ if ((object_list+i)->t_vertices	!= NULL) free((object_list+i)->t_vertices);
+		//~ if ((object_list+i)->) free(object_list+i);
+	}
 	if(object_list != NULL)   free(object_list);
+	
+	for(int i = 0; i < obstacle_list_used; i++){
+		free((obstacle_list+i)->faces);
+		free((obstacle_list+i)->base_faces);
+		free((obstacle_list+i)->vertices);
+		free((obstacle_list+i)->t_vertices);
+	}
 	if(obstacle_list != NULL) free(obstacle_list);
+	
+	
 	if(triangle_list != NULL) free(triangle_list);
 	
-	SDL_DestroyRenderer( renderer );
-	SDL_DestroyWindow( window );
-	SDL_Quit();
+	//~ SDL_DestroyRenderer( renderer );
+	//~ SDL_DestroyWindow( window );
+	//~ SDL_Quit();
 	
 	return 0;
 }
