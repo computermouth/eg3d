@@ -472,7 +472,7 @@ void init_3d(){
 		object_list = NULL;
 	}
 	
-	particle_list_t p_l = { .fake = NULL };
+	//~ particle_list_t p_l = { .fake = NULL };
 	
 }
 
@@ -916,8 +916,8 @@ void update_temple(){
 	for(int i = 0; i < 5; i++){
 		int l = 35;
 		float a = i / 5 + .125 + cur_frame / 1000;
-		float x = sin(a)*l;
-		float z = cos(a)*l;
+		//~ float x = sin(a)*l; UNUSED
+		//~ float z = cos(a)*l; UNUSED
 		pyramids[i]->x = sin(a)*l;
 		pyramids[i]->z = cos(a)*l;
 		pyramids[i]->y = 10 + sin(a - cur_frame/ 200) * 4;
@@ -1016,9 +1016,9 @@ void update_player(){
 }
 
 void update_camera(){
-	float cam_x = player.x;
-	float cam_y = player.y;
-	float cam_z = player.z;
+	cam_x = player.x;
+	cam_y = player.y;
+	cam_z = player.z;
 	
 	float cam_ax = player.ax;
 	float cam_ay = player.ay;
@@ -1091,9 +1091,9 @@ void update_visible(object_t * object){
 void cam_transform_object(object_t * obj){
 	if(obj->visible){
 		for(int i = 0; i < obj->num_vertices; i++){
-			obj->t_vertices[i][0] + (obj->x - cam_x);
-			obj->t_vertices[i][1] + (obj->x - cam_x);
-			obj->t_vertices[i][2] + (obj->x - cam_x);
+			obj->t_vertices[i][0] += (obj->x - cam_x);
+			obj->t_vertices[i][1] += (obj->x - cam_x);
+			obj->t_vertices[i][2] += (obj->x - cam_x);
 			
 			rotate_cam_point(
 				obj->t_vertices[i][0],
