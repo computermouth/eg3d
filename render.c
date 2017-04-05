@@ -117,11 +117,18 @@ float pyramid_v_string[][3] = {
 	{-3.465, -2.062, 2 }
 };
 
+//~ unsigned char pyramid_f_string[][3] = {
+	//~ { 0x02, 0x03, 0x04 },
+	//~ { 0x01, 0x03, 0x02 },
+	//~ { 0x04, 0x03, 0x01 },
+	//~ { 0x01, 0x02, 0x04 }
+//~ };
+
 unsigned char pyramid_f_string[][3] = {
-	{ 0x02, 0x03, 0x04 },
-	{ 0x01, 0x03, 0x02 },
-	{ 0x04, 0x03, 0x01 },
-	{ 0x01, 0x02, 0x04 }
+	{ 0x01, 0x02, 0x03 },
+	{ 0x00, 0x02, 0x01 },
+	{ 0x03, 0x02, 0x00 },
+	{ 0x00, 0x01, 0x03 }
 };
 
 float column_v_string[][3] = {
@@ -147,39 +154,74 @@ float column_v_string[][3] = {
 	{ 2.535, 17.344, 0}
 };
 
+//~ unsigned char column_f_string[][3] = {
+	//~ { 0x06, 0x02, 0x01 },
+	//~ { 0x07, 0x03, 0x02 },
+	//~ { 0x08, 0x04, 0x03 },
+	//~ { 0x05, 0x01, 0x04 },
+	//~ { 0x05, 0x08, 0x0c },
+	//~ { 0x10, 0x0d, 0x0c },
+	//~ { 0x08, 0x07, 0x0b },
+	//~ { 0x07, 0x06, 0x0a },
+	//~ { 0x06, 0x05, 0x09 },
+	//~ { 0x10, 0x14, 0x11 },
+	//~ { 0x0f, 0x10, 0x0b },
+	//~ { 0x0e, 0x0f, 0x0a },
+	//~ { 0x0d, 0x0e, 0x09 },
+	//~ { 0x0f, 0x13, 0x14 },
+	//~ { 0x0e, 0x12, 0x13 },
+	//~ { 0x0d, 0x11, 0x12 },
+	//~ { 0x0d, 0x09, 0x0c },
+	//~ { 0x10, 0x0c, 0x0b },
+	//~ { 0x0f, 0x0b, 0x0a },
+	//~ { 0x0e, 0x0a, 0x09 },
+	//~ { 0x05, 0x06, 0x01 },
+	//~ { 0x06, 0x07, 0x02 },
+	//~ { 0x07, 0x08, 0x03 },
+	//~ { 0x08, 0x05, 0x04 },
+	//~ { 0x09, 0x05, 0x0c },
+	//~ { 0x0c, 0x08, 0x0b },
+	//~ { 0x0b, 0x07, 0x0a },
+	//~ { 0x0a, 0x06, 0x09 },
+	//~ { 0x0d, 0x10, 0x11 },
+	//~ { 0x10, 0x0f, 0x14 },
+	//~ { 0x0f, 0x0e, 0x13 },
+	//~ { 0x0e, 0x0d, 0x12 }
+//~ };
+
 unsigned char column_f_string[][3] = {
+	{ 0x05, 0x01, 0x00 },
 	{ 0x06, 0x02, 0x01 },
 	{ 0x07, 0x03, 0x02 },
-	{ 0x08, 0x04, 0x03 },
-	{ 0x05, 0x01, 0x04 },
-	{ 0x05, 0x08, 0x0c },
-	{ 0x10, 0x0d, 0x0c },
-	{ 0x08, 0x07, 0x0b },
+	{ 0x04, 0x00, 0x03 },
+	{ 0x04, 0x07, 0x0b },
+	{ 0x0f, 0x0c, 0x0b },
 	{ 0x07, 0x06, 0x0a },
 	{ 0x06, 0x05, 0x09 },
-	{ 0x10, 0x14, 0x11 },
-	{ 0x0f, 0x10, 0x0b },
+	{ 0x05, 0x04, 0x08 },
+	{ 0x0f, 0x13, 0x10 },
 	{ 0x0e, 0x0f, 0x0a },
 	{ 0x0d, 0x0e, 0x09 },
-	{ 0x0f, 0x13, 0x14 },
+	{ 0x0c, 0x0d, 0x08 },
 	{ 0x0e, 0x12, 0x13 },
 	{ 0x0d, 0x11, 0x12 },
-	{ 0x0d, 0x09, 0x0c },
-	{ 0x10, 0x0c, 0x0b },
+	{ 0x0c, 0x10, 0x11 },
+	{ 0x0c, 0x08, 0x0b },
 	{ 0x0f, 0x0b, 0x0a },
 	{ 0x0e, 0x0a, 0x09 },
+	{ 0x0d, 0x09, 0x08 },
+	{ 0x04, 0x05, 0x00 },
 	{ 0x05, 0x06, 0x01 },
 	{ 0x06, 0x07, 0x02 },
-	{ 0x07, 0x08, 0x03 },
-	{ 0x08, 0x05, 0x04 },
-	{ 0x09, 0x05, 0x0c },
-	{ 0x0c, 0x08, 0x0b },
+	{ 0x07, 0x04, 0x03 },
+	{ 0x08, 0x04, 0x0b },
 	{ 0x0b, 0x07, 0x0a },
 	{ 0x0a, 0x06, 0x09 },
-	{ 0x0d, 0x10, 0x11 },
-	{ 0x10, 0x0f, 0x14 },
+	{ 0x09, 0x05, 0x08 },
+	{ 0x0c, 0x0f, 0x10 },
 	{ 0x0f, 0x0e, 0x13 },
-	{ 0x0e, 0x0d, 0x12 }
+	{ 0x0e, 0x0d, 0x12 },
+	{ 0x0d, 0x0c, 0x11 }
 };
 
 float hole_v_string[][3] = {
@@ -201,39 +243,74 @@ float hole_v_string[][3] = {
 	{ -1.125, -2.25, -1.129 }
 };
 
+//~ unsigned char hole_f_string[][3] = {
+	//~ { 0x03, 0x04, 0x10 },
+	//~ { 0x07, 0x0b, 0x0c },
+	//~ { 0x01, 0x05, 0x06 },
+	//~ { 0x02, 0x06, 0x07 },
+	//~ { 0x07, 0x08, 0x04 },
+	//~ { 0x01, 0x04, 0x08 },
+	//~ { 0x0b, 0x0a, 0x0e },
+	//~ { 0x06, 0x0a, 0x0b },
+	//~ { 0x08, 0x0c, 0x09 },
+	//~ { 0x05, 0x09, 0x0a },
+	//~ { 0x09, 0x0d, 0x0e },
+	//~ { 0x03, 0x0f, 0x0e },
+	//~ { 0x01, 0x0d, 0x10 },
+	//~ { 0x02, 0x0e, 0x0d },
+	//~ { 0x10, 0x0d, 0x09 },
+	//~ { 0x0b, 0x0f, 0x10 },
+	//~ { 0x0f, 0x03, 0x10 },
+	//~ { 0x08, 0x07, 0x0c },
+	//~ { 0x02, 0x01, 0x06 },
+	//~ { 0x03, 0x02, 0x07 },
+	//~ { 0x03, 0x07, 0x04 },
+	//~ { 0x05, 0x01, 0x08 },
+	//~ { 0x0f, 0x0b, 0x0e },
+	//~ { 0x07, 0x06, 0x0b },
+	//~ { 0x05, 0x08, 0x09 },
+	//~ { 0x06, 0x05, 0x0a },
+	//~ { 0x0a, 0x09, 0x0e },
+	//~ { 0x02, 0x03, 0x0e },
+	//~ { 0x04, 0x01, 0x10 },
+	//~ { 0x01, 0x02, 0x0d },
+	//~ { 0x0c, 0x10, 0x09 },
+	//~ { 0x0c, 0x0b, 0x10 }
+//~ };
+
 unsigned char hole_f_string[][3] = {
-	{ 0x03, 0x04, 0x10 },
-	{ 0x07, 0x0b, 0x0c },
-	{ 0x01, 0x05, 0x06 },
-	{ 0x02, 0x06, 0x07 },
-	{ 0x07, 0x08, 0x04 },
-	{ 0x01, 0x04, 0x08 },
-	{ 0x0b, 0x0a, 0x0e },
+	{ 0x02, 0x03, 0x0f },
 	{ 0x06, 0x0a, 0x0b },
-	{ 0x08, 0x0c, 0x09 },
+	{ 0x00, 0x04, 0x05 },
+	{ 0x01, 0x05, 0x06 },
+	{ 0x06, 0x07, 0x03 },
+	{ 0x00, 0x03, 0x07 },
+	{ 0x0a, 0x09, 0x0d },
 	{ 0x05, 0x09, 0x0a },
-	{ 0x09, 0x0d, 0x0e },
-	{ 0x03, 0x0f, 0x0e },
-	{ 0x01, 0x0d, 0x10 },
+	{ 0x07, 0x0b, 0x08 },
+	{ 0x04, 0x08, 0x09 },
+	{ 0x08, 0x0c, 0x0d },
 	{ 0x02, 0x0e, 0x0d },
-	{ 0x10, 0x0d, 0x09 },
-	{ 0x0b, 0x0f, 0x10 },
-	{ 0x0f, 0x03, 0x10 },
-	{ 0x08, 0x07, 0x0c },
-	{ 0x02, 0x01, 0x06 },
-	{ 0x03, 0x02, 0x07 },
-	{ 0x03, 0x07, 0x04 },
-	{ 0x05, 0x01, 0x08 },
-	{ 0x0f, 0x0b, 0x0e },
+	{ 0x00, 0x0c, 0x0f },
+	{ 0x01, 0x0d, 0x0c },
+	{ 0x0f, 0x0c, 0x08 },
+	{ 0x0a, 0x0e, 0x0f },
+	{ 0x0e, 0x02, 0x0f },
 	{ 0x07, 0x06, 0x0b },
-	{ 0x05, 0x08, 0x09 },
+	{ 0x01, 0x00, 0x05 },
+	{ 0x02, 0x01, 0x06 },
+	{ 0x02, 0x06, 0x03 },
+	{ 0x04, 0x00, 0x07 },
+	{ 0x0e, 0x0a, 0x0d },
 	{ 0x06, 0x05, 0x0a },
-	{ 0x0a, 0x09, 0x0e },
-	{ 0x02, 0x03, 0x0e },
-	{ 0x04, 0x01, 0x10 },
+	{ 0x04, 0x07, 0x08 },
+	{ 0x05, 0x04, 0x09 },
+	{ 0x09, 0x08, 0x0d },
 	{ 0x01, 0x02, 0x0d },
-	{ 0x0c, 0x10, 0x09 },
-	{ 0x0c, 0x0b, 0x10 }
+	{ 0x03, 0x00, 0x0f },
+	{ 0x00, 0x01, 0x0c },
+	{ 0x0b, 0x0f, 0x08 },
+	{ 0x0b, 0x0a, 0x0f }
 };
 
 float fountain_v_string[][3] = {
@@ -264,50 +341,96 @@ float fountain_v_string[][3] = {
 	{ -2.422, 0.0547, -0.7891 }
 };
 
+//~ unsigned char fountain_f_string[][3] = {
+	//~ { 0x02, 0x04, 0x03 },
+	//~ { 0x04, 0x06, 0x05 },
+	//~ { 0x06, 0x08, 0x07 },
+	//~ { 0x0a, 0x0f, 0x0b },
+	//~ { 0x0a, 0x02, 0x01 },
+	//~ { 0x08, 0x0a, 0x09 },
+	//~ { 0x01, 0x15, 0x19 },
+	//~ { 0x0f, 0x14, 0x10 },
+	//~ { 0x08, 0x0e, 0x0f },
+	//~ { 0x06, 0x0d, 0x0e },
+	//~ { 0x04, 0x0c, 0x0d },
+	//~ { 0x02, 0x0b, 0x0c },
+	//~ { 0x11, 0x10, 0x14 },
+	//~ { 0x0e, 0x13, 0x14 },
+	//~ { 0x0d, 0x12, 0x13 },
+	//~ { 0x0c, 0x11, 0x12 },
+	//~ { 0x0b, 0x10, 0x11 },
+	//~ { 0x09, 0x19, 0x18 },
+	//~ { 0x05, 0x07, 0x18 },
+	//~ { 0x03, 0x05, 0x17 },
+	//~ { 0x03, 0x16, 0x15 },
+	//~ { 0x01, 0x02, 0x03 },
+	//~ { 0x03, 0x04, 0x05 },
+	//~ { 0x05, 0x06, 0x07 },
+	//~ { 0x02, 0x0a, 0x0b },
+	//~ { 0x09, 0x0a, 0x01 },
+	//~ { 0x07, 0x08, 0x09 },
+	//~ { 0x09, 0x01, 0x19 },
+	//~ { 0x0b, 0x0f, 0x10 },
+	//~ { 0x0a, 0x08, 0x0f },
+	//~ { 0x08, 0x06, 0x0e },
+	//~ { 0x06, 0x04, 0x0d },
+	//~ { 0x04, 0x02, 0x0c },
+	//~ { 0x13, 0x12, 0x11 },
+	//~ { 0x13, 0x11, 0x14 },
+	//~ { 0x0e, 0x0d, 0x13 },
+	//~ { 0x0f, 0x0e, 0x14 },
+	//~ { 0x0d, 0x0c, 0x12 },
+	//~ { 0x0c, 0x0b, 0x11 },
+	//~ { 0x07, 0x09, 0x18 },
+	//~ { 0x17, 0x05, 0x18 },
+	//~ { 0x16, 0x03, 0x17 },
+	//~ { 0x01, 0x03, 0x15 }
+//~ };
+
 unsigned char fountain_f_string[][3] = {
-	{ 0x02, 0x04, 0x03 },
-	{ 0x04, 0x06, 0x05 },
-	{ 0x06, 0x08, 0x07 },
-	{ 0x0a, 0x0f, 0x0b },
-	{ 0x0a, 0x02, 0x01 },
-	{ 0x08, 0x0a, 0x09 },
-	{ 0x01, 0x15, 0x19 },
-	{ 0x0f, 0x14, 0x10 },
-	{ 0x08, 0x0e, 0x0f },
-	{ 0x06, 0x0d, 0x0e },
-	{ 0x04, 0x0c, 0x0d },
-	{ 0x02, 0x0b, 0x0c },
-	{ 0x11, 0x10, 0x14 },
-	{ 0x0e, 0x13, 0x14 },
+	{ 0x01, 0x03, 0x02 },
+	{ 0x03, 0x05, 0x04 },
+	{ 0x05, 0x07, 0x06 },
+	{ 0x09, 0x0e, 0x0a },
+	{ 0x09, 0x01, 0x00 },
+	{ 0x07, 0x09, 0x08 },
+	{ 0x00, 0x14, 0x18 },
+	{ 0x0e, 0x13, 0x0f },
+	{ 0x07, 0x0d, 0x0e },
+	{ 0x05, 0x0c, 0x0d },
+	{ 0x03, 0x0b, 0x0c },
+	{ 0x01, 0x0a, 0x0b },
+	{ 0x10, 0x0f, 0x13 },
 	{ 0x0d, 0x12, 0x13 },
 	{ 0x0c, 0x11, 0x12 },
 	{ 0x0b, 0x10, 0x11 },
-	{ 0x09, 0x19, 0x18 },
-	{ 0x05, 0x07, 0x18 },
-	{ 0x03, 0x05, 0x17 },
-	{ 0x03, 0x16, 0x15 },
-	{ 0x01, 0x02, 0x03 },
-	{ 0x03, 0x04, 0x05 },
-	{ 0x05, 0x06, 0x07 },
-	{ 0x02, 0x0a, 0x0b },
-	{ 0x09, 0x0a, 0x01 },
-	{ 0x07, 0x08, 0x09 },
-	{ 0x09, 0x01, 0x19 },
-	{ 0x0b, 0x0f, 0x10 },
-	{ 0x0a, 0x08, 0x0f },
-	{ 0x08, 0x06, 0x0e },
-	{ 0x06, 0x04, 0x0d },
-	{ 0x04, 0x02, 0x0c },
-	{ 0x13, 0x12, 0x11 },
-	{ 0x13, 0x11, 0x14 },
-	{ 0x0e, 0x0d, 0x13 },
-	{ 0x0f, 0x0e, 0x14 },
+	{ 0x0a, 0x0f, 0x10 },
+	{ 0x08, 0x18, 0x17 },
+	{ 0x04, 0x06, 0x17 },
+	{ 0x02, 0x04, 0x16 },
+	{ 0x02, 0x15, 0x14 },
+	{ 0x00, 0x01, 0x02 },
+	{ 0x02, 0x03, 0x04 },
+	{ 0x04, 0x05, 0x06 },
+	{ 0x01, 0x09, 0x0a },
+	{ 0x08, 0x09, 0x00 },
+	{ 0x06, 0x07, 0x08 },
+	{ 0x08, 0x00, 0x18 },
+	{ 0x0a, 0x0e, 0x0f },
+	{ 0x09, 0x07, 0x0e },
+	{ 0x07, 0x05, 0x0d },
+	{ 0x05, 0x03, 0x0c },
+	{ 0x03, 0x01, 0x0b },
+	{ 0x12, 0x11, 0x10 },
+	{ 0x12, 0x10, 0x13 },
 	{ 0x0d, 0x0c, 0x12 },
+	{ 0x0e, 0x0d, 0x13 },
 	{ 0x0c, 0x0b, 0x11 },
-	{ 0x07, 0x09, 0x18 },
-	{ 0x17, 0x05, 0x18 },
-	{ 0x16, 0x03, 0x17 },
-	{ 0x01, 0x03, 0x15 }
+	{ 0x0b, 0x0a, 0x10 },
+	{ 0x06, 0x08, 0x17 },
+	{ 0x16, 0x04, 0x17 },
+	{ 0x15, 0x02, 0x16 },
+	{ 0x00, 0x02, 0x14 }
 };
 
 typedef struct {
@@ -340,10 +463,10 @@ typedef struct {
 star_t star_list[150];
 
 typedef struct {
-	float * vertices[3];
-	unsigned char * base_faces[3];
-	unsigned char * faces[3];
-	float * t_vertices[3];
+	float ** vertices;
+	unsigned char ** base_faces;
+	unsigned char ** faces;
+	float ** t_vertices;
 	int num_vertices;
 	int num_faces;
 	int x;
@@ -355,9 +478,9 @@ typedef struct {
 	float tx;
 	float ty;
 	float tz;
-	int ax;
-	int ay;
-	int az;
+	float ax;
+	float ay;
+	float az;
 	float sx;
 	float sy;
 	int color;
@@ -386,8 +509,6 @@ typedef struct {
 	int age;
 	int health;
 } object_t;
-
-
 
 typedef struct {
 	float p1x;
@@ -491,18 +612,12 @@ void init_stars(){
 }
 
 object_t * add_object_to_list(){
-	
 	if (object_list_used == object_list_length){
 		object_list_length += 2;
 		object_list = realloc(object_list, (sizeof(object_t)) * object_list_length);
 	}
 	
-	// pointer of object_list[index] is now new_object's pointer
-	//~ *(object_list + object_list_used) = *new_obj;
-	
-	object_t * return_object = (object_list + object_list_used);
-	
-	printf("obj: %p\n", return_object);
+	object_t * return_object = &object_list[object_list_used];
 	object_list_used++;
 	
 	return return_object;
@@ -530,8 +645,6 @@ void del_obstacle_from_list(int i){
 	obstacle_list_used--;
 }
 
-
-
 void add_triangle_to_list(triangle_t * new_tri){
 	
 	if (triangle_list_used == triangle_list_length){
@@ -553,11 +666,6 @@ void del_triangle_from_list(int i){
 object_t * new_object(){
 	object_t * obj = add_object_to_list();
 	
-	printf("obj: %p\n", obj);
-	//~ obj->vertices[0] =  NULL ;
-	//~ obj->base_faces[0] =  NULL ;
-	//~ obj->faces[0] =  NULL ;
-	//~ obj->t_vertices[0] =  NULL ;
 	obj->num_faces = 0;
 	obj->num_vertices = 0;
 	obj->x = 0;
@@ -669,30 +777,19 @@ void generate_cam_matrix_transform(int xa, int ya, int za){
 
 }
 
-void rotate_point(float ** v, float ** t){
-	//~ printf("v[0]: %f\n", (float)*v[0]);
-	//~ printf("t[0]: %f\n", (float)*t[0]);
-	printf("v[0]: %f\tv[1]: %f\tv[2]: %f\t\n", **v+0, **v+1, **v+2);
-	return;
-	//~ *t[0] = ((float)*v[0] * mat00 + (float)*v[1] *mat10 + (float)*v[2] * mat20);
-	//~ *t[1] = ((float)*v[0] * mat01 + (float)*v[1] *mat11 + (float)*v[2] * mat21);
-	//~ *t[2] = ((float)*v[0] * mat02 + (float)*v[1] *mat12 + (float)*v[2] * mat22);
+void rotate_point(float v[3], float t[3]){
+	t[0] = (v[0] * mat00 + v[1] *mat10 + v[2] * mat20);
+	t[1] = (v[0] * mat01 + v[1] *mat11 + v[2] * mat21);
+	t[2] = (v[0] * mat02 + v[1] *mat12 + v[2] * mat22);
 }
 
 void transform_object(object_t * object){
 	//shouldn't this not be happening if all the axes are 0?
-	printf("k4\n");
-	printf("vis2: %d", object->visible);
 	if(object->visible){
-	printf("k4.25\n");
 		generate_matrix_transform(object->ax, object->ay, object->az);
-	printf("k4.5\n");
 		for(int i = 0; i < object->num_vertices; i++){
-	printf("k5\n");
-		//~ int i = 0;
-			printf("o[%d][0] %f\to[][1] %f\to[][2] %f\n", i, object->vertices[i][0], object->vertices[i][1], object->vertices[i][2]);
 			//pass direct access to objects verts
-			rotate_point(&object->vertices[i], &object->t_vertices[i]);
+			rotate_point(object->vertices[i], object->t_vertices[i]);
 		}
 	}
 }
@@ -700,13 +797,14 @@ void transform_object(object_t * object){
 void set_radius(object_t * object){
 	
 	for(int i = 0; i < object->num_vertices; i++){
-		int max_test = 
-			object->vertices[i][1] * object->vertices[i][1] + 
-			object->vertices[i][2] * object->vertices[i][2] + 
-			object->vertices[i][3] * object->vertices[i][3];
-			
-		if( max_test > object->radius)
-			object->radius = max_test;
+		object->radius = MAX(
+			object->radius, 
+			(
+				object->vertices[i][0] * object->vertices[i][0] + 
+				object->vertices[i][1] * object->vertices[i][1] + 
+				object->vertices[i][2] * object->vertices[i][2]
+			)
+		);
 	}
 	object->radius=sqrt(object->radius);
 	
@@ -715,19 +813,19 @@ void set_radius(object_t * object){
 void set_bounding_box(object_t * object){
 	
 	for(int i = 0; i < object->num_vertices; i++){
-		if( object->min_x > object->vertices[i][1] )
-			object->min_x = object->vertices[i][1];
-		if( object->min_y > object->vertices[i][2] )
-			object->min_y = object->vertices[i][2];
-		if( object->min_z > object->vertices[i][3] )
-			object->min_z = object->vertices[i][3];
+		if( object->min_x > object->vertices[i][0] )
+			object->min_x = object->vertices[i][0];
+		if( object->min_y > object->vertices[i][1] )
+			object->min_y = object->vertices[i][1];
+		if( object->min_z > object->vertices[i][2] )
+			object->min_z = object->vertices[i][2];
 		
-		if( object->max_x < object->vertices[i][1] )
-			object->max_x = object->vertices[i][1];
-		if( object->max_y < object->vertices[i][2] )
-			object->max_y = object->vertices[i][2];
-		if( object->max_z < object->vertices[i][3] )
-			object->max_z = object->vertices[i][3];
+		if( object->max_x < object->vertices[i][0] )
+			object->max_x = object->vertices[i][0];
+		if( object->max_y < object->vertices[i][1] )
+			object->max_y = object->vertices[i][1];
+		if( object->max_z < object->vertices[i][2] )
+			object->max_z = object->vertices[i][2];
 	}
 
 }
@@ -765,16 +863,16 @@ void color_faces(object_t * object){
 	
 	for(int i = 0; i < object->num_faces; i++){
 		unsigned char * face = object->faces[i];
-		float p1x = object->t_vertices[face[1]][1];
-		float p1y = object->t_vertices[face[1]][2];
-		float p1z = object->t_vertices[face[1]][3];
-		float p2x = object->t_vertices[face[2]][1];
-		float p2y = object->t_vertices[face[2]][2];
-		float p2z = object->t_vertices[face[2]][3];
-		float p3x = object->t_vertices[face[3]][1];
-		float p3y = object->t_vertices[face[3]][2];
-		float p3z = object->t_vertices[face[3]][3];
-		
+		float p1x = object->t_vertices[face[0]][0];
+		float p1y = object->t_vertices[face[0]][1];
+		float p1z = object->t_vertices[face[0]][2];
+		float p2x = object->t_vertices[face[1]][0];
+		float p2y = object->t_vertices[face[1]][1];
+		float p2z = object->t_vertices[face[1]][2];
+		float p3x = object->t_vertices[face[2]][0];
+		float p3y = object->t_vertices[face[2]][1];
+		float p3z = object->t_vertices[face[2]][2];
+	
 		float nx, ny, nz;
 		vector_cross_3d(
 			p1x, p1y, p1z,
@@ -793,9 +891,9 @@ void color_faces(object_t * object){
 		else mid = b * (1-k_ambient) + k_ambient;
 		
 		if(object->color_mode == k_multi_color_dynamic){
-			color_shade(object->base_faces[i][4], mid, &face[4], &face[5]);
+			color_shade(object->base_faces[i][3], mid, &face[3], &face[4]);
 		} else {
-			color_shade(object->color, mid, &face[4], &face[5]);			
+			color_shade(object->color, mid, &face[3], &face[4]);			
 		}
 		
 	}
@@ -803,60 +901,58 @@ void color_faces(object_t * object){
 }
 
 object_t * load_object(
-	float (*object_vertices)[3], unsigned short num_vertices,
-	unsigned char (*object_faces)[3], unsigned short num_faces,
+	float object_vertices[][3], unsigned short num_vertices,
+	unsigned char object_faces[][3], unsigned short num_faces,
 	int x, int y, int z, int ax, int ay, int az,
 	int obstacle, int color_mode, int color){
 		
 	object_t * object = new_object();
-	printf("obj: %p\n", object);
-	printf("k1\n");
-	printf("vis: %d\n", object->visible);
 	
+	object->num_vertices = num_vertices;
+	object->num_faces = num_faces;
+		
 	//copy verts
-	//~ for(int i = 0; i < num_vertices; i++)
-		//~ object->vertices[i] = malloc(sizeof (float[3]));
-		*object->vertices = malloc(sizeof(float*) * 3);
+	object->vertices = malloc( sizeof(float*) * num_vertices );
 	for(int i = 0; i < num_vertices; i++){
+		object->vertices[i] = malloc( sizeof(float) * 3 );
 		for(int j = 0; j < 3; j++){
 			object->vertices[i][j] = object_vertices[i][j];
 		}
 	}
 	
-	return object;//REMOVE LATER
-	printf("vis: %d\n", object->visible);
 	//copy for translated verts
-	//~ for(int i = 0; i < num_vertices; i++)
-		//~ object->t_vertices[i] = malloc(sizeof (float[3]));
-		*object->t_vertices = malloc(sizeof(float*) * 3);
-	for(int i = 0; i < num_vertices; i++)
+	object->t_vertices = malloc( sizeof(float*) * num_vertices );
+	for(int i = 0; i < num_vertices; i++){
+		object->t_vertices[i] = malloc( sizeof(float) * 3 );
 		for(int j = 0; j < 3; j++){
 			object->t_vertices[i][j] = object_vertices[i][j];
 		}
+	}
 	
-	printf("vis: %d\n", object->visible);
+	
 	//copy faces
-	//~ for(int i = 0; i < num_vertices; i++)
-		//~ object->faces[i] = malloc(sizeof (unsigned char[3]));
-		*object->faces = malloc(sizeof(unsigned char*) * 3);
-	for(int i = 0; i < num_faces; i++)
-		for(int j = 0; j < 3; j++)
+	object->faces = malloc( sizeof(unsigned char*) * num_faces );
+	for(int i = 0; i < num_faces; i++){
+		object->faces[i] = malloc( sizeof(unsigned char) * 5 );
+		for(int j = 0; j < 3; j++){
 			object->faces[i][j] = object_faces[i][j];
-		
-	printf("vis: %d\n", object->visible);
+		}
+	}
+
 	//base faces for shading
 	if (color_mode != k_preset_color){
-		//~ for(int i = 0; i < num_vertices; i++)
-			//~ object->base_faces[i] = malloc(sizeof (unsigned char[3]));
-			*object->base_faces = malloc(sizeof(unsigned char*) * 3);
-		for(int i = 0; i < num_faces; i++)
-			for(int j = 0; j < 3; j++)
+		object->base_faces = malloc( sizeof(unsigned char*) * num_faces );
+		for(int i = 0; i < num_faces; i++){
+			object->base_faces[i] = malloc( sizeof(unsigned char) * 5 );
+			for(int j = 0; j < 3; j++){
 				object->base_faces[i][j] = object_faces[i][j];
+			}
+		}
 	}
-		
-	//move everything above into new_object, and pass it all this shit^^
 	
-	printf("vis: %d\n", object->visible);
+	
+	
+	//move everything above into new_object, and pass it all this shit^^
 	
 	object->radius = 0;
 	object->ax = ax;
@@ -865,12 +961,13 @@ object_t * load_object(
 	object->num_vertices = num_vertices;
 	object->num_faces = num_faces;
 	
-	printf("vis: %d\n", object->visible);
 	transform_object(object);
 	
-	printf("k3\n");
+	
 	set_radius(object);
 	set_bounding_box(object);
+	
+	
 	
 	object->x = x;
 	object->y = y;
@@ -883,9 +980,11 @@ object_t * load_object(
 	if(obstacle)
 		add_obstacle_to_list(object);
 	
-	if ( color_mode==k_colorize_static || 
-		color_mode==k_colorize_dynamic || 
-		color_mode==k_multi_color_static ){
+	
+	//~ return object;//REMOVE LATER
+	if ( color_mode == k_colorize_static || 
+		color_mode == k_colorize_dynamic || 
+		color_mode == k_multi_color_static ){
 		color_faces(object);
 	}
 	
@@ -897,7 +996,7 @@ void load_temple(){
 	init_stars();
 	
 	// create 5 columns
-	//~ for(int i = 0; i < 5; i++){
+	for(int i = 0; i < 5; i++){
 	int i = 0;
 		unsigned char l = 30;
 		unsigned char x = sin(i/5)*l;
@@ -906,48 +1005,52 @@ void load_temple(){
 			column_v_string,
 			(sizeof(column_v_string)/sizeof(column_v_string[0])),
 			column_f_string,
-			(sizeof(column_v_string)/sizeof(column_v_string[0])),
+			(sizeof(column_f_string)/sizeof(column_f_string[0])),
 			x, 0, z, 0, 0, 0, 1, k_colorize_static, 9
 		);
-	//~ }
+	}
 	
-	//~ //load fountain
-	//~ load_object(
-		//~ fountain_v_string,
-		//~ (sizeof(fountain_v_string)/sizeof(float)),
-		//~ fountain_f_string,
-		//~ (sizeof(fountain_f_string)/sizeof(char)),
-		//~ 0,0,0,0,.08,0,1,k_colorize_static,14
-	//~ );
+	//load fountain
+	load_object(
+		fountain_v_string,
+		(sizeof(fountain_v_string)/sizeof(fountain_v_string[0])),
+		fountain_f_string,
+		(sizeof(fountain_f_string)/sizeof(fountain_f_string[0])),
+		0,0,0,0,.08,0,1,k_colorize_static,14
+	);
 	
-	//~ //load hole
-	//~ hole = load_object(
-		//~ hole_v_string,
-		//~ (sizeof(hole_v_string)/sizeof(float)),
-		//~ hole_f_string,
-		//~ (sizeof(hole_f_string)/sizeof(char)),
-		//~ 0,11,0,.125,.125,.125,0,k_colorize_dynamic,12
-	//~ );
+	//load hole
+	hole = load_object(
+		hole_v_string,
+		(sizeof(hole_v_string)/sizeof(hole_v_string[0])),
+		hole_f_string,
+		(sizeof(hole_f_string)/sizeof(hole_f_string[0])),
+		0,11,0,.125,.125,.125,0,k_colorize_dynamic,12
+	);
 	
-	//~ // create 5 pyramids
-	//~ for(int i = 0; i < 5; i++){
-		//~ unsigned char l = 25;
-		//~ float a = i/5+.125;
-		//~ unsigned char x = sin(a)*l;
-		//~ unsigned char z = cos(a)*l;
-		//~ pyramids[i] = load_object(
-			//~ pyramid_v_string,
-			//~ (sizeof(pyramid_v_string)/sizeof(float)),
-			//~ pyramid_f_string,
-			//~ (sizeof(pyramid_f_string)/sizeof(char)),
-			//~ x, 0, z, 0, 0, 0, 0, k_colorize_static, 13
-		//~ );
-	//~ }
+	printf("hole_ax: %f\n", hole->ax);
+	
+	// create 5 pyramids
+	for(int i = 0; i < 5; i++){
+		unsigned char l = 25;
+		float a = i/5+.125;
+		unsigned char x = sin(a)*l;
+		unsigned char z = cos(a)*l;
+		pyramids[i] = load_object(
+			pyramid_v_string,
+			(sizeof(pyramid_v_string)/sizeof(pyramid_v_string[0])),
+			pyramid_f_string,
+			(sizeof(pyramid_f_string)/sizeof(pyramid_f_string[0])),
+			x, 0, z, 0, 0, 0, 0, k_colorize_static, 13
+		);
+	}
 	
 }
 
 void update_temple(){
+	printf("hole_ax: %f\n", hole->ax);
 	hole->ax += -.004;
+	return;
 	hole->az += .001;
 	hole->ax += .002;
 	hole->y = 11 + sin(cur_frame/100);
@@ -1609,25 +1712,35 @@ int main(){
 	init();
 	
 	//~ while (!quit){
-		//~ update();
+		update();
 		//~ draw();
 	//~ }
 	
 	for(int i = 0; i < object_list_used; i++){
-		//~ if ((object_list+i)->faces		!= NULL) free((object_list+i)->faces);
-		//~ if ((object_list+i)->base_faces	!= NULL) free((object_list+i)->base_faces);
-		//~ if ((object_list+i)->vertices	!= NULL) free((object_list+i)->vertices);
-		//~ if ((object_list+i)->t_vertices	!= NULL) free((object_list+i)->t_vertices);
-		//~ if ((object_list+i)->) free(object_list+i);
+		//free the verts
+		for(int j = 0; j < (object_list + i)->num_vertices; j++){
+			free((object_list + i)->vertices[j]);
+			free((object_list + i)->t_vertices[j]);
+		}
+		free((object_list + i)->vertices);
+		free((object_list + i)->t_vertices);
+		
+		//free the faces
+		for(int j = 0; j < (object_list + i)->num_faces; j++){
+			free((object_list + i)->faces[j]);
+			free((object_list + i)->base_faces[j]);
+		}
+		free((object_list + i)->faces);
+		free((object_list + i)->base_faces);
 	}
-	if(object_list != NULL)   free(object_list);
+	if(object_list != NULL) free(object_list);
 	
-	for(int i = 0; i < obstacle_list_used; i++){
-		free((obstacle_list+i)->faces);
-		free((obstacle_list+i)->base_faces);
-		free((obstacle_list+i)->vertices);
-		free((obstacle_list+i)->t_vertices);
-	}
+	//~ for(int i = 0; i < obstacle_list_used; i++){
+		//~ free((obstacle_list+i)->faces);
+		//~ free((obstacle_list+i)->base_faces);
+		//~ free((obstacle_list+i)->vertices);
+		//~ free((obstacle_list+i)->t_vertices);
+	//~ }
 	if(obstacle_list != NULL) free(obstacle_list);
 	
 	
