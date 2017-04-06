@@ -1048,9 +1048,9 @@ void load_temple(){
 }
 
 void update_temple(){
+	return; // REMOVE
 	printf("hole_ax: %f\n", hole->ax);
 	hole->ax += -.004;
-	return;
 	hole->az += .001;
 	hole->ax += .002;
 	hole->y = 11 + sin(cur_frame/100);
