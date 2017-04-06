@@ -522,7 +522,7 @@ typedef struct {
 	int c2;
 }triangle_t;
 
-triangle_t * triangle_list = NULL;
+triangle_t ** triangle_list = NULL;
 int triangle_list_used = 0;
 int triangle_list_length = 0;
 
@@ -650,11 +650,12 @@ void add_triangle_to_list(triangle_t * new_tri){
 	
 	if (triangle_list_used == triangle_list_length){
 		triangle_list_length += 2;
-		triangle_list = realloc(triangle_list, (sizeof(triangle_t)) * triangle_list_length);
+		triangle_list = realloc(triangle_list, (sizeof(triangle_t*)) * triangle_list_length);
 	}
 	
 	// pointer of triangle_list[index] is now new_triangle's pointer
-	*(triangle_list + triangle_list_used) = *new_tri;
+	new_tri = malloc(sizeof (triangle_t));
+	triangle_list[triangle_list_used] = new_tri;
 	
 	triangle_list_used++;
 }
@@ -913,18 +914,18 @@ object_t * load_object(
 	object->num_faces = num_faces;
 		
 	//copy verts
-	object->vertices = malloc( sizeof(float*) * num_vertices );
+	object->vertices = calloc( num_vertices, sizeof(float*) );
 	for(int i = 0; i < num_vertices; i++){
-		object->vertices[i] = malloc( sizeof(float) * 3 );
+		object->vertices[i] = calloc( 3, sizeof(float) );
 		for(int j = 0; j < 3; j++){
 			object->vertices[i][j] = object_vertices[i][j];
 		}
 	}
 	
 	//copy for translated verts
-	object->t_vertices = malloc( sizeof(float*) * num_vertices );
+	object->t_vertices = calloc( num_vertices, sizeof(float*) );
 	for(int i = 0; i < num_vertices; i++){
-		object->t_vertices[i] = malloc( sizeof(float) * 3 );
+		object->t_vertices[i] = calloc( 5, sizeof(float) );
 		for(int j = 0; j < 3; j++){
 			object->t_vertices[i][j] = object_vertices[i][j];
 		}
@@ -932,9 +933,9 @@ object_t * load_object(
 	
 	
 	//copy faces
-	object->faces = malloc( sizeof(unsigned char*) * num_faces );
+	object->faces = calloc( num_faces, sizeof(unsigned char*) );
 	for(int i = 0; i < num_faces; i++){
-		object->faces[i] = malloc( sizeof(unsigned char) * 5 );
+		object->faces[i] = calloc( 6, sizeof(unsigned char) );
 		for(int j = 0; j < 3; j++){
 			object->faces[i][j] = object_faces[i][j];
 		}
@@ -942,9 +943,9 @@ object_t * load_object(
 
 	//base faces for shading
 	if (color_mode != k_preset_color){
-		object->base_faces = malloc( sizeof(unsigned char*) * num_faces );
+		object->base_faces = calloc( num_faces, sizeof(unsigned char*) );
 		for(int i = 0; i < num_faces; i++){
-			object->base_faces[i] = malloc( sizeof(unsigned char) * 5 );
+			object->base_faces[i] = calloc( 6, sizeof(unsigned char) );
 			for(int j = 0; j < 3; j++){
 				object->base_faces[i][j] = object_faces[i][j];
 			}
@@ -1027,8 +1028,6 @@ void load_temple(){
 		0,11,0,.125,.125,.125,0,k_colorize_dynamic,12
 	);
 	
-	printf("hole_ax: %f\n", hole->ax);
-	
 	// create 5 pyramids
 	for(int i = 0; i < 5; i++){
 		unsigned char l = 25;
@@ -1047,12 +1046,10 @@ void load_temple(){
 }
 
 void update_temple(){
-	printf("hole_ax: %f\n", hole->ax);
 	hole->ax += -.004;
 	hole->az += .001;
 	hole->ax += .002;
 	hole->y = 11 + sin(cur_frame/100);
-	return; // REMOVE
 	
 	for(int i = 0; i < 5; i++){
 		int l = 35;
@@ -1294,17 +1291,17 @@ void quicksort_triangle_list(int start, int end){
 	
 	int pivot = start;
 	for(int i = start + 1; i < end; i++){
-		if((triangle_list + i)->tz <= (triangle_list + pivot)->tz){
+		if(triangle_list[i]->tz <= triangle_list[pivot]->tz){
 			if(i == pivot + 1){
-				triangle_t * tmp = (triangle_list + pivot);
-				*(triangle_list + pivot) = *(triangle_list + pivot + 1);
-				*(triangle_list + pivot + 1) = *tmp;
+				triangle_t * tmp = triangle_list[pivot];
+				triangle_list[pivot] = triangle_list[pivot + 1];
+				triangle_list[pivot + 1] = tmp;
 			} else {
-				triangle_t * tmp = (triangle_list + pivot);
-				triangle_t * tmp_plus_1 = (triangle_list + pivot + 1);
-				*(triangle_list + pivot) = *(triangle_list + i);
-				*(triangle_list + pivot + 1) = *tmp;
-				*(triangle_list + i) = *tmp_plus_1;
+				triangle_t * tmp = triangle_list[pivot];
+				triangle_t * tmp_plus_1 = triangle_list[pivot + 1];
+				triangle_list[pivot] = triangle_list[i];
+				triangle_list[pivot + 1] = tmp;
+				triangle_list[pivot] = tmp_plus_1;
 			}
 			pivot++;
 		}
@@ -1396,7 +1393,10 @@ void render_object(object_t * object){
 		object->t_vertices[i][4] = object->t_vertices[i][0] * k_screen_scale / object->t_vertices[i][4] + k_x_center;
 	}
 	
+	
+	
 	for(int i = 0; i < object->num_faces; i++){
+	
 		float * p1 = object->t_vertices[object->faces[i][0]];
 		float * p2 = object->t_vertices[object->faces[i][1]];
 		float * p3 = object->t_vertices[object->faces[i][2]];
@@ -1461,10 +1461,11 @@ void render_object(object_t * object){
 						
 						new_triangle(s1x, s1y, s2x, s2y, s3x, s3y, z_paint, object->faces[i][k_color1], object->faces[i][k_color2]);						
 					}
-				}				
+				}
 			} else if (p1z < z_clip || p2z < z_clip || p3z < z_clip) {
 				three_point_sort(&p1x, &p1y, &p1z, &p2x, &p2y, &p2z, &p3x, &p3y, &p3z);
 				
+			
 				if(p1z < z_clip && p2z < z_clip){
 					
 					float n2x, n2y, n2z = 0;
@@ -1527,8 +1528,7 @@ void render_object(object_t * object){
 				}
 			}
 		}
-	}
-	
+	}	
 }
 
 void shade_trifill(triangle_t * tri){
@@ -1673,13 +1673,16 @@ void shade_trifill(triangle_t * tri){
 
 void draw_triangle_list(){
 	for(int i = 0; i < triangle_list_length; i++){
-		shade_trifill(triangle_list+i);
+		shade_trifill(triangle_list[i]);
 	}
 }
 
 void draw_3d(){
 	
 	quicksort_object_list(0, object_list_used);
+	
+	
+	
 	for(int i = 0; i < object_list_used; i++){
 		if( object_list[i]->visible == 1 &&
 			object_list[i]->background != 1){
@@ -1698,6 +1701,7 @@ void draw(){
 	cur_frame += 1;
 	scene_background_func();
 	
+	
 	update_3d();
 	
 	draw_3d();
@@ -1712,7 +1716,7 @@ int main(){
 	
 	//~ while (!quit){
 		update();
-		//~ draw();
+		draw();
 	//~ }
 	
 	for(int i = 0; i < object_list_used; i++){
