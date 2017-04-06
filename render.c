@@ -526,7 +526,7 @@ triangle_t * triangle_list = NULL;
 int triangle_list_used = 0;
 int triangle_list_length = 0;
 
-object_t * object_list = NULL;
+object_t ** object_list = NULL;
 int object_list_used = 0;
 int object_list_length = 0;
 
@@ -580,13 +580,13 @@ void init_3d(){
 	
 	if (object_list != NULL){
 		for(int i = 0; i < object_list_used; i++){
-			for(int j = 0; j < (object_list + i)->num_vertices; j++){
-				free((object_list + i)->vertices);
-				free((object_list + i)->t_vertices);
+			for(int j = 0; j < object_list[i]->num_vertices; j++){
+				free(object_list[i]->vertices);
+				free(object_list[i]->t_vertices);
 			}
-			for(int j = 0; j < (object_list + i)->num_faces; j++){
-				free((object_list + i)->faces);
-				free((object_list + i)->base_faces);
+			for(int j = 0; j < object_list[i]->num_faces; j++){
+				free(object_list[i]->faces);
+				free(object_list[i]->base_faces);
 			}
 		}
 		object_list_used = 0;
@@ -614,10 +614,11 @@ void init_stars(){
 object_t * add_object_to_list(){
 	if (object_list_used == object_list_length){
 		object_list_length += 2;
-		object_list = realloc(object_list, (sizeof(object_t)) * object_list_length);
+		object_list = realloc(object_list, (sizeof(object_t*)) * object_list_length);
 	}
 	
-	object_t * return_object = &object_list[object_list_used];
+	object_t * return_object = malloc(sizeof (object_t));
+	object_list[object_list_used] = return_object;
 	object_list_used++;
 	
 	return return_object;
@@ -980,8 +981,6 @@ object_t * load_object(
 	if(obstacle)
 		add_obstacle_to_list(object);
 	
-	
-	//~ return object;//REMOVE LATER
 	if ( color_mode == k_colorize_static || 
 		color_mode == k_colorize_dynamic || 
 		color_mode == k_multi_color_static ){
@@ -1048,12 +1047,12 @@ void load_temple(){
 }
 
 void update_temple(){
-	return; // REMOVE
 	printf("hole_ax: %f\n", hole->ax);
 	hole->ax += -.004;
 	hole->az += .001;
 	hole->ax += .002;
 	hole->y = 11 + sin(cur_frame/100);
+	return; // REMOVE
 	
 	for(int i = 0; i < 5; i++){
 		int l = 35;
@@ -1129,7 +1128,7 @@ void update_player(){
 	// could be optimized by passing player vars and only loop once
 	player.x += player.vx;	
 	for(int i = 0; i < obstacle_list_used; i++){
-		if(intersect_bounding_box((object_list + i))){
+		if(intersect_bounding_box(object_list[i])){
 			player.vx = 0;
 			player.x = old_x;
 		}
@@ -1137,7 +1136,7 @@ void update_player(){
 	
 	player.y += player.vy;
 	for(int i = 0; i < obstacle_list_used; i++){
-		if(intersect_bounding_box((object_list + i))){
+		if(intersect_bounding_box(object_list[i])){
 			player.vy = 0;
 			player.y = old_y;
 		}
@@ -1145,7 +1144,7 @@ void update_player(){
 	
 	player.z += player.vz;
 	for(int i = 0; i < obstacle_list_used; i++){
-		if(intersect_bounding_box((object_list + i))){
+		if(intersect_bounding_box(object_list[i])){
 			player.vz = 0;
 			player.z = old_z;
 		}
@@ -1256,7 +1255,7 @@ void update_light(){
 void update_3d(){
 	
 	for(int i = 0; i < object_list_used; i++){
-		object_t * tmp_o = (object_list+i);
+		object_t * tmp_o = object_list[i];
 		update_visible(tmp_o);
 		transform_object(tmp_o);
 		cam_transform_object(tmp_o);
@@ -1270,17 +1269,17 @@ void quicksort_object_list(int start, int end){
 	
 	int pivot = start;
 	for(int i = start + 1; i < end; i++){
-		if((object_list + i)->tz <= (object_list + pivot)->tz){
+		if(object_list[i]->tz <= object_list[pivot]->tz){
 			if(i == pivot + 1){
-				object_t * tmp = (object_list + pivot);
-				*(object_list + pivot) = *(object_list + pivot + 1);
-				*(object_list + pivot + 1) = *tmp;
+				object_t * tmp = object_list[pivot];
+				object_list[pivot] = object_list[pivot + 1];
+				object_list[pivot + 1] = tmp;
 			} else {
-				object_t * tmp = (object_list + pivot);
-				object_t * tmp_plus_1 = (object_list + pivot + 1);
-				*(object_list + pivot) = *(object_list + i);
-				*(object_list + pivot + 1) = *tmp;
-				*(object_list + i) = *tmp_plus_1;
+				object_t * tmp = object_list[pivot];
+				object_t * tmp_plus_1 = object_list[pivot + 1];
+				object_list[pivot] = object_list[i];
+				object_list[pivot+1] = tmp;
+				object_list[i] = tmp_plus_1;
 			}
 			pivot++;
 		}
@@ -1682,9 +1681,9 @@ void draw_3d(){
 	
 	quicksort_object_list(0, object_list_used);
 	for(int i = 0; i < object_list_used; i++){
-		if( (object_list + i)->visible == 1 &&
-			(object_list + i)->background != 1){
-			render_object( (object_list + i) );
+		if( object_list[i]->visible == 1 &&
+			object_list[i]->background != 1){
+			render_object( object_list[i] );
 		}
 	}
 	
@@ -1718,21 +1717,23 @@ int main(){
 	
 	for(int i = 0; i < object_list_used; i++){
 		//free the verts
-		for(int j = 0; j < (object_list + i)->num_vertices; j++){
-			free((object_list + i)->vertices[j]);
-			free((object_list + i)->t_vertices[j]);
+		for(int j = 0; j < object_list[i]->num_vertices; j++){
+			free(object_list[i]->vertices[j]);
+			free(object_list[i]->t_vertices[j]);
 		}
-		free((object_list + i)->vertices);
-		free((object_list + i)->t_vertices);
+		free(object_list[i]->vertices);
+		free(object_list[i]->t_vertices);
 		
 		//free the faces
-		for(int j = 0; j < (object_list + i)->num_faces; j++){
-			free((object_list + i)->faces[j]);
-			free((object_list + i)->base_faces[j]);
+		for(int j = 0; j < object_list[i]->num_faces; j++){
+			free(object_list[i]->faces[j]);
+			free(object_list[i]->base_faces[j]);
 		}
-		free((object_list + i)->faces);
-		free((object_list + i)->base_faces);
+		free(object_list[i]->faces);
+		free(object_list[i]->base_faces);
 	}
+	for(int i = 0; i < object_list_length; i++)
+		free(object_list[i]);
 	if(object_list != NULL) free(object_list);
 	
 	//~ for(int i = 0; i < obstacle_list_used; i++){
