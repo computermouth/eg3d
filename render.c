@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
+#include <unistd.h>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
@@ -11,10 +12,10 @@
 
 SDL_Window * window = NULL;
 SDL_Renderer * renderer = NULL;
-int SCREEN_WIDTH = 128;
-int SCREEN_HEIGHT = 128;
-int k_x_center = 64;
-int k_y_center = 64;
+const int SCREEN_WIDTH = 128;
+const int SCREEN_HEIGHT = 128;
+const int k_x_center = 64;
+const int k_y_center = 64;
 
 unsigned char quit = 0;
 unsigned int cur_frame = 0;
@@ -110,12 +111,21 @@ unsigned  double_color_list[32][10] = {
 	{0,4,4,9,9,15,15,7,7,7}
 };
 
+//~ float pyramid_v_string[][3] = {
+	//~ { 0.0, -2.062, -4.0 },
+	//~ { 3.461, -2.062, 2 },
+	//~ { 0.0, 3.59, 0.0 },
+	//~ {-3.465, -2.062, 2 }
+//~ };
+
 float pyramid_v_string[][3] = {
-	{ 0.0, -2.062, -4.0 },
-	{ 3.461, -2.062, 2 },
-	{ 0.0, 3.59, 0.0 },
-	{-3.465, -2.062, 2 }
+{ 1.058224 , 1.079009  ,-0.488062 },
+{ -1.016373,  1.355348 ,0.019194  },
+{ 0.098498 , 0.782318  ,1.237561  },
+{ -0.415697,  -0.157571, -0.809078},
 };
+
+
 
 //~ unsigned char pyramid_f_string[][3] = {
 	//~ { 0x02, 0x03, 0x04 },
@@ -125,11 +135,13 @@ float pyramid_v_string[][3] = {
 //~ };
 
 unsigned char pyramid_f_string[][3] = {
-	{ 0x01, 0x02, 0x03 },
-	{ 0x00, 0x02, 0x01 },
-	{ 0x03, 0x02, 0x00 },
-	{ 0x00, 0x01, 0x03 }
+ { 2, 3, 0},
+ { 0, 3, 1},
+ { 2, 0, 1},
+ { 3, 2, 1},
 };
+
+
 
 float column_v_string[][3] = {
 	{ -2.0, -0.01171, 2.0 },
@@ -1074,7 +1086,7 @@ void draw_stars(){
 
 void draw_temple_background(){
 	
-	SDL_Rect rectfill = { 0, 0, 127, 64 };
+	SDL_Rect rectfill = { 0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT/2 };
 	SDL_SetRenderDrawColor( 
 		renderer, 14 * 16 , 14 * 16, 14 * 16, 
 		0xFF );		
@@ -1082,7 +1094,7 @@ void draw_temple_background(){
 	
 	draw_stars();
 	
-	SDL_Rect rectfill_lower = { 0, 64, 127, 127 };
+	SDL_Rect rectfill_lower = { 0, SCREEN_HEIGHT/2, SCREEN_WIDTH - 1, SCREEN_HEIGHT };
 	SDL_SetRenderDrawColor( 
 		renderer, 5 * 16 , 5 * 16, 5 * 16, 
 		0xFF );		
@@ -1092,9 +1104,11 @@ void draw_temple_background(){
 
 void init_sdl(){
 	
-	SDL_Init ( SDL_INIT_VIDEO );
+	if( SDL_Init ( SDL_INIT_VIDEO ) < 0) printf("shit!\n");
 	window = SDL_CreateWindow("eg3d", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+	if( window == NULL ) printf("shit!\n");
 	renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED );
+	if( renderer == NULL ) printf("shit!\n");
 	SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
 	SDL_RenderClear( renderer );
 	
@@ -1197,12 +1211,15 @@ void project_point(int x, int y, int z, float * sx, float * sy){
 	//~ if( (x * k_screen_scale) == 0 || (z + k_x_center) == 0 )
 		//~ *sx = 1;
 	//~ else
-		*sx = (float)((x * k_screen_scale) / (z + k_x_center));
+		
+		if ( z == 0 ) { z = 1; }
+		
+		*sx = x * k_screen_scale / z + k_x_center;
 	
 	//~ if( (y * k_screen_scale) == 0 || (z + k_x_center) == 0 )
 		//~ *sy = 1;
 	//~ else
-		*sy = (float)((y * k_screen_scale) / (z + k_x_center));
+		*sy = y * k_screen_scale / z + k_x_center;
 	
 }
 
@@ -1439,7 +1456,7 @@ void render_object(object_t * object){
 				float s3x = p3[3];
 				float s3y = p3[4];
 				
-				if ( (s1x > 0 && s2x > 0 && s3x > 0) && (s1x < 128 && s2x < 128 && s3x < 128) ){
+				if ( (s1x > 0 && s2x > 0 && s3x > 0) && (s1x < SCREEN_WIDTH && s2x < SCREEN_WIDTH && s3x < SCREEN_WIDTH) ){
 					if(( (s1x-s2x)*(s3y-s2y)-(s1y-s2y)*(s3x-s2x)) < 0){
 						if(object->color_mode==k_colorize_dynamic){
 							p2x -= p1x;
@@ -1495,14 +1512,14 @@ void render_object(object_t * object){
 					project_point(n3x, n3y, n3z, &s4x, &s4y);
 					
 					if( (s1x > 0 && s2x > 0 && s4x > 0) &&
-						(s4x < 128 && s4x < 128 && s4x < 128)){
+						(s4x < SCREEN_WIDTH && s4x < SCREEN_WIDTH && s4x < SCREEN_WIDTH)){
 						
 						new_triangle(s1x, s1y, s2x, s2y, s4x, s4y, z_paint, object->faces[i][k_color1], object->faces[i][k_color2]);
 						
 					}
 					
 					if( (s2x > 0 && s3x > 0 && s4x > 0) &&
-						(s2x < 128 && s3x < 128 && s4x < 128)){
+						(s2x < SCREEN_WIDTH && s3x < SCREEN_WIDTH && s4x < SCREEN_WIDTH)){
 						
 						new_triangle(s2x, s2y, s4x, s4y, s3x, s3y, z_paint, object->faces[i][k_color1], object->faces[i][k_color2]);
 						
@@ -1528,7 +1545,7 @@ void render_object(object_t * object){
 					
 					
 					if( (s1x > 0 && s2x > 0 && s3x > 0) &&
-						(s1x < 128 && s2x < 128 && s3x < 128)){
+						(s1x < SCREEN_WIDTH && s2x < SCREEN_WIDTH && s3x < SCREEN_WIDTH)){
 						
 						new_triangle(s1x, s1y, s2x, s2y, s3x, s3y, z_paint, object->faces[i][k_color1], object->faces[i][k_color2]);
 						
@@ -1598,7 +1615,7 @@ void shade_trifill(triangle_t * tri){
 			min_y = 0;
 		}
 		
-		max_y = MIN(y2, 128);
+		max_y = MIN(y2, SCREEN_WIDTH);
 		
 		for(int i = min_y; i < max_y - 1; i++){
 			
@@ -1631,7 +1648,7 @@ void shade_trifill(triangle_t * tri){
 		float delta_ex = (x3 - x2) / (y3 - y2);
 		
 		min_y = y2;
-		max_y = MIN(y3,128);
+		max_y = MIN(y3,SCREEN_HEIGHT);
 		
 		if(y2 < 0){
 			nex = x2 - delta_ex * y2;
@@ -1723,13 +1740,17 @@ int main(){
 	
 	init();
 	
-		SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
+	SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
 	SDL_RenderClear( renderer );
 	
-	while (!quit){
-	//~ for(int i = 0; i < 100; i++){
+	//~ while (!quit){
+	for(int i = 0; i < 123456; i++){
+		SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
+		SDL_RenderClear( renderer );
 		update();
 		draw();
+		SDL_RenderPresent( renderer );
+		sleep(.0167);
 	}
 	
 	for(int i = 0; i < object_list_used; i++){
@@ -1753,15 +1774,8 @@ int main(){
 		free(object_list[i]);
 	if(object_list != NULL) free(object_list);
 	
-	//~ for(int i = 0; i < obstacle_list_used; i++){
-		//~ free((obstacle_list+i)->faces);
-		//~ free((obstacle_list+i)->base_faces);
-		//~ free((obstacle_list+i)->vertices);
-		//~ free((obstacle_list+i)->t_vertices);
-	//~ }
 	if(obstacle_list != NULL) free(obstacle_list);
-	
-	
+		
 	if(triangle_list != NULL) free(triangle_list);
 	
 	SDL_DestroyRenderer( renderer );
