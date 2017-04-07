@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
-#include <unistd.h>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
@@ -12,10 +11,10 @@
 
 SDL_Window * window = NULL;
 SDL_Renderer * renderer = NULL;
-const int SCREEN_WIDTH = 128;
-const int SCREEN_HEIGHT = 128;
-const int k_x_center = 64;
-const int k_y_center = 64;
+const int SCREEN_WIDTH = 512;
+const int SCREEN_HEIGHT = 512;
+const int k_x_center = 256;
+const int k_y_center = 256;
 
 unsigned char quit = 0;
 unsigned int cur_frame = 0;
@@ -1107,7 +1106,7 @@ void init_sdl(){
 	if( SDL_Init ( SDL_INIT_VIDEO ) < 0) printf("shit!\n");
 	window = SDL_CreateWindow("eg3d", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 	if( window == NULL ) printf("shit!\n");
-	renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED );
+	renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	if( renderer == NULL ) printf("shit!\n");
 	SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
 	SDL_RenderClear( renderer );
@@ -1179,6 +1178,21 @@ void update_camera(){
 	generate_cam_matrix_transform(cam_ax, cam_ay, cam_az);
 }
 
+void handle_input(){
+	
+	SDL_Event e;
+
+	//Handle events on queue
+	while( SDL_PollEvent( &e ) != 0 )
+	{
+		//User requests quit
+		if( e.type == SDL_QUIT )
+		{
+			quit = 1;
+		}
+	}
+}
+
 void update(){
 	
 	// INPUT HANDLING
@@ -1188,7 +1202,7 @@ void update(){
 		//~ load_scene(scene_list[scene_index][1],scene_list[scene_index][2],scene_list[scene_index][3])
 	//~ end
 
-	//~ handle_buttons() -- handle default buttons for player-- this can be overwritten obviously.
+	handle_input();
 	
 	update_player();
 	update_camera();
@@ -1734,25 +1748,8 @@ void draw(){
 	
 }
 
-int main(){
-	
-	srand(time(NULL));
-	
-	init();
-	
-	SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
-	SDL_RenderClear( renderer );
-	
-	//~ while (!quit){
-	for(int i = 0; i < 123456; i++){
-		SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
-		SDL_RenderClear( renderer );
-		update();
-		draw();
-		SDL_RenderPresent( renderer );
-		sleep(.0167);
-	}
-	
+void cleanup(){
+
 	for(int i = 0; i < object_list_used; i++){
 		//free the verts
 		for(int j = 0; j < object_list[i]->num_vertices; j++){
@@ -1772,15 +1769,37 @@ int main(){
 	}
 	for(int i = 0; i < object_list_length; i++)
 		free(object_list[i]);
+	
 	if(object_list != NULL) free(object_list);
 	
 	if(obstacle_list != NULL) free(obstacle_list);
 		
 	if(triangle_list != NULL) free(triangle_list);
-	
+
 	SDL_DestroyRenderer( renderer );
 	SDL_DestroyWindow( window );
 	SDL_Quit();
+
+}
+
+int main(){
+	
+	srand(time(NULL));
+	
+	init();
+	
+	SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
+	SDL_RenderClear( renderer );
+	
+	while (!quit){
+		SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
+		SDL_RenderClear( renderer );
+		update();
+		draw();
+		SDL_RenderPresent( renderer );
+	}
+	
+	cleanup();
 	
 	return 0;
 }
