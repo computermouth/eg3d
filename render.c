@@ -657,7 +657,7 @@ void del_obstacle_from_list(int i){
 	obstacle_list_used--;
 }
 
-void add_triangle_to_list(triangle_t * new_tri){
+triangle_t * add_triangle_to_list(){
 	
 	if (triangle_list_used == triangle_list_length){
 		triangle_list_length += 2;
@@ -665,10 +665,12 @@ void add_triangle_to_list(triangle_t * new_tri){
 	}
 	
 	// pointer of triangle_list[index] is now new_triangle's pointer
-	new_tri = malloc(sizeof (triangle_t));
-	triangle_list[triangle_list_used] = new_tri;
+	triangle_t * return_triangle = malloc(sizeof (triangle_t));
+	triangle_list[triangle_list_used] = return_triangle;
 	
 	triangle_list_used++;
+	
+	return return_triangle;
 }
 
 void del_triangle_from_list(int i){
@@ -731,7 +733,7 @@ triangle_t * new_triangle(
 	float tz, int c1, int c2
 	){
 	
-	triangle_t * tri = malloc(sizeof (triangle_t));
+	triangle_t * tri = add_triangle_to_list();
 	
 	tri->p1x = p1x;
 	tri->p1y = p1y;
@@ -743,7 +745,7 @@ triangle_t * new_triangle(
 	tri->c1 = c1;
 	tri->c2 = c2;
 	
-	add_triangle_to_list(tri);
+	//~ add_triangle_to_list(tri);
 	
 	return tri;
 }
@@ -1077,7 +1079,7 @@ void update_temple(){
 }
 
 void draw_stars(){
-	SDL_SetRenderDrawColor( renderer, 15 * 16, 15 * 16, 15 * 16, 0xFF );
+	SDL_SetRenderDrawColor( renderer, 2 * 16, 4 * 16, 6 * 16, 0xFF );
 	for(int i = 0; i < 150; i++){
 		SDL_RenderDrawPoint(renderer, star_list[i].x, star_list[i].y);
 	}
@@ -1220,20 +1222,13 @@ void rotate_cam_point(float x, float y, float z, float * tx, float * ty, float *
 
 void project_point(int x, int y, int z, float * sx, float * sy){
 	
-	//~ printf("x: %d  y: %d  z: %d  sx: %f  sy: %f\n", x, y, z, *sx, *sy);
-	
-	//~ if( (x * k_screen_scale) == 0 || (z + k_x_center) == 0 )
-		//~ *sx = 1;
-	//~ else
-		
-		if ( z == 0 ) { z = 1; }
-		
+	if ( z == 0 || x == 0 || k_screen_scale == 0 ) { 
+		*sx = 99999;
+		*sy = 99999;
+	} else {
 		*sx = x * k_screen_scale / z + k_x_center;
-	
-	//~ if( (y * k_screen_scale) == 0 || (z + k_x_center) == 0 )
-		//~ *sy = 1;
-	//~ else
 		*sy = y * k_screen_scale / z + k_x_center;
+	}
 	
 }
 
@@ -1712,12 +1707,18 @@ void shade_trifill(triangle_t * tri){
 }
 
 void draw_triangle_list(){
-	for(int i = 0; i < triangle_list_length; i++){
+	
+	for(int i = 0; i < triangle_list_used; i++){
 		shade_trifill(triangle_list[i]);
 	}
 }
 
 void draw_3d(){
+	
+	for(int i = 0; i < triangle_list_used; i++){
+		free(triangle_list[i]);
+		triangle_list_used = 0;
+	}
 	
 	quicksort_object_list(0, object_list_used);
 	
@@ -1740,7 +1741,6 @@ void draw(){
 	
 	cur_frame += 1;
 	scene_background_func();
-	
 	
 	update_3d();
 	
