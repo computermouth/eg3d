@@ -564,6 +564,22 @@ void init_player(){
 	player.vx = 0;
 	player.vy = 0;
 	player.vz = 0;
+	
+	printf("player.min_x: %f\n", player.min_x);
+	printf("player.min_y: %f\n", player.min_y);
+	printf("player.min_z: %f\n", player.min_z);
+	printf("player.max_x: %f\n", player.max_x);
+	printf("player.max_y: %f\n", player.max_y);
+	printf("player.max_z: %f\n", player.max_z);
+	printf("player.x: %f\n", player.x);
+	printf("player.y: %f\n", player.y);
+	printf("player.z: %f\n", player.z);
+	printf("player.ax: %f\n", player.ax);
+	printf("player.ay: %f\n", player.ay);
+	printf("player.az: %f\n", player.az);
+	printf("player.vx: %f\n", player.vx);
+	printf("player.vy: %f\n", player.vy);
+	printf("player.vz: %f\n", player.vz);
 }
 
 void normalize(float * norm_x, float * norm_y, float * norm_z){
@@ -581,7 +597,14 @@ void normalize(float * norm_x, float * norm_y, float * norm_z){
 }
 
 void init_light(){
+	printf("fn init_light()\n");
+	printf("prelight1_x: %f\n", light1_x);
+	printf("prelight1_y: %f\n", light1_y);
+	printf("prelight1_z: %f\n", light1_z);
 	normalize(&light1_x, &light1_y, &light1_z);
+	printf("light1_x: %f\n", light1_x);
+	printf("light1_y: %f\n", light1_y);
+	printf("light1_z: %f\n", light1_z);
 }
 
 void init_3d(){
@@ -915,23 +938,73 @@ void color_faces(object_t * object){
 	
 }
 
+int debug_load_object_cnt = 0;
+
 object_t * load_object(
 	float object_vertices[][3], unsigned short num_vertices,
 	unsigned char object_faces[][3], unsigned short num_faces,
 	int x, int y, int z, int ax, int ay, int az,
 	int obstacle, int color_mode, int color){
-		
+	
+	printf("fn load_object() [%d]\n", debug_load_object_cnt);
+	
 	object_t * object = new_object();
+	
+	printf("object.num_faces: %d\n", object->num_faces);
+	printf("object.num_vertices: %d\n", object->num_vertices);
+	printf("object.x: %d\n", object->x);
+	printf("object.y: %d\n", object->y);
+	printf("object.z: %d\n", object->z);
+	printf("object.rx: %d\n", object->rx);
+	printf("object.ry: %d\n", object->ry);
+	printf("object.rz: %d\n", object->rz);
+	printf("object.tx: %f\n", object->tx);
+	printf("object.ty: %f\n", object->ty);
+	printf("object.tz: %f\n", object->tz);
+	printf("object.ax: %f\n", object->ax);
+	printf("object.ay: %f\n", object->ay);
+	printf("object.az: %f\n", object->az);
+	printf("object.sx: %f\n", object->sx);
+	printf("object.sy: %f\n", object->sy);
+	printf("object.color: %d\n", object->color);
+	printf("object.color_mode: %d\n", object->color_mode);
+	printf("object.radius: %f\n", object->radius);
+	printf("object.sradius: %f\n", object->sradius);
+	//bools
+	printf("object.obstacle: %d\n", object->obstacle);
+	printf("object.visible: %d\n", object->visible);
+	printf("object.render: %d\n", object->render);
+	printf("object.background: %d\n", object->background);
+	printf("object.collision_x: %d\n", object->collision_x);
+	printf("object.collision_y: %d\n", object->collision_y);
+	printf("object.collision_down: %d\n", object->collision_down);
+	printf("object.collision_up: %d\n", object->collision_up);
+	printf("object.collision_left: %d\n", object->collision_left);
+	printf("object.ring: %d\n", object->ring);
+	//end bools
+	printf("object.min_x: %d\n", object->min_x);
+	printf("object.min_y: %d\n", object->min_y);
+	printf("object.min_z: %d\n", object->min_z);
+	printf("object.max_x: %d\n", object->max_x);
+	printf("object.max_y: %d\n", object->max_y);
+	printf("object.max_z: %d\n", object->max_z);
+	printf("object.vx: %d\n", object->vx);
+	printf("object.vy: %d\n", object->vy);
+	printf("object.vz: %d\n", object->vz);
+	printf("object.age: %d\n", object->age);
+	printf("object.health: %d\n", object->health);
 	
 	object->num_vertices = num_vertices;
 	object->num_faces = num_faces;
-		
+	
 	//copy verts
 	object->vertices = calloc( num_vertices, sizeof(float*) );
 	for(int i = 0; i < num_vertices; i++){
 		object->vertices[i] = calloc( 3, sizeof(float) );
 		for(int j = 0; j < 3; j++){
 			object->vertices[i][j] = object_vertices[i][j];
+			printf("ivert[%d][%d]: %f\n", i, j, object_vertices[i][j]);
+			printf("overt[%d][%d]: %f\n", i, j, object->vertices[i][j]);
 		}
 	}
 	
@@ -941,6 +1014,8 @@ object_t * load_object(
 		object->t_vertices[i] = calloc( 5, sizeof(float) );
 		for(int j = 0; j < 3; j++){
 			object->t_vertices[i][j] = object_vertices[i][j];
+			printf("itvert[%d][%d]: %f\n", i, j, object_vertices[i][j]);
+			printf("otvert[%d][%d]: %f\n", i, j, object->t_vertices[i][j]);
 		}
 	}
 	
@@ -1000,6 +1075,8 @@ object_t * load_object(
 		color_mode == k_multi_color_static ){
 		color_faces(object);
 	}
+	
+	debug_load_object_cnt += 1;
 	
 	return object;
 }
@@ -1791,13 +1868,13 @@ int main(){
 	SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
 	SDL_RenderClear( renderer );
 	
-	while (!quit){
+	//~ while (!quit){
 		SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
 		SDL_RenderClear( renderer );
 		update();
 		draw();
 		SDL_RenderPresent( renderer );
-	}
+	//~ }
 	
 	cleanup();
 	
