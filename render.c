@@ -3,14 +3,14 @@
 #include <math.h>
 #include <time.h>
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL2_gfxPrimitives.h>
+//~ #include <SDL2/SDL.h>
+//~ #include <SDL2/SDL2_gfxPrimitives.h>
 
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAX(a,b) (((a)>(b))?(a):(b))
 
-SDL_Window * window = NULL;
-SDL_Renderer * renderer = NULL;
+//~ SDL_Window * window = NULL;
+//~ SDL_Renderer * renderer = NULL;
 const int SCREEN_WIDTH = 512;
 const int SCREEN_HEIGHT = 512;
 const int k_x_center = 256;
@@ -110,35 +110,35 @@ unsigned  double_color_list[32][10] = {
 	{0,4,4,9,9,15,15,7,7,7}
 };
 
-//~ float pyramid_v_string[][3] = {
-	//~ { 0.0, -2.062, -4.0 },
-	//~ { 3.461, -2.062, 2 },
-	//~ { 0.0, 3.59, 0.0 },
-	//~ {-3.465, -2.062, 2 }
-//~ };
-
 float pyramid_v_string[][3] = {
-{ 1.058224 , 1.079009  ,-0.488062 },
-{ -1.016373,  1.355348 ,0.019194  },
-{ 0.098498 , 0.782318  ,1.237561  },
-{ -0.415697,  -0.157571, -0.809078},
+	{ 0.0, -2.062, -4.0 },
+	{ 3.461, -2.062, 2 },
+	{ 0.0, 3.59, 0.0 },
+	{-3.465, -2.062, 2 }
 };
 
-
-
-//~ unsigned char pyramid_f_string[][3] = {
-	//~ { 0x02, 0x03, 0x04 },
-	//~ { 0x01, 0x03, 0x02 },
-	//~ { 0x04, 0x03, 0x01 },
-	//~ { 0x01, 0x02, 0x04 }
+//~ float pyramid_v_string[][3] = {
+//~ { 1.058224 , 1.079009  ,-0.488062 },
+//~ { -1.016373,  1.355348 ,0.019194  },
+//~ { 0.098498 , 0.782318  ,1.237561  },
+//~ { -0.415697,  -0.157571, -0.809078},
 //~ };
+
+
 
 unsigned char pyramid_f_string[][3] = {
- { 2, 3, 0},
- { 0, 3, 1},
- { 2, 0, 1},
- { 3, 2, 1},
+	{ 0x01, 0x02, 0x03 },
+	{ 0x00, 0x02, 0x01 },
+	{ 0x03, 0x02, 0x00 },
+	{ 0x00, 0x01, 0x03 }
 };
+
+//~ unsigned char pyramid_f_string[][3] = {
+ //~ { 2, 3, 0},
+ //~ { 0, 3, 1},
+ //~ { 2, 0, 1},
+ //~ { 3, 2, 1},
+//~ };
 
 
 
@@ -546,7 +546,7 @@ int obstacle_list_used = 0;
 int obstacle_list_length = 0;
 
 object_t * hole = NULL;
-object_t * pyramids[5] = { NULL };
+object_t * pyramids = NULL;
 
 void init_player(){
 	player.min_x = -4.5;
@@ -565,21 +565,21 @@ void init_player(){
 	player.vy = 0;
 	player.vz = 0;
 	
-	printf("player.min_x: %f\n", player.min_x);
-	printf("player.min_y: %f\n", player.min_y);
-	printf("player.min_z: %f\n", player.min_z);
-	printf("player.max_x: %f\n", player.max_x);
-	printf("player.max_y: %f\n", player.max_y);
-	printf("player.max_z: %f\n", player.max_z);
-	printf("player.x: %f\n", player.x);
-	printf("player.y: %f\n", player.y);
-	printf("player.z: %f\n", player.z);
-	printf("player.ax: %f\n", player.ax);
-	printf("player.ay: %f\n", player.ay);
-	printf("player.az: %f\n", player.az);
-	printf("player.vx: %f\n", player.vx);
-	printf("player.vy: %f\n", player.vy);
-	printf("player.vz: %f\n", player.vz);
+	//~ printf("player.min_x: %f\n", player.min_x);
+	//~ printf("player.min_y: %f\n", player.min_y);
+	//~ printf("player.min_z: %f\n", player.min_z);
+	//~ printf("player.max_x: %f\n", player.max_x);
+	//~ printf("player.max_y: %f\n", player.max_y);
+	//~ printf("player.max_z: %f\n", player.max_z);
+	//~ printf("player.x: %f\n", player.x);
+	//~ printf("player.y: %f\n", player.y);
+	//~ printf("player.z: %f\n", player.z);
+	//~ printf("player.ax: %f\n", player.ax);
+	//~ printf("player.ay: %f\n", player.ay);
+	//~ printf("player.az: %f\n", player.az);
+	//~ printf("player.vx: %f\n", player.vx);
+	//~ printf("player.vy: %f\n", player.vy);
+	//~ printf("player.vz: %f\n", player.vz);
 }
 
 void normalize(float * norm_x, float * norm_y, float * norm_z){
@@ -597,14 +597,14 @@ void normalize(float * norm_x, float * norm_y, float * norm_z){
 }
 
 void init_light(){
-	printf("fn init_light()\n");
-	printf("prelight1_x: %f\n", light1_x);
-	printf("prelight1_y: %f\n", light1_y);
-	printf("prelight1_z: %f\n", light1_z);
+	//~ printf("fn init_light()\n");
+	//~ printf("prelight1_x: %f\n", light1_x);
+	//~ printf("prelight1_y: %f\n", light1_y);
+	//~ printf("prelight1_z: %f\n", light1_z);
 	normalize(&light1_x, &light1_y, &light1_z);
-	printf("light1_x: %f\n", light1_x);
-	printf("light1_y: %f\n", light1_y);
-	printf("light1_z: %f\n", light1_z);
+	//~ printf("light1_x: %f\n", light1_x);
+	//~ printf("light1_y: %f\n", light1_y);
+	//~ printf("light1_z: %f\n", light1_z);
 }
 
 void init_3d(){
@@ -767,23 +767,28 @@ triangle_t * new_triangle(
 	tri->tz = tz;
 	tri->c1 = c1;
 	tri->c2 = c2;
-	
-	//~ add_triangle_to_list(tri);
-	
+		
 	return tri;
 }
 
-void generate_matrix_transform(int xa, int ya, int za){
+void generate_matrix_transform(float xa, float ya, float za){
 
-	int sx=sin(xa);
-	int sy=sin(ya);
-	int sz=sin(za);
-	int cx=cos(xa);
-	int cy=cos(ya);
-	int cz=cos(za);
+	float sx=sin(xa);
+	float sy=sin(ya);
+	float sz=sin(za);
+	float cx=cos(xa);
+	float cy=cos(ya);
+	float cz=cos(za);
+	
+	//~ printf("gmt_sx: %f\n", sx);
+	//~ printf("gmt_sy: %f\n", sy);
+	//~ printf("gmt_sz: %f\n", sz);
+	//~ printf("gmt_cx: %f\n", cx);
+	//~ printf("gmt_cy: %f\n", cy);
+	//~ printf("gmt_cz: %f\n", cz);
 	
 	mat00=cz*cy;
-	mat10=-sz;
+	mat10=-1*sz;
 	mat20=cz*sy;
 	mat01=cx*sz*cy+sx*sy;
 	mat11=cx*cz;
@@ -791,20 +796,30 @@ void generate_matrix_transform(int xa, int ya, int za){
 	mat02=sx*sz*cy-cx*sy;
 	mat12=sx*cz;
 	mat22=sx*sz*sy+cx*cy;
+	
+	//~ printf("gmt_mat00: %f\n", mat00);
+	//~ printf("gmt_mat10: %f\n", mat10);
+	//~ printf("gmt_mat20: %f\n", mat20);
+	//~ printf("gmt_mat01: %f\n", mat01);
+	//~ printf("gmt_mat11: %f\n", mat11);
+	//~ printf("gmt_mat21: %f\n", mat21);
+	//~ printf("gmt_mat02: %f\n", mat02);
+	//~ printf("gmt_mat12: %f\n", mat12);
+	//~ printf("gmt_mat22: %f\n", mat22);
 
 }
 
-void generate_cam_matrix_transform(int xa, int ya, int za){
+void generate_cam_matrix_transform(float xa, float ya, float za){
 
-	int sx=sin(xa);
-	int sy=sin(ya);
-	int sz=sin(za);
-	int cx=cos(xa);
-	int cy=cos(ya);
-	int cz=cos(za);
+	float sx=sin(xa);
+	float sy=sin(ya);
+	float sz=sin(za);
+	float cx=cos(xa);
+	float cy=cos(ya);
+	float cz=cos(za);
 	
 	cam_mat00=cz*cy;
-	cam_mat10=-sz;
+	cam_mat10=-1*sz;
 	cam_mat20=cz*sy;
 	cam_mat01=cx*sz*cy+sx*sy;
 	cam_mat11=cx*cz;
@@ -823,7 +838,12 @@ void rotate_point(float v[3], float t[3]){
 
 void transform_object(object_t * object){
 	//shouldn't this not be happening if all the axes are 0?
+	//~ printf("object.visible: %d\n", object->visible);
 	if(object->visible){
+		
+		//~ printf("object.ax: %f\n", object->ax);
+		//~ printf("object.ay: %f\n", object->ay);
+		//~ printf("object.az: %f\n", object->az);
 		generate_matrix_transform(object->ax, object->ay, object->az);
 		for(int i = 0; i < object->num_vertices; i++){
 			//pass direct access to objects verts
@@ -899,6 +919,7 @@ void color_shade(unsigned char color, float brightness, unsigned char * f4, unsi
 
 void color_faces(object_t * object){
 	
+	
 	for(int i = 0; i < object->num_faces; i++){
 		unsigned char * face = object->faces[i];
 		float p1x = object->t_vertices[face[0]][0];
@@ -946,56 +967,57 @@ object_t * load_object(
 	int x, int y, int z, int ax, int ay, int az,
 	int obstacle, int color_mode, int color){
 	
-	printf("fn load_object() [%d]\n", debug_load_object_cnt);
+	//~ printf("fn load_object() [%d]\n", debug_load_object_cnt);
 	
 	object_t * object = new_object();
 	
-	printf("object.num_faces: %d\n", object->num_faces);
-	printf("object.num_vertices: %d\n", object->num_vertices);
-	printf("object.x: %d\n", object->x);
-	printf("object.y: %d\n", object->y);
-	printf("object.z: %d\n", object->z);
-	printf("object.rx: %d\n", object->rx);
-	printf("object.ry: %d\n", object->ry);
-	printf("object.rz: %d\n", object->rz);
-	printf("object.tx: %f\n", object->tx);
-	printf("object.ty: %f\n", object->ty);
-	printf("object.tz: %f\n", object->tz);
-	printf("object.ax: %f\n", object->ax);
-	printf("object.ay: %f\n", object->ay);
-	printf("object.az: %f\n", object->az);
-	printf("object.sx: %f\n", object->sx);
-	printf("object.sy: %f\n", object->sy);
-	printf("object.color: %d\n", object->color);
-	printf("object.color_mode: %d\n", object->color_mode);
-	printf("object.radius: %f\n", object->radius);
-	printf("object.sradius: %f\n", object->sradius);
-	//bools
-	printf("object.obstacle: %d\n", object->obstacle);
-	printf("object.visible: %d\n", object->visible);
-	printf("object.render: %d\n", object->render);
-	printf("object.background: %d\n", object->background);
-	printf("object.collision_x: %d\n", object->collision_x);
-	printf("object.collision_y: %d\n", object->collision_y);
-	printf("object.collision_down: %d\n", object->collision_down);
-	printf("object.collision_up: %d\n", object->collision_up);
-	printf("object.collision_left: %d\n", object->collision_left);
-	printf("object.ring: %d\n", object->ring);
-	//end bools
-	printf("object.min_x: %d\n", object->min_x);
-	printf("object.min_y: %d\n", object->min_y);
-	printf("object.min_z: %d\n", object->min_z);
-	printf("object.max_x: %d\n", object->max_x);
-	printf("object.max_y: %d\n", object->max_y);
-	printf("object.max_z: %d\n", object->max_z);
-	printf("object.vx: %d\n", object->vx);
-	printf("object.vy: %d\n", object->vy);
-	printf("object.vz: %d\n", object->vz);
-	printf("object.age: %d\n", object->age);
-	printf("object.health: %d\n", object->health);
-	
 	object->num_vertices = num_vertices;
 	object->num_faces = num_faces;
+	
+	//~ printf("object.num_faces: %d\n", object->num_faces);
+	//~ printf("object.num_vertices: %d\n", object->num_vertices);
+	//~ printf("object.x: %d\n", object->x);
+	//~ printf("object.y: %d\n", object->y);
+	//~ printf("object.z: %d\n", object->z);
+	//~ printf("object.rx: %d\n", object->rx);
+	//~ printf("object.ry: %d\n", object->ry);
+	//~ printf("object.rz: %d\n", object->rz);
+	//~ printf("object.tx: %f\n", object->tx);
+	//~ printf("object.ty: %f\n", object->ty);
+	//~ printf("object.tz: %f\n", object->tz);
+	//~ printf("object.ax: %f\n", object->ax);
+	//~ printf("object.ay: %f\n", object->ay);
+	//~ printf("object.az: %f\n", object->az);
+	//~ printf("object.sx: %f\n", object->sx);
+	//~ printf("object.sy: %f\n", object->sy);
+	//~ printf("object.color: %d\n", color);
+	//~ printf("object.color_mode: %d\n", color_mode);
+	//~ printf("object.radius: %f\n", object->radius);
+	//~ printf("object.sradius: %f\n", object->sradius);
+	//~ //bools
+	//~ printf("object.obstacle: %d\n", object->obstacle);
+	//~ printf("object.visible: %d\n", object->visible);
+	//~ printf("object.render: %d\n", object->render);
+	//~ printf("object.background: %d\n", object->background);
+	//~ printf("object.collision_x: %d\n", object->collision_x);
+	//~ printf("object.collision_y: %d\n", object->collision_y);
+	//~ printf("object.collision_down: %d\n", object->collision_down);
+	//~ printf("object.collision_up: %d\n", object->collision_up);
+	//~ printf("object.collision_left: %d\n", object->collision_left);
+	//~ printf("object.ring: %d\n", object->ring);
+	//~ //end bools
+	//~ printf("object.min_x: %d\n", object->min_x);
+	//~ printf("object.min_y: %d\n", object->min_y);
+	//~ printf("object.min_z: %d\n", object->min_z);
+	//~ printf("object.max_x: %d\n", object->max_x);
+	//~ printf("object.max_y: %d\n", object->max_y);
+	//~ printf("object.max_z: %d\n", object->max_z);
+	//~ printf("object.vx: %d\n", object->vx);
+	//~ printf("object.vy: %d\n", object->vy);
+	//~ printf("object.vz: %d\n", object->vz);
+	//~ printf("object.age: %d\n", object->age);
+	//~ printf("object.health: %d\n", object->health);
+	
 	
 	//copy verts
 	object->vertices = calloc( num_vertices, sizeof(float*) );
@@ -1003,8 +1025,8 @@ object_t * load_object(
 		object->vertices[i] = calloc( 3, sizeof(float) );
 		for(int j = 0; j < 3; j++){
 			object->vertices[i][j] = object_vertices[i][j];
-			printf("ivert[%d][%d]: %f\n", i, j, object_vertices[i][j]);
-			printf("overt[%d][%d]: %f\n", i, j, object->vertices[i][j]);
+			//~ printf("ivert[%d][%d]: %f\n", i, j, object_vertices[i][j]);
+			//~ printf("overt[%d][%d]: %f\n", i, j, object->vertices[i][j]);
 		}
 	}
 	
@@ -1014,8 +1036,8 @@ object_t * load_object(
 		object->t_vertices[i] = calloc( 5, sizeof(float) );
 		for(int j = 0; j < 3; j++){
 			object->t_vertices[i][j] = object_vertices[i][j];
-			printf("itvert[%d][%d]: %f\n", i, j, object_vertices[i][j]);
-			printf("otvert[%d][%d]: %f\n", i, j, object->t_vertices[i][j]);
+			//~ printf("itvert[%d][%d]: %f\n", i, j, object_vertices[i][j]);
+			//~ printf("otvert[%d][%d]: %f\n", i, j, object->t_vertices[i][j]);
 		}
 	}
 	
@@ -1026,6 +1048,7 @@ object_t * load_object(
 		object->faces[i] = calloc( 6, sizeof(unsigned char) );
 		for(int j = 0; j < 3; j++){
 			object->faces[i][j] = object_faces[i][j];
+			//~ printf("iface[%d][%d]: %d\n", i, j, object_faces[i][j]);
 		}
 	}
 
@@ -1087,7 +1110,6 @@ void load_temple(){
 	
 	// create 5 columns
 	for(int i = 0; i < 5; i++){
-	int i = 0;
 		unsigned char l = 30;
 		unsigned char x = sin(i/5)*l;
 		unsigned char z = cos(i/5)*l;
@@ -1124,7 +1146,8 @@ void load_temple(){
 		float a = i/5+.125;
 		unsigned char x = sin(a)*l;
 		unsigned char z = cos(a)*l;
-		pyramids[i] = load_object(
+		//~ pyramids[i] = load_object(
+		pyramids = load_object(
 			pyramid_v_string,
 			(sizeof(pyramid_v_string)/sizeof(pyramid_v_string[0])),
 			pyramid_f_string,
@@ -1140,55 +1163,68 @@ void update_temple(){
 	hole->az += .001;
 	hole->ax += .002;
 	hole->y = 11 + sin(cur_frame/100);
+		
+	//~ for(int i = 0; i < 5; i++){
+		//~ int l = 35;
+		//~ float a = i / 5 + .125 + cur_frame / 1000;
+		//~ //float x = sin(a)*l; UNUSED
+		//~ //float z = cos(a)*l; UNUSED
+		//~ pyramids[i]->x = sin(a)*l;
+		//~ pyramids[i]->z = cos(a)*l;
+		//~ pyramids[i]->y = 10 + sin(a - cur_frame/ 200) * 4;
+		//~ pyramids[i]->ax += .003;
+		//~ pyramids[i]->ay += .002;
+		//~ pyramids[i]->az += .004;
+	//~ }
 	
-	for(int i = 0; i < 5; i++){
+	//~ for(int i = 0; i < 5; i++){
 		int l = 35;
-		float a = i / 5 + .125 + cur_frame / 1000;
-		//~ float x = sin(a)*l; UNUSED
-		//~ float z = cos(a)*l; UNUSED
-		pyramids[i]->x = sin(a)*l;
-		pyramids[i]->z = cos(a)*l;
-		pyramids[i]->y = 10 + sin(a - cur_frame/ 200) * 4;
-		pyramids[i]->ax += .003;
-		pyramids[i]->ay += .002;
-		pyramids[i]->az += .004;
-	}
+		float a = 0 / 5 + .125 + cur_frame / 1000;
+		//float x = sin(a)*l; UNUSED
+		//float z = cos(a)*l; UNUSED
+		pyramids->x = sin(a)*l;
+		pyramids->z = cos(a)*l;
+		pyramids->y = 10 + sin(a - cur_frame/ 200) * 4;
+		pyramids->ax += .003;
+		pyramids->ay += .002;
+		pyramids->az += .004;
+	//~ }
 }
 
 void draw_stars(){
-	SDL_SetRenderDrawColor( renderer, 2 * 16, 4 * 16, 6 * 16, 0xFF );
+	//~ SDL_SetRenderDrawColor( renderer, 2 * 16, 4 * 16, 6 * 16, 0xFF );
 	for(int i = 0; i < 150; i++){
-		SDL_RenderDrawPoint(renderer, star_list[i].x, star_list[i].y);
+		//~ SDL_RenderDrawPoint(renderer, star_list[i].x, star_list[i].y);
 	}
 }
 
 void draw_temple_background(){
 	
-	SDL_Rect rectfill = { 0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT/2 };
-	SDL_SetRenderDrawColor( 
-		renderer, 14 * 16 , 14 * 16, 14 * 16, 
-		0xFF );		
-	SDL_RenderFillRect( renderer, &rectfill );
+	//~ SDL_Rect rectfill = { 0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT/2 };
+	//~ SDL_SetRenderDrawColor( 
+		//~ renderer, 14 * 16 , 14 * 16, 14 * 16, 
+		//~ 0xFF );		
+	//~ SDL_RenderFillRect( renderer, &rectfill );
 	
 	draw_stars();
 	
-	SDL_Rect rectfill_lower = { 0, SCREEN_HEIGHT/2, SCREEN_WIDTH - 1, SCREEN_HEIGHT };
-	SDL_SetRenderDrawColor( 
-		renderer, 5 * 16 , 5 * 16, 5 * 16, 
-		0xFF );		
-	SDL_RenderFillRect( renderer, &rectfill_lower );
+	//~ SDL_Rect rectfill_lower = { 0, SCREEN_HEIGHT/2, SCREEN_WIDTH - 1, SCREEN_HEIGHT };
+	//~ SDL_SetRenderDrawColor( 
+		//~ renderer, 5 * 16 , 5 * 16, 5 * 16, 
+		//~ 0xFF );		
+	//~ SDL_RenderFillRect( renderer, &rectfill_lower );
 	
 }
 
 void init_sdl(){
 	
-	if( SDL_Init ( SDL_INIT_VIDEO ) < 0) printf("shit!\n");
-	window = SDL_CreateWindow("eg3d", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-	if( window == NULL ) printf("shit!\n");
-	renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-	if( renderer == NULL ) printf("shit!\n");
-	SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
-	SDL_RenderClear( renderer );
+	//~ if( SDL_Init ( SDL_INIT_VIDEO ) < 0) printf("shit!\n");
+	//~ window = SDL_CreateWindow("eg3d", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+	//~ if( window == NULL ) printf("shit!\n");
+	//~ renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	//~ if( renderer == NULL ) printf("shit!\n");
+	//~ SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
+	//~ SDL_RenderClear( renderer );
 	
 }
 
@@ -1259,17 +1295,17 @@ void update_camera(){
 
 void handle_input(){
 	
-	SDL_Event e;
+	//~ SDL_Event e;
 
-	//Handle events on queue
-	while( SDL_PollEvent( &e ) != 0 )
-	{
-		//User requests quit
-		if( e.type == SDL_QUIT )
-		{
-			quit = 1;
-		}
-	}
+	//~ //Handle events on queue
+	//~ while( SDL_PollEvent( &e ) != 0 )
+	//~ {
+		//~ //User requests quit
+		//~ if( e.type == SDL_QUIT )
+		//~ {
+			//~ quit = 1;
+		//~ }
+	//~ }
 }
 
 void update(){
@@ -1706,17 +1742,17 @@ void shade_trifill(triangle_t * tri){
 		for(int i = min_y; i < max_y - 1; i++){
 			
 			if ( (i & 1) == 0 ){
-				SDL_Rect rectfill = { nsx, i, nex, i };
-				SDL_SetRenderDrawColor( 
-					renderer, tri->c1 * 16 , tri->c1 * 16, tri->c1 * 16, 
-					0xFF );		
-				SDL_RenderFillRect( renderer, &rectfill );
+				//~ SDL_Rect rectfill = { nsx, i, nex, i };
+				//~ SDL_SetRenderDrawColor( 
+					//~ renderer, tri->c1 * 16 , tri->c1 * 16, tri->c1 * 16, 
+					//~ 0xFF );		
+				//~ SDL_RenderFillRect( renderer, &rectfill );
 			} else {
-				SDL_Rect rectfill = { nsx, i, nex, i };
-				SDL_SetRenderDrawColor( 
-					renderer, tri->c2 * 16 , tri->c2 * 16, tri->c2 * 16, 
-					0xFF );		
-				SDL_RenderFillRect( renderer, &rectfill );
+				//~ SDL_Rect rectfill = { nsx, i, nex, i };
+				//~ SDL_SetRenderDrawColor( 
+					//~ renderer, tri->c2 * 16 , tri->c2 * 16, tri->c2 * 16, 
+					//~ 0xFF );		
+				//~ SDL_RenderFillRect( renderer, &rectfill );
 			}
 			
 			nsx += delta_sx;
@@ -1745,17 +1781,17 @@ void shade_trifill(triangle_t * tri){
 		for(int i = min_y; i < max_y; i++){
 			
 			if ( (i & 1) == 0 ){
-				SDL_Rect rectfill = { nsx, i, nex, i };
-				SDL_SetRenderDrawColor( 
-					renderer, tri->c1 * 16 , tri->c1 * 16, tri->c1 * 16, 
-					0xFF );		
-				SDL_RenderFillRect( renderer, &rectfill );
+				//~ SDL_Rect rectfill = { nsx, i, nex, i };
+				//~ SDL_SetRenderDrawColor( 
+					//~ renderer, tri->c1 * 16 , tri->c1 * 16, tri->c1 * 16, 
+					//~ 0xFF );		
+				//~ SDL_RenderFillRect( renderer, &rectfill );
 			} else {
-				SDL_Rect rectfill = { nsx, i, nex, i };
-				SDL_SetRenderDrawColor( 
-					renderer, tri->c2 * 16 , tri->c2 * 16, tri->c2 * 16, 
-					0xFF );		
-				SDL_RenderFillRect( renderer, &rectfill );
+				//~ SDL_Rect rectfill = { nsx, i, nex, i };
+				//~ SDL_SetRenderDrawColor( 
+					//~ renderer, tri->c2 * 16 , tri->c2 * 16, tri->c2 * 16, 
+					//~ 0xFF );		
+				//~ SDL_RenderFillRect( renderer, &rectfill );
 			}
 			
 			nsx += delta_sx;
@@ -1767,17 +1803,17 @@ void shade_trifill(triangle_t * tri){
 		//where is the original value Y coming into scope here????
 		int i = 0; // just to get it to compile, I guess.
 		if ( (i & 1) == 0 ){
-			SDL_Rect rectfill = { nsx, i, nex, i };
-			SDL_SetRenderDrawColor( 
-				renderer, tri->c1 * 16 , tri->c1 * 16, tri->c1 * 16, 
-				0xFF );		
-			SDL_RenderFillRect( renderer, &rectfill );
+			//~ SDL_Rect rectfill = { nsx, i, nex, i };
+			//~ SDL_SetRenderDrawColor( 
+				//~ renderer, tri->c1 * 16 , tri->c1 * 16, tri->c1 * 16, 
+				//~ 0xFF );		
+			//~ SDL_RenderFillRect( renderer, &rectfill );
 		} else {
-			SDL_Rect rectfill = { nsx, i, nex, i };
-			SDL_SetRenderDrawColor( 
-				renderer, tri->c2 * 16 , tri->c2 * 16, tri->c2 * 16, 
-				0xFF );		
-			SDL_RenderFillRect( renderer, &rectfill );
+			//~ SDL_Rect rectfill = { nsx, i, nex, i };
+			//~ SDL_SetRenderDrawColor( 
+				//~ renderer, tri->c2 * 16 , tri->c2 * 16, tri->c2 * 16, 
+				//~ 0xFF );		
+			//~ SDL_RenderFillRect( renderer, &rectfill );
 		}
 	}
 	
@@ -1827,6 +1863,7 @@ void draw(){
 
 void cleanup(){
 
+	
 	for(int i = 0; i < object_list_used; i++){
 		//free the verts
 		for(int j = 0; j < object_list[i]->num_vertices; j++){
@@ -1844,7 +1881,7 @@ void cleanup(){
 		free(object_list[i]->faces);
 		free(object_list[i]->base_faces);
 	}
-	for(int i = 0; i < object_list_length; i++)
+	for(int i = 0; i < object_list_used; i++)
 		free(object_list[i]);
 	
 	if(object_list != NULL) free(object_list);
@@ -1853,9 +1890,9 @@ void cleanup(){
 		
 	if(triangle_list != NULL) free(triangle_list);
 
-	SDL_DestroyRenderer( renderer );
-	SDL_DestroyWindow( window );
-	SDL_Quit();
+	//~ SDL_DestroyRenderer( renderer );
+	//~ SDL_DestroyWindow( window );
+	//~ SDL_Quit();
 
 }
 
@@ -1865,15 +1902,15 @@ int main(){
 	
 	init();
 	
-	SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
-	SDL_RenderClear( renderer );
+	//~ SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
+	//~ SDL_RenderClear( renderer );
 	
 	//~ while (!quit){
-		SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
-		SDL_RenderClear( renderer );
+		//~ SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
+		//~ SDL_RenderClear( renderer );
 		update();
 		draw();
-		SDL_RenderPresent( renderer );
+		//~ SDL_RenderPresent( renderer );
 	//~ }
 	
 	cleanup();
