@@ -638,14 +638,22 @@ triangle_t * new_triangle(
 	return tri;
 }
 
+float pico_sin(float in){
+	return sin(in * M_PI * -2);
+}
+
+float pico_cos(float in){
+	return cos(in * M_PI * 2);
+}
+
 void generate_matrix_transform(float xa, float ya, float za){
 
-	float sx=sin(xa);
-	float sy=sin(ya);
-	float sz=sin(za);
-	float cx=cos(xa);
-	float cy=cos(ya);
-	float cz=cos(za);
+	float sx=pico_sin(xa);
+	float sy=pico_sin(ya);
+	float sz=pico_sin(za);
+	float cx=pico_cos(xa);
+	float cy=pico_cos(ya);
+	float cz=pico_cos(za);
 	
 	//~ printf("gmt_sx: %f\n", sx);
 	//~ printf("gmt_sy: %f\n", sy);
@@ -678,12 +686,12 @@ void generate_matrix_transform(float xa, float ya, float za){
 
 void generate_cam_matrix_transform(float xa, float ya, float za){
 
-	float sx=sin(xa);
-	float sy=sin(ya);
-	float sz=sin(za);
-	float cx=cos(xa);
-	float cy=cos(ya);
-	float cz=cos(za);
+	float sx=pico_sin(xa);
+	float sy=pico_sin(ya);
+	float sz=pico_sin(za);
+	float cx=pico_cos(xa);
+	float cy=pico_cos(ya);
+	float cz=pico_cos(za);
 	
 	cam_mat00=cz*cy;
 	cam_mat10=-1*sz;
@@ -978,8 +986,8 @@ void load_temple(){
 	// create 5 columns
 	for(int i = 0; i < 5; i++){
 		float l = 30;
-		float x = sin((float)(i+1)/5 * M_PI * -2)*l;
-		float z = cos((float)(i+1)/5 * M_PI * 2)*l;
+		float x = pico_sin((float)(i+1)/5)*l;
+		float z = pico_cos((float)(i+1)/5)*l;
 		printf("x: %f\n", x);
 		printf("i: %f\n", (float)(i+1));
 		printf("l: %f\n", l);
@@ -1014,8 +1022,8 @@ void load_temple(){
 	for(int i = 0; i < 5; i++){
 		float l = 25;
 		float a = (float)(i+1)/5+.125;
-		float x = sin(a * M_PI * -2)*l;
-		float z = cos(a * M_PI * 2)*l;
+		float x = pico_sin(a)*l;
+		float z = pico_cos(a)*l;
 		pyramids[i] = load_object(
 			pyramid_v_string,
 			(sizeof(pyramid_v_string)/sizeof(pyramid_v_string[0])),
@@ -1031,16 +1039,16 @@ void update_temple(){
 	hole->ax += -.004;
 	hole->az += .001;
 	hole->ax += .002;
-	hole->y = 11 + sin(cur_frame/100);
+	hole->y = 11 + pico_sin(cur_frame/100);
 		
 	for(int i = 0; i < 5; i++){
 		int l = 35;
 		float a = i / 5 + .125 + cur_frame / 1000;
 		//float x = sin(a)*l; UNUSED
 		//float z = cos(a)*l; UNUSED
-		pyramids[i]->x = sin(a)*l;
-		pyramids[i]->z = cos(a)*l;
-		pyramids[i]->y = 10 + sin(a - cur_frame/ 200) * 4;
+		pyramids[i]->x = pico_sin(a)*l;
+		pyramids[i]->z = pico_cos(a)*l;
+		pyramids[i]->y = 10 + pico_sin(a - cur_frame/ 200) * 4;
 		pyramids[i]->ax += .003;
 		pyramids[i]->ay += .002;
 		pyramids[i]->az += .004;
@@ -1826,13 +1834,13 @@ int main(){
 	SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
 	SDL_RenderClear( renderer );
 	
-	while (!quit){
+	//~ while (!quit){
 		SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
 		SDL_RenderClear( renderer );
 		update();
 		draw();
 		SDL_RenderPresent( renderer );
-	}
+	//~ }
 	
 	cleanup();
 	
