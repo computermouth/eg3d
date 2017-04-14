@@ -11,10 +11,10 @@
 
 SDL_Window * window = NULL;
 SDL_Renderer * renderer = NULL;
-const int SCREEN_WIDTH = 256;
-const int SCREEN_HEIGHT = 256;
-const int k_x_center = 128;
-const int k_y_center = 128;
+const int SCREEN_WIDTH = 128;
+const int SCREEN_HEIGHT = 128;
+const int k_x_center = 64;
+const int k_y_center = 64;
 
 unsigned char quit = 0;
 unsigned int cur_frame = 0;
@@ -50,15 +50,15 @@ float mat22 = 0;
 float cam_x = 0;
 float cam_y = 0;
 float cam_z = 0;
-float cam_mat00 = 0;
-float cam_mat10 = 0;
-float cam_mat20 = 0;
-float cam_mat01 = 0;
-float cam_mat11 = 0;
-float cam_mat21 = 0;
-float cam_mat02 = 0;
-float cam_mat12 = 0;
-float cam_mat22 = 0;
+int cam_mat00 = 0;
+int cam_mat10 = 0;
+int cam_mat20 = 0;
+int cam_mat01 = 0;
+int cam_mat11 = 0;
+int cam_mat21 = 0;
+int cam_mat02 = 0;
+int cam_mat12 = 0;
+int cam_mat22 = 0;
 
 unsigned  double_color_list[32][10] = {
 	{0,0,0,0,0,0,0,0,0,0},
@@ -988,9 +988,9 @@ void load_temple(){
 		float l = 30;
 		float x = pico_sin((float)(i+1)/5)*l;
 		float z = pico_cos((float)(i+1)/5)*l;
-		printf("x: %f\n", x);
-		printf("i: %f\n", (float)(i+1));
-		printf("l: %f\n", l);
+		//~ printf("x: %f\n", x);
+		//~ printf("i: %f\n", (float)(i+1));
+		//~ printf("l: %f\n", l);
 		load_object(
 			column_v_string,
 			(sizeof(column_v_string)/sizeof(column_v_string[0])),
@@ -1017,6 +1017,8 @@ void load_temple(){
 		(sizeof(hole_f_string)/sizeof(hole_f_string[0])),
 		0,11,0,.125,.125,.125,0,k_colorize_dynamic,12
 	);
+	
+	printf("pyramids\n");
 	
 	// create 5 pyramids
 	for(int i = 0; i < 5; i++){
@@ -1124,17 +1126,17 @@ void update_player(){
 	//~ float old_y = player.y; //UNUSED
 	float old_z = player.z;
 	
-	printf("player.x: %f\n", player.x);
-	printf("player.y: %f\n", player.y);
-	printf("player.z: %f\n", player.z);
+	//~ printf("player.x: %f\n", player.x);
+	//~ printf("player.y: %f\n", player.y);
+	//~ printf("player.z: %f\n", player.z);
 	
 	// this repeats to check per each vector, which movement to reject
 	// could be optimized by passing player vars and only loop once
 	player.x += player.vx;
 	
-	printf("player.x: %f\n", player.x);
-	printf("player.y: %f\n", player.y);
-	printf("player.z: %f\n", player.z);
+	//~ printf("player.x: %f\n", player.x);
+	//~ printf("player.y: %f\n", player.y);
+	//~ printf("player.z: %f\n", player.z);
 	
 	for(int i = 0; i < obstacle_list_used; i++){
 		if(intersect_bounding_box(object_list[i])){
@@ -1144,15 +1146,15 @@ void update_player(){
 	}
 	
 	
-	printf("player.x: %f\n", player.x);
-	printf("player.y: %f\n", player.y);
-	printf("player.z: %f\n", player.z);
+	//~ printf("player.x: %f\n", player.x);
+	//~ printf("player.y: %f\n", player.y);
+	//~ printf("player.z: %f\n", player.z);
 	
 	player.y += player.vy;
 	
-	printf("player.x: %f\n", player.x);
-	printf("player.y: %f\n", player.y);
-	printf("player.z: %f\n", player.z);
+	//~ printf("player.x: %f\n", player.x);
+	//~ printf("player.y: %f\n", player.y);
+	//~ printf("player.z: %f\n", player.z);
 	//~ for(int i = 0; i < obstacle_list_used; i++){
 		//~ if(intersect_bounding_box(object_list[i])){
 			//~ player.vy = 0;
@@ -1160,15 +1162,15 @@ void update_player(){
 		//~ }
 	//~ }
 	
-	printf("player.x: %f\n", player.x);
-	printf("player.y: %f\n", player.y);
-	printf("player.z: %f\n", player.z);
+	//~ printf("player.x: %f\n", player.x);
+	//~ printf("player.y: %f\n", player.y);
+	//~ printf("player.z: %f\n", player.z);
 	
 	player.z += player.vz;
 	
-	printf("player.x: %f\n", player.x);
-	printf("player.y: %f\n", player.y);
-	printf("player.z: %f\n", player.z);
+	//~ printf("player.x: %f\n", player.x);
+	//~ printf("player.y: %f\n", player.y);
+	//~ printf("player.z: %f\n", player.z);
 	
 	for(int i = 0; i < obstacle_list_used; i++){
 		if(intersect_bounding_box(object_list[i])){
@@ -1177,16 +1179,16 @@ void update_player(){
 		}
 	}
 	
-	printf("player.x: %f\n", player.x);
-	printf("player.y: %f\n", player.y);
-	printf("player.z: %f\n", player.z);
+	//~ printf("player.x: %f\n", player.x);
+	//~ printf("player.y: %f\n", player.y);
+	//~ printf("player.z: %f\n", player.z);
 	player.vx *= k_friction;
 	player.vy *= k_friction;
 	player.vz *= k_friction;
 	
-	printf("player.x: %f\n", player.x);
-	printf("player.y: %f\n", player.y);
-	printf("player.z: %f\n", player.z);
+	//~ printf("player.x: %f\n", player.x);
+	//~ printf("player.y: %f\n", player.y);
+	//~ printf("player.z: %f\n", player.z);
 }
 
 void update_camera(){
@@ -1235,25 +1237,62 @@ void update(){
 
 void rotate_cam_point(float x, float y, float z, float * tx, float * ty, float * tz){
 	*tx = (x)*cam_mat00+(y)*cam_mat10+(z)*cam_mat20;
+	  //~ (x)*cam_mat00+(y)*cam_mat10+(z)*cam_mat20
 	*ty = (x)*cam_mat01+(y)*cam_mat11+(z)*cam_mat21;
+	  //~ (x)*cam_mat01+(y)*cam_mat11+(z)*cam_mat21
 	*tz = (x)*cam_mat02+(y)*cam_mat12+(z)*cam_mat22;
+	  //~ (x)*cam_mat02+(y)*cam_mat12+(z)*cam_mat22
+	
+	printf("cam_mat00: %d\n", cam_mat00);
+	printf("cam_mat10: %d\n", cam_mat10);
+	printf("cam_mat20: %d\n", cam_mat20);
+	printf("cam_mat01: %d\n", cam_mat01);
+	printf("cam_mat11: %d\n", cam_mat11);
+	printf("cam_mat21: %d\n", cam_mat21);
+	printf("cam_mat02: %d\n", cam_mat02);
+	printf("cam_mat12: %d\n", cam_mat12);
+	printf("cam_mat22: %d\n", cam_mat22);
+	
+	printf("x: %f\n", x);
+	printf("y: %f\n", y);
+	printf("z: %f\n", z);
+	printf("tx: %f\n", *tx);
+	printf("ty: %f\n", *ty);
+	printf("tz: %f\n", *tz);
 	
 }
 
-void project_point(int x, int y, int z, float * sx, float * sy){
+void project_point(float x, float y, float z, float * sx, float * sy){
 	
-	if ( z == 0 || x == 0 || k_screen_scale == 0 ) { 
-		*sx = 99999;
-		*sy = 99999;
-	} else {
+	printf("project_point\n");
+	printf("x: %f\n", x);
+	printf("y: %f\n", y);
+	printf("z: %f\n", z);
+	
+	//~ if ( z == 0 || x == 0 || k_screen_scale == 0 ) { 
+		//~ *sx = 99999;
+		//~ *sy = 99999;
+	//~ } else {
 		*sx = x * k_screen_scale / z + k_x_center;
 		*sy = y * k_screen_scale / z + k_x_center;
-	}
+	//~ }
+	
+	printf("sx: %f\n", *sx);
+	printf("sz: %f\n", *sy);
+	printf("k_screen_scale: %d\n", k_screen_scale);
+	printf("k_x_center: %d\n", k_x_center);
 	
 }
 
-void project_radius(float radius, float tz, float * sradius){	
-	*sradius = radius * k_screen_scale/abs(tz);
+void project_radius(float radius, float tz, float * sradius){
+	if(tz < 0)
+		tz *= -1;
+	
+	*sradius = radius * k_screen_scale/tz;
+	printf("p_r sradius: %f\n", *sradius);
+	printf("p_r r: %f\n", radius);
+	printf("p_r z: %f\n", tz);
+	printf("p_r kss: %d\n", k_screen_scale);
 }
 
 void is_visible(object_t * obj){

@@ -710,6 +710,25 @@ function rotate_point(x,y,z)
 end
 
 function rotate_cam_point(x,y,z)
+	
+	printh ("cam_mat00: " .. ( cam_mat00))
+	printh ("cam_mat10: " .. ( cam_mat10))
+	printh ("cam_mat20: " .. ( cam_mat20))
+	printh ("cam_mat01: " .. ( cam_mat01))
+	printh ("cam_mat11: " .. ( cam_mat11))
+	printh ("cam_mat21: " .. ( cam_mat21))
+	printh ("cam_mat02: " .. ( cam_mat02))
+	printh ("cam_mat12: " .. ( cam_mat12))
+	printh ("cam_mat22: " .. ( cam_mat22))
+	
+	printh ("x: " .. (x))
+	printh ("y: " .. (y))
+	printh ("z: " .. (z))
+	
+	printh ("tx: " .. (x)*cam_mat00+(y)*cam_mat10+(z)*cam_mat20)
+	printh ("ty: " .. (x)*cam_mat01+(y)*cam_mat11+(z)*cam_mat21)
+	printh ("tz: " .. (x)*cam_mat02+(y)*cam_mat12+(z)*cam_mat22)
+	
 	return (x)*cam_mat00+(y)*cam_mat10+(z)*cam_mat20,(x)*cam_mat01+(y)*cam_mat11+(z)*cam_mat21,(x)*cam_mat02+(y)*cam_mat12+(z)*cam_mat22
 end
 
@@ -936,10 +955,26 @@ function z_clip_line(p1x,p1y,p1z,p2x,p2y,p2z,clip)
 end
 
 function project_point(x,y,z)
+	printh ("project_point")
+	printh ("x: " .. (x))
+	printh ("y: " .. (y))
+	printh ("z: " .. (z))
+	
+	printh ("sx: " .. (x*k_screen_scale/z+k_x_center))
+	printh ("sy: " .. (y*k_screen_scale/z+k_x_center))
+	
+	printh ("k_screen_scale: " .. (k_screen_scale))
+	printh ("k_x_center: " .. (k_x_center))
+	
 	return x*k_screen_scale/z+k_x_center,y*k_screen_scale/z+k_x_center
 end
 
 function project_radius(r,z)
+	printh ("p_r sradius: " .. (r*k_screen_scale/abs(z)))
+	printh ("p_r r: " .. (r))
+	printh ("p_r z: " .. (z))
+	printh ("p_r z: " .. (abs(z)))
+	printh ("p_r kss: " .. (k_screen_scale))
 	return r*k_screen_scale/abs(z)
 end
 
@@ -1022,48 +1057,48 @@ function update_player()
 	old_y=player.y
 	old_z=player.z
 
-	printh ("player.x: " .. player.x)
-	printh ("player.y: " .. player.y)
-	printh ("player.z: " .. player.z)
+	--~ printh ("player.x: " .. player.x)
+	--~ printh ("player.y: " .. player.y)
+	--~ printh ("player.z: " .. player.z)
 	
 	player.x+=player.vx
-	printh ("player.x: " .. player.x)
-	printh ("player.y: " .. player.y)
-	printh ("player.z: " .. player.z)
+	--~ printh ("player.x: " .. player.x)
+	--~ printh ("player.y: " .. player.y)
+	--~ printh ("player.z: " .. player.z)
 	for object in all(obstacle_list) do
 		if( intersect_bounding_box(player, object)) player.vx=0 player.x=old_x 
 	end
 	
 	
-	printh ("player.x: " .. player.x)
-	printh ("player.y: " .. player.y)
-	printh ("player.z: " .. player.z)
+	--~ printh ("player.x: " .. player.x)
+	--~ printh ("player.y: " .. player.y)
+	--~ printh ("player.z: " .. player.z)
 	player.y+=player.vy
 	
-	printh ("player.x: " .. player.x)
-	printh ("player.y: " .. player.y)
-	printh ("player.z: " .. player.z)
+	--~ printh ("player.x: " .. player.x)
+	--~ printh ("player.y: " .. player.y)
+	--~ printh ("player.z: " .. player.z)
 	
 	
 	player.z+=player.vz
-	printh ("player.x: " .. player.x)
-	printh ("player.y: " .. player.y)
-	printh ("player.z: " .. player.z)
+	--~ printh ("player.x: " .. player.x)
+	--~ printh ("player.y: " .. player.y)
+	--~ printh ("player.z: " .. player.z)
 	for object in all(obstacle_list) do
 		if( intersect_bounding_box(player, object)) player.vz=0 player.z=old_z 
 	end
 	
-	printh ("player.x: " .. player.x)
-	printh ("player.y: " .. player.y)
-	printh ("player.z: " .. player.z)
+	--~ printh ("player.x: " .. player.x)
+	--~ printh ("player.y: " .. player.y)
+	--~ printh ("player.z: " .. player.z)
 	
 	player.vx*=k_friction
 	player.vy*=k_friction
 	player.vz*=k_friction
 	
-	printh ("player.x: " .. player.x)
-	printh ("player.y: " .. player.y)
-	printh ("player.z: " .. player.z)
+	--~ printh ("player.x: " .. player.x)
+	--~ printh ("player.y: " .. player.y)
+	--~ printh ("player.z: " .. player.z)
 end
 
 function update_camera()	
@@ -1341,14 +1376,16 @@ function load_temple()
 		l=30
 		x=sin(i/5)*l
 		z=cos(i/5)*l
-		printh ("x: " .. (x))
-		printh ("i: " .. (i))
-		printh ("l: " .. (l))
+		--~ printh ("x: " .. (x))
+		--~ printh ("i: " .. (i))
+		--~ printh ("l: " .. (l))
 		c=load_object(read_vector_string(column_v_string),read_face_string(column_f_string),x,0,z,0,0,0,true,k_colorize_static,9)--load models
 	end
 	
 	fnt=load_object(read_vector_string(fountain_v_string),read_face_string(fountain_f_string),0,0,0,0,.08,0,true,k_colorize_static,14)
 	hole=load_object(read_vector_string(hole_v_string),read_face_string(hole_f_string),0,11,0,.125,.125,.125,false,k_colorize_dynamic,12)
+	
+	printh ("pyramids")
 	
 	pyramids={}
 	for i=1,5 do
