@@ -426,6 +426,7 @@ function load_object(object_vertices,object_faces,x,y,z,ax,ay,az,obstacle,color_
 
 
 	object.ax=ax or 0
+	printh ("object.ax: " .. (object.ax))
 	object.ay=ay or 0
 	object.az=az or 0
 	
@@ -613,13 +614,15 @@ end
 
 function transform_object(object)
 	
+		printh ("BEGIN_TRANSFORM_OBJ")
 	
 	if(object.visible)then
 		--~ printh ("object.visible: 1")
 		
-		--~ printh ("object.ax: " .. object.ax)
-		--~ printh ("object.ay: " .. object.ay)
-		--~ printh ("object.az: " .. object.az)
+		
+		printh ("object.ax: " .. object.ax)
+		printh ("object.ay: " .. object.ay)
+		printh ("object.az: " .. object.az)
 		generate_matrix_transform(object.ax,object.ay,object.az)
 		for i=1, #object.vertices do
 			local t_vertex=object.t_vertices[i]
@@ -630,6 +633,7 @@ function transform_object(object)
 	else
 		--~ printh ("object.visible: 0")
 	end
+		printh ("END_TRANSFORM_OBJ")
 end
 
 function generate_matrix_transform(xa,ya,za)

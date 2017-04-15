@@ -714,17 +714,19 @@ void rotate_point(float v[3], float t[3]){
 void transform_object(object_t * object){
 	//shouldn't this not be happening if all the axes are 0?
 	//~ printf("object.visible: %d\n", object->visible);
+		printf("BEGIN_TRANSFORM_OBJ\n");
 	if(object->visible){
 		
-		//~ printf("object.ax: %f\n", object->ax);
-		//~ printf("object.ay: %f\n", object->ay);
-		//~ printf("object.az: %f\n", object->az);
+		printf("object.ax: %f\n", object->ax);
+		printf("object.ay: %f\n", object->ay);
+		printf("object.az: %f\n", object->az);
 		generate_matrix_transform(object->ax, object->ay, object->az);
 		for(int i = 0; i < object->num_vertices; i++){
 			//pass direct access to objects verts
 			rotate_point(object->vertices[i], object->t_vertices[i]);
 		}
 	}
+		printf("END_TRANSFORM_OBJ\n");
 }
 
 void set_radius(object_t * object){
@@ -839,7 +841,7 @@ int debug_load_object_cnt = 0;
 object_t * load_object(
 	float object_vertices[][3], unsigned short num_vertices,
 	unsigned char object_faces[][3], unsigned short num_faces,
-	float x, float y, float z, int ax, int ay, int az,
+	float x, float y, float z, float ax, float ay, float az,
 	int obstacle, int color_mode, int color){
 	
 	//~ printf("fn load_object() [%d]\n", debug_load_object_cnt);
@@ -944,6 +946,7 @@ object_t * load_object(
 	
 	object->radius = 0;
 	object->ax = ax;
+	printf("object.ax: %f\n", object->ax);
 	object->ay = ay;
 	object->az = az;
 	object->num_vertices = num_vertices;
