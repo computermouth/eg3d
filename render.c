@@ -983,31 +983,31 @@ void load_temple(){
 	
 	init_stars();
 	
-	// create 5 columns
-	for(int i = 0; i < 5; i++){
-		float l = 30;
-		float x = pico_sin((float)(i+1)/5)*l;
-		float z = pico_cos((float)(i+1)/5)*l;
-		//~ printf("x: %f\n", x);
-		//~ printf("i: %f\n", (float)(i+1));
-		//~ printf("l: %f\n", l);
-		load_object(
-			column_v_string,
-			(sizeof(column_v_string)/sizeof(column_v_string[0])),
-			column_f_string,
-			(sizeof(column_f_string)/sizeof(column_f_string[0])),
-			x, 0, z, 0, 0, 0, 1, k_colorize_static, 9
-		);
-	}
+	//~ // create 5 columns
+	//~ for(int i = 0; i < 5; i++){
+		//~ float l = 30;
+		//~ float x = pico_sin((float)(i+1)/5)*l;
+		//~ float z = pico_cos((float)(i+1)/5)*l;
+		//~ //printf("x: %f\n", x);
+		//~ //printf("i: %f\n", (float)(i+1));
+		//~ //printf("l: %f\n", l);
+		//~ load_object(
+			//~ column_v_string,
+			//~ (sizeof(column_v_string)/sizeof(column_v_string[0])),
+			//~ column_f_string,
+			//~ (sizeof(column_f_string)/sizeof(column_f_string[0])),
+			//~ x, 0, z, 0, 0, 0, 1, k_colorize_static, 9
+		//~ );
+	//~ }
 	
-	//load fountain
-	load_object(
-		fountain_v_string,
-		(sizeof(fountain_v_string)/sizeof(fountain_v_string[0])),
-		fountain_f_string,
-		(sizeof(fountain_f_string)/sizeof(fountain_f_string[0])),
-		0,0,0,0,.08,0,1,k_colorize_static,14
-	);
+	//~ //load fountain
+	//~ load_object(
+		//~ fountain_v_string,
+		//~ (sizeof(fountain_v_string)/sizeof(fountain_v_string[0])),
+		//~ fountain_f_string,
+		//~ (sizeof(fountain_f_string)/sizeof(fountain_f_string[0])),
+		//~ 0,0,0,0,.08,0,1,k_colorize_static,14
+	//~ );
 	
 	//load hole
 	hole = load_object(
@@ -1017,23 +1017,21 @@ void load_temple(){
 		(sizeof(hole_f_string)/sizeof(hole_f_string[0])),
 		0,11,0,.125,.125,.125,0,k_colorize_dynamic,12
 	);
-	
-	printf("pyramids\n");
-	
-	// create 5 pyramids
-	for(int i = 0; i < 5; i++){
-		float l = 25;
-		float a = (float)(i+1)/5+.125;
-		float x = pico_sin(a)*l;
-		float z = pico_cos(a)*l;
-		pyramids[i] = load_object(
-			pyramid_v_string,
-			(sizeof(pyramid_v_string)/sizeof(pyramid_v_string[0])),
-			pyramid_f_string,
-			(sizeof(pyramid_f_string)/sizeof(pyramid_f_string[0])),
-			x, 0, z, 0, 0, 0, 0, k_colorize_static, 13
-		);
-	}
+		
+	//~ // create 5 pyramids
+	//~ for(int i = 0; i < 5; i++){
+		//~ float l = 25;
+		//~ float a = (float)(i+1)/5+.125;
+		//~ float x = pico_sin(a)*l;
+		//~ float z = pico_cos(a)*l;
+		//~ pyramids[i] = load_object(
+			//~ pyramid_v_string,
+			//~ (sizeof(pyramid_v_string)/sizeof(pyramid_v_string[0])),
+			//~ pyramid_f_string,
+			//~ (sizeof(pyramid_f_string)/sizeof(pyramid_f_string[0])),
+			//~ x, 0, z, 0, 0, 0, 0, k_colorize_static, 13
+		//~ );
+	//~ }
 	
 }
 
@@ -1043,29 +1041,18 @@ void update_temple(){
 	hole->ax += .002;
 	hole->y = 11 + pico_sin(cur_frame/100);
 		
-	for(int i = 0; i < 5; i++){
-		int l = 35;
-		float a = i / 5 + .125 + cur_frame / 1000;
-		//float x = sin(a)*l; UNUSED
-		//float z = cos(a)*l; UNUSED
-		pyramids[i]->x = pico_sin(a)*l;
-		pyramids[i]->z = pico_cos(a)*l;
-		pyramids[i]->y = 10 + pico_sin(a - cur_frame/ 200) * 4;
-		pyramids[i]->ax += .003;
-		pyramids[i]->ay += .002;
-		pyramids[i]->az += .004;
-	}
-	
+	//~ for(int i = 0; i < 5; i++){
 		//~ int l = 35;
-		//~ float a = 0 / 5 + .125 + cur_frame / 1000;
-		//float x = sin(a)*l; UNUSED
-		//float z = cos(a)*l; UNUSED
-		//~ pyramids->x = sin(a)*l;
-		//~ pyramids->z = cos(a)*l;
-		//~ pyramids->y = 10 + sin(a - cur_frame/ 200) * 4;
-		//~ pyramids->ax += .003;
-		//~ pyramids->ay += .002;
-		//~ pyramids->az += .004;
+		//~ float a = i / 5 + .125 + cur_frame / 1000;
+		//~ //float x = sin(a)*l; UNUSED
+		//~ //float z = cos(a)*l; UNUSED
+		//~ pyramids[i]->x = pico_sin(a)*l;
+		//~ pyramids[i]->z = pico_cos(a)*l;
+		//~ pyramids[i]->y = 10 + pico_sin(a - cur_frame/ 200) * 4;
+		//~ pyramids[i]->ax += .003;
+		//~ pyramids[i]->ay += .002;
+		//~ pyramids[i]->az += .004;
+	//~ }
 }
 
 void draw_stars(){
@@ -1243,6 +1230,7 @@ void rotate_cam_point(float x, float y, float z, float * tx, float * ty, float *
 	*tz = (x)*cam_mat02+(y)*cam_mat12+(z)*cam_mat22;
 	  //~ (x)*cam_mat02+(y)*cam_mat12+(z)*cam_mat22
 	
+	printf("BEGIN_ROTATE_CAMP\n");
 	printf("cam_mat00: %d\n", cam_mat00);
 	printf("cam_mat10: %d\n", cam_mat10);
 	printf("cam_mat20: %d\n", cam_mat20);
@@ -1259,12 +1247,13 @@ void rotate_cam_point(float x, float y, float z, float * tx, float * ty, float *
 	printf("tx: %f\n", *tx);
 	printf("ty: %f\n", *ty);
 	printf("tz: %f\n", *tz);
+	printf("END_ROTATE_CAMP\n");
 	
 }
 
 void project_point(float x, float y, float z, float * sx, float * sy){
 	
-	printf("project_point\n");
+	printf("BEGIN_PROJECT_POINT\n");
 	printf("x: %f\n", x);
 	printf("y: %f\n", y);
 	printf("z: %f\n", z);
@@ -1281,6 +1270,7 @@ void project_point(float x, float y, float z, float * sx, float * sy){
 	printf("sz: %f\n", *sy);
 	printf("k_screen_scale: %d\n", k_screen_scale);
 	printf("k_x_center: %d\n", k_x_center);
+	printf("END_PROJECT_POINT\n");
 	
 }
 
@@ -1289,27 +1279,30 @@ void project_radius(float radius, float tz, float * sradius){
 		tz *= -1;
 	
 	*sradius = radius * k_screen_scale/tz;
-	printf("p_r sradius: %f\n", *sradius);
-	printf("p_r r: %f\n", radius);
-	printf("p_r z: %f\n", tz);
-	printf("p_r kss: %d\n", k_screen_scale);
+	printf("BEGIN_PR\n");
+	printf("sradius: %f\n", *sradius);
+	printf("r: %f\n", radius);
+	printf("z: %f\n", tz);
+	printf("kss: %d\n", k_screen_scale);
+	printf("END_PR\n");
 }
 
 void is_visible(object_t * obj){
 	
-	printf ("is_vis\n");
-	printf ("object.tz: %f\n",(obj->tz));
-	printf ("object.radius: %f\n",(obj->radius));
-	printf ("z_max: %d\n",(z_max));
-	printf ("object.tz: %f\n",(obj->tz));
-	printf ("object.radius: %f\n",(obj->radius));
-	printf ("z_clip: %d\n",(z_clip));
+	//~ printf ("BEGIN_IS_VIS\n");
+	//~ printf ("object.tz: %f\n",(obj->tz));
+	//~ printf ("object.radius: %f\n",(obj->radius));
+	//~ printf ("z_max: %d\n",(z_max));
+	//~ printf ("object.tz: %f\n",(obj->tz));
+	//~ printf ("object.radius: %f\n",(obj->radius));
+	//~ printf ("z_clip: %d\n",(z_clip));
 	
-	printf ("object.sx: %f\n",(obj->sx));
-	printf ("object.sradius: %f\n",(obj->sradius));
+	//~ printf ("object.sx: %f\n",(obj->sx));
+	//~ printf ("object.sradius: %f\n",(obj->sradius));
 	
-	printf ("object.sy: %f\n",(obj->sy));
-	printf ("object.sradius: %f\n",(obj->sradius));
+	//~ printf ("object.sy: %f\n",(obj->sy));
+	//~ printf ("object.sradius: %f\n",(obj->sradius));
+	//~ printf ("END_IS_VIS\n");
 	
 	obj->visible = (
 		obj->tz + obj->radius  > z_max	&& 
@@ -1328,16 +1321,17 @@ void update_visible(object_t * object){
 	float py = object->y - cam_y;
 	float pz = object->z - cam_z;
 	
-	printf("update_visible\n");
-	printf("px: %f\n", px);
-	printf("py: %f\n", py);
-	printf("pz: %f\n", pz);
-	printf("object.x: %f\n", object->x);
-	printf("object.y: %f\n", object->y);
-	printf("object.z: %f\n", object->z);
-	printf("cam_x: %f\n", cam_x);
-	printf("cam_y: %f\n", cam_y);
-	printf("cam_z: %f\n", cam_z);
+	//~ printf("BEGIN_UPDATE_VIS\n");
+	//~ printf("px: %f\n", px);
+	//~ printf("py: %f\n", py);
+	//~ printf("pz: %f\n", pz);
+	//~ printf("object.x: %f\n", object->x);
+	//~ printf("object.y: %f\n", object->y);
+	//~ printf("object.z: %f\n", object->z);
+	//~ printf("cam_x: %f\n", cam_x);
+	//~ printf("cam_y: %f\n", cam_y);
+	//~ printf("cam_z: %f\n", cam_z);
+	//~ printf("END_UPDATE_VIS\n");
 	
 	rotate_cam_point(px, py, pz, &object->tx, &object->ty, &object->tz);
 	project_point(object->tx, object->ty, object->tz, &object->sx, &object->sy);

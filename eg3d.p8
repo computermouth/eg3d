@@ -574,16 +574,17 @@ function update_visible(object)
 
 		local px,py,pz = object.x-cam_x,object.y-cam_y,object.z-cam_z
 		
-		printh ("update_visible")
-		printh ("px: " .. px)
-		printh ("py: " .. py)
-		printh ("pz: " .. pz)
-		printh ("object.x: " .. object.x)
-		printh ("object.y: " .. object.y)
-		printh ("object.z: " .. object.z)
-		printh ("cam_x: " .. cam_x)
-		printh ("cam_y: " .. cam_y)
-		printh ("cam_z: " .. cam_z)
+		--~ printh ("BEGIN_UPDATE_VIS")
+		--~ printh ("px: " .. px)
+		--~ printh ("py: " .. py)
+		--~ printh ("pz: " .. pz)
+		--~ printh ("object.x: " .. object.x)
+		--~ printh ("object.y: " .. object.y)
+		--~ printh ("object.z: " .. object.z)
+		--~ printh ("cam_x: " .. cam_x)
+		--~ printh ("cam_y: " .. cam_y)
+		--~ printh ("cam_z: " .. cam_z)
+		--~ printh ("END_UPDATE_VIS")
 		
 		object.tx, object.ty, object.tz =rotate_cam_point(px,py,pz)
 		
@@ -711,6 +712,7 @@ end
 
 function rotate_cam_point(x,y,z)
 	
+	printh ("BEGIN_ROTATE_CAMP")
 	printh ("cam_mat00: " .. ( cam_mat00))
 	printh ("cam_mat10: " .. ( cam_mat10))
 	printh ("cam_mat20: " .. ( cam_mat20))
@@ -728,24 +730,27 @@ function rotate_cam_point(x,y,z)
 	printh ("tx: " .. (x)*cam_mat00+(y)*cam_mat10+(z)*cam_mat20)
 	printh ("ty: " .. (x)*cam_mat01+(y)*cam_mat11+(z)*cam_mat21)
 	printh ("tz: " .. (x)*cam_mat02+(y)*cam_mat12+(z)*cam_mat22)
+	printh ("END_ROTATE_CAMP")
 	
 	return (x)*cam_mat00+(y)*cam_mat10+(z)*cam_mat20,(x)*cam_mat01+(y)*cam_mat11+(z)*cam_mat21,(x)*cam_mat02+(y)*cam_mat12+(z)*cam_mat22
 end
 
 function is_visible(object)
-	printh ("is_vis")
-	printh ("object.tz: " .. (object.tz))
-	printh ("object.radius: " .. (object.radius))
-	printh ("z_max: " .. (z_max))
-	printh ("object.tz: " .. (object.tz))
-	printh ("object.radius: " .. (object.radius))
-	printh ("z_clip: " .. (z_clip))
+
+	--~ printh ("BEGIN_IS_VIS")
+	--~ printh ("object.tz: " .. (object.tz))
+	--~ printh ("object.radius: " .. (object.radius))
+	--~ printh ("z_max: " .. (z_max))
+	--~ printh ("object.tz: " .. (object.tz))
+	--~ printh ("object.radius: " .. (object.radius))
+	--~ printh ("z_clip: " .. (z_clip))
 	
-	printh ("object.sx: " .. (object.sx))
-	printh ("object.sradius: " .. (object.sradius))
+	--~ printh ("object.sx: " .. (object.sx))
+	--~ printh ("object.sradius: " .. (object.sradius))
 	
-	printh ("object.sy: " .. (object.sy))
-	printh ("object.sradius: " .. (object.sradius))
+	--~ printh ("object.sy: " .. (object.sy))
+	--~ printh ("object.sradius: " .. (object.sradius))
+	--~ printh ("END_IS_VIS")
 	
 	
 	if(object.tz+object.radius>z_max and object.tz-object.radius<z_clip and
@@ -955,7 +960,7 @@ function z_clip_line(p1x,p1y,p1z,p2x,p2y,p2z,clip)
 end
 
 function project_point(x,y,z)
-	printh ("project_point")
+	printh ("BEGIN_PROJECT_POINT")
 	printh ("x: " .. (x))
 	printh ("y: " .. (y))
 	printh ("z: " .. (z))
@@ -965,16 +970,18 @@ function project_point(x,y,z)
 	
 	printh ("k_screen_scale: " .. (k_screen_scale))
 	printh ("k_x_center: " .. (k_x_center))
+	printh ("END_PROJECT_POINT")
 	
 	return x*k_screen_scale/z+k_x_center,y*k_screen_scale/z+k_x_center
 end
 
 function project_radius(r,z)
-	printh ("p_r sradius: " .. (r*k_screen_scale/abs(z)))
-	printh ("p_r r: " .. (r))
-	printh ("p_r z: " .. (z))
-	printh ("p_r z: " .. (abs(z)))
-	printh ("p_r kss: " .. (k_screen_scale))
+	printh ("BEGIN_PR")
+	printh ("sradius: " .. (r*k_screen_scale/abs(z)))
+	printh ("r: " .. (r))
+	printh ("z: " .. (abs(z)))
+	printh ("kss: " .. (k_screen_scale))
+	printh ("END_PR")
 	return r*k_screen_scale/abs(z)
 end
 
@@ -1372,29 +1379,27 @@ function load_temple()
 	
 	init_stars()
 
-	for i=1,5 do
-		l=30
-		x=sin(i/5)*l
-		z=cos(i/5)*l
-		--~ printh ("x: " .. (x))
-		--~ printh ("i: " .. (i))
-		--~ printh ("l: " .. (l))
-		c=load_object(read_vector_string(column_v_string),read_face_string(column_f_string),x,0,z,0,0,0,true,k_colorize_static,9)--load models
-	end
+	--~ for i=1,5 do
+		--~ l=30
+		--~ x=sin(i/5)*l
+		--~ z=cos(i/5)*l
+		--~ --printh ("x: " .. (x))
+		--~ --printh ("i: " .. (i))
+		--~ --printh ("l: " .. (l))
+		--~ c=load_object(read_vector_string(column_v_string),read_face_string(column_f_string),x,0,z,0,0,0,true,k_colorize_static,9)--load models
+	--~ end
 	
-	fnt=load_object(read_vector_string(fountain_v_string),read_face_string(fountain_f_string),0,0,0,0,.08,0,true,k_colorize_static,14)
+	--~ fnt=load_object(read_vector_string(fountain_v_string),read_face_string(fountain_f_string),0,0,0,0,.08,0,true,k_colorize_static,14)
 	hole=load_object(read_vector_string(hole_v_string),read_face_string(hole_f_string),0,11,0,.125,.125,.125,false,k_colorize_dynamic,12)
-	
-	printh ("pyramids")
-	
-	pyramids={}
-	for i=1,5 do
-		l=25
-		a=i/5+.125
-		x=sin(a)*l
-		z=cos(a)*l
-		pyramids[i]=load_object(read_vector_string(pyramid_v_string),read_face_string(pyramid_f_string),x,0,z,0,0,0,false,k_colorize_static,13)
-	end
+		
+	--~ pyramids={}
+	--~ for i=1,5 do
+		--~ l=25
+		--~ a=i/5+.125
+		--~ x=sin(a)*l
+		--~ z=cos(a)*l
+		--~ pyramids[i]=load_object(read_vector_string(pyramid_v_string),read_face_string(pyramid_f_string),x,0,z,0,0,0,false,k_colorize_static,13)
+	--~ end
 end
 
 function update_temple()
@@ -1403,15 +1408,15 @@ function update_temple()
 	hole.ax+=.002
 	hole.y=11+sin(cur_frame/100)
 	
-	for i=1,5 do
-		l=35
-		a=i/5+.125+cur_frame/1000
-		x=sin(a)*l
-		z=cos(a)*l
-		pyramids[i].x=sin(a)*l pyramids[i].z=cos(a)*l
-		pyramids[i].y=10+sin(a-cur_frame/200)*4
-		pyramids[i].ax+=.003 pyramids[i].ay+=.002 pyramids[i].az+=.004
-	end
+	--~ for i=1,5 do
+		--~ l=35
+		--~ a=i/5+.125+cur_frame/1000
+		--~ x=sin(a)*l
+		--~ z=cos(a)*l
+		--~ pyramids[i].x=sin(a)*l pyramids[i].z=cos(a)*l
+		--~ pyramids[i].y=10+sin(a-cur_frame/200)*4
+		--~ pyramids[i].ax+=.003 pyramids[i].ay+=.002 pyramids[i].az+=.004
+	--~ end
 end
 
 function draw_temple_background()
