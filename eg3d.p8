@@ -647,12 +647,12 @@ function generate_matrix_transform(xa,ya,za)
 	local cz=cos(za)
 	
 	
-	--~ printh ("gmt_sx: " .. sx)
-	--~ printh ("gmt_sy: " .. sy)
-	--~ printh ("gmt_sz: " .. sz)
-	--~ printh ("gmt_cx: " .. cx)
-	--~ printh ("gmt_cy: " .. cy)
-	--~ printh ("gmt_cz: " .. cz)
+	printh ("gmt_sx: " .. sx)
+	printh ("gmt_sy: " .. sy)
+	printh ("gmt_sz: " .. sz)
+	printh ("gmt_cx: " .. cx)
+	printh ("gmt_cy: " .. cy)
+	printh ("gmt_cz: " .. cz)
 	
 	mat00=cz*cy
 	mat10=-sz
@@ -1133,12 +1133,14 @@ function init_3d()
 end
 
 function update_3d()
+	printh ("BEGIN_UPDATE_3D")
 	for object in all(object_list) do
 			update_visible(object)
 			transform_object(object)
 			cam_transform_object(object)
 			update_light()
 	end
+	printh ("END_UPDATE_3D")
 end
 
 function draw_3d()

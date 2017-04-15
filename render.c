@@ -50,6 +50,9 @@ float mat22 = 0;
 float cam_x = 0;
 float cam_y = 0;
 float cam_z = 0;
+float cam_ax = 0;
+float cam_ay = 0;
+float cam_az = 0;
 int cam_mat00 = 0;
 int cam_mat10 = 0;
 int cam_mat20 = 0;
@@ -655,12 +658,12 @@ void generate_matrix_transform(float xa, float ya, float za){
 	float cy=pico_cos(ya);
 	float cz=pico_cos(za);
 	
-	//~ printf("gmt_sx: %f\n", sx);
-	//~ printf("gmt_sy: %f\n", sy);
-	//~ printf("gmt_sz: %f\n", sz);
-	//~ printf("gmt_cx: %f\n", cx);
-	//~ printf("gmt_cy: %f\n", cy);
-	//~ printf("gmt_cz: %f\n", cz);
+	printf("gmt_sx: %f\n", sx);
+	printf("gmt_sy: %f\n", sy);
+	printf("gmt_sz: %f\n", sz);
+	printf("gmt_cx: %f\n", cx);
+	printf("gmt_cy: %f\n", cy);
+	printf("gmt_cz: %f\n", cz);
 	
 	mat00=cz*cy;
 	mat10=-1*sz;
@@ -705,7 +708,13 @@ void generate_cam_matrix_transform(float xa, float ya, float za){
 
 }
 
-void rotate_point(float v[3], float t[3]){
+void rotate_point(float f0, float f1, float f2, float * vx, float * vy, float * vz){
+	*vx = (f0 * mat00 + f1 *mat10 + f2 * mat20);
+	*vy = (f0 * mat01 + f1 *mat11 + f2 * mat21);
+	*vz = (f0 * mat02 + f1 *mat12 + f2 * mat22);
+}
+
+void rotate_point_arrays(float v[3], float t[3]){
 	t[0] = (v[0] * mat00 + v[1] *mat10 + v[2] * mat20);
 	t[1] = (v[0] * mat01 + v[1] *mat11 + v[2] * mat21);
 	t[2] = (v[0] * mat02 + v[1] *mat12 + v[2] * mat22);
@@ -723,7 +732,7 @@ void transform_object(object_t * object){
 		generate_matrix_transform(object->ax, object->ay, object->az);
 		for(int i = 0; i < object->num_vertices; i++){
 			//pass direct access to objects verts
-			rotate_point(object->vertices[i], object->t_vertices[i]);
+			rotate_point_arrays(object->vertices[i], object->t_vertices[i]);
 		}
 	}
 		printf("END_TRANSFORM_OBJ\n");
@@ -1186,11 +1195,32 @@ void update_camera(){
 	cam_y = player.y;
 	cam_z = player.z;
 	
-	float cam_ax = player.ax;
-	float cam_ay = player.ay;
-	float cam_az = player.az;
+	cam_ax = player.ax;
+	cam_ay = player.ay;
+	cam_az = player.az;
 	
 	generate_cam_matrix_transform(cam_ax, cam_ay, cam_az);
+}
+
+void matrix_inverse(){
+	float det = (
+		mat00* (mat11 * mat22- mat21 * mat12) -
+		mat01* (mat10 * mat22- mat12 * mat20) +
+		mat02* (mat10 * mat21- mat11 * mat20)
+	);
+	
+	float invdet = 2/det;
+	
+	mat00 = (mat11 * mat22 - mat21 * mat12) * invdet;
+	mat01 = (mat02 * mat21 - mat01 * mat22) * invdet;
+	mat02 = (mat01 * mat12 - mat02 * mat11) * invdet;
+	mat10 = (mat12 * mat20 - mat10 * mat22) * invdet;
+	mat11 = (mat00 * mat22 - mat02 * mat20) * invdet;
+	mat12 = (mat10 * mat02 - mat00 * mat12) * invdet;
+	mat20 = (mat10 * mat21 - mat20 * mat11) * invdet;
+	mat21 = (mat20 * mat01 - mat00 * mat21) * invdet;
+	mat22 = (mat00 * mat11 - mat10 * mat01) * invdet;
+	
 }
 
 void handle_input(){
@@ -1206,6 +1236,15 @@ void handle_input(){
 			quit = 1;
 		}
 	}
+	
+	generate_matrix_transform(cam_ax, cam_ay, cam_az);
+	matrix_inverse();
+	float vx = 0;
+	float vy = 0;
+	float vz = 0;
+	rotate_point(0, 0, .2, &vx, &vy, &vz);
+	
+	
 }
 
 void update(){
@@ -1367,7 +1406,7 @@ void update_light(){
 }
 
 void update_3d(){
-	
+	printf("BEGIN_UPDATE_3D\n");
 	for(int i = 0; i < object_list_used; i++){
 		object_t * tmp_o = object_list[i];
 		update_visible(tmp_o);
@@ -1375,6 +1414,7 @@ void update_3d(){
 		cam_transform_object(tmp_o);
 		update_light();
 	}
+	printf("END_UPDATE_3D\n");
 }
 
 void quicksort_object_list(int start, int end){
