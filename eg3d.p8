@@ -256,15 +256,15 @@ t_light_z=0
 
 function init_light()
 
-	printh ("BEGIN_INIT_LIGHT")
-	printh ("prelight1_x: " .. (light1_x))
-	printh ("prelight1_y: " .. (light1_y))
-	printh ("prelight1_z: " .. (light1_z))
+	--~ printh ("BEGIN_INIT_LIGHT")
+	--~ printh ("prelight1_x: " .. (light1_x))
+	--~ printh ("prelight1_y: " .. (light1_y))
+	--~ printh ("prelight1_z: " .. (light1_z))
 	light1_x,light1_y,light1_z=normalize(light1_x,light1_y,light1_z)
-	printh ("light1_x: " .. (light1_x))
-	printh ("light1_y: " .. (light1_y))
-	printh ("light1_z: " .. (light1_z))
-	printh ("END_INIT_LIGHT")
+	--~ printh ("light1_x: " .. (light1_x))
+	--~ printh ("light1_y: " .. (light1_y))
+	--~ printh ("light1_z: " .. (light1_z))
+	--~ printh ("END_INIT_LIGHT")
 end
 
 function update_light()
@@ -328,53 +328,53 @@ debug_load_object_cnt = 0
 
 function load_object(object_vertices,object_faces,x,y,z,ax,ay,az,obstacle,color_mode,color)
 	
-	printh ("BEGIN_LOAD_OBJECT")
+	--~ printh ("BEGIN_LOAD_OBJECT")
 	
 	object=new_object()
 	
- 	printh ("object.num_faces: " .. #object_faces)
- 	printh ("object.num_vertices: " .. #object_vertices)
- 	printh ("object.x: " .. object.x)
- 	printh ("object.y: " .. object.y)
- 	printh ("object.z: " .. object.z)
- 	printh ("object.rx: " .. object.rx)
- 	printh ("object.ry: " .. object.ry)
- 	printh ("object.rz: " .. object.rz)
- 	printh ("object.tx: " .. object.tx)
- 	printh ("object.ty: " .. object.ty)
- 	printh ("object.tz: " .. object.tz)
- 	printh ("object.ax: " .. object.ax)
- 	printh ("object.ay: " .. object.ay)
- 	printh ("object.az: " .. object.az)
- 	printh ("object.sx: " .. object.sx)
- 	printh ("object.sy: " .. object.sy)
- 	printh ("object.color: " .. color)
- 	printh ("object.color_mode: " .. color_mode)
- 	printh ("object.radius: " .. object.radius)
- 	printh ("object.sradius: " .. object.sradius)
+ 	--~ printh ("object.num_faces: " .. #object_faces)
+ 	--~ printh ("object.num_vertices: " .. #object_vertices)
+ 	--~ printh ("object.x: " .. object.x)
+ 	--~ printh ("object.y: " .. object.y)
+ 	--~ printh ("object.z: " .. object.z)
+ 	--~ printh ("object.rx: " .. object.rx)
+ 	--~ printh ("object.ry: " .. object.ry)
+ 	--~ printh ("object.rz: " .. object.rz)
+ 	--~ printh ("object.tx: " .. object.tx)
+ 	--~ printh ("object.ty: " .. object.ty)
+ 	--~ printh ("object.tz: " .. object.tz)
+ 	--~ printh ("object.ax: " .. object.ax)
+ 	--~ printh ("object.ay: " .. object.ay)
+ 	--~ printh ("object.az: " .. object.az)
+ 	--~ printh ("object.sx: " .. object.sx)
+ 	--~ printh ("object.sy: " .. object.sy)
+ 	--~ printh ("object.color: " .. color)
+ 	--~ printh ("object.color_mode: " .. color_mode)
+ 	--~ printh ("object.radius: " .. object.radius)
+ 	--~ printh ("object.sradius: " .. object.sradius)
  	
- 	printh ("object.obstacle: " .. 0)
- 	printh ("object.visible: " .. 1)
- 	printh ("object.render: " .. 1)
- 	printh ("object.background: " .. 0)
- 	printh ("object.collision_x: " .. 1)
- 	printh ("object.collision_y: " .. 0)
- 	printh ("object.collision_down: " .. 0)
- 	printh ("object.collision_up: " .. 0)
- 	printh ("object.collision_left: " .. 0)
- 	printh ("object.ring: " .. 0)
+ 	--~ printh ("object.obstacle: " .. 0)
+ 	--~ printh ("object.visible: " .. 1)
+ 	--~ printh ("object.render: " .. 1)
+ 	--~ printh ("object.background: " .. 0)
+ 	--~ printh ("object.collision_x: " .. 1)
+ 	--~ printh ("object.collision_y: " .. 0)
+ 	--~ printh ("object.collision_down: " .. 0)
+ 	--~ printh ("object.collision_up: " .. 0)
+ 	--~ printh ("object.collision_left: " .. 0)
+ 	--~ printh ("object.ring: " .. 0)
  	
- 	printh ("object.min_x: " .. object.min_x)
- 	printh ("object.min_y: " .. object.min_y)
- 	printh ("object.min_z: " .. object.min_z)
- 	printh ("object.max_x: " .. object.max_x)
- 	printh ("object.max_y: " .. object.max_y)
- 	printh ("object.max_z: " .. object.max_z)
- 	printh ("object.vx: " .. object.vx)
- 	printh ("object.vy: " .. object.vy)
- 	printh ("object.vz: " .. object.vz)
- 	printh ("object.age: " .. object.age)
- 	printh ("object.health: " .. object.health)
+ 	--~ printh ("object.min_x: " .. object.min_x)
+ 	--~ printh ("object.min_y: " .. object.min_y)
+ 	--~ printh ("object.min_z: " .. object.min_z)
+ 	--~ printh ("object.max_x: " .. object.max_x)
+ 	--~ printh ("object.max_y: " .. object.max_y)
+ 	--~ printh ("object.max_z: " .. object.max_z)
+ 	--~ printh ("object.vx: " .. object.vx)
+ 	--~ printh ("object.vy: " .. object.vy)
+ 	--~ printh ("object.vz: " .. object.vz)
+ 	--~ printh ("object.age: " .. object.age)
+ 	--~ printh ("object.health: " .. object.health)
 	
 	object.vertices=object_vertices
 
@@ -382,8 +382,8 @@ function load_object(object_vertices,object_faces,x,y,z,ax,ay,az,obstacle,color_
 	--we share the initial vertices
 	for i=1,#object_vertices do
 			for j=1,3 do
-				printh ("ivert[" .. (i - 1) .. "][" .. (j - 1) .. "]: " .. object_vertices[i][j])
-				printh ("overt[" .. (i - 1) .. "][" .. (j - 1) .. "]: " .. object.vertices[i][j])
+				--~ printh ("ivert[" .. (i - 1) .. "][" .. (j - 1) .. "]: " .. object_vertices[i][j])
+				--~ printh ("overt[" .. (i - 1) .. "][" .. (j - 1) .. "]: " .. object.vertices[i][j])
 			end
 	end
 
@@ -393,8 +393,8 @@ function load_object(object_vertices,object_faces,x,y,z,ax,ay,az,obstacle,color_
 		object.t_vertices[i]={}
 			for j=1,3 do
 				object.t_vertices[i][j]=object.vertices[i][j]
-				printh ("itvert[" .. (i - 1) .. "][" .. (j - 1) .. "]: " .. object_vertices[i][j])
-				printh ("otvert[" .. (i - 1) .. "][" .. (j - 1) .. "]: " .. object.t_vertices[i][j])
+				--~ printh ("itvert[" .. (i - 1) .. "][" .. (j - 1) .. "]: " .. object_vertices[i][j])
+				--~ printh ("otvert[" .. (i - 1) .. "][" .. (j - 1) .. "]: " .. object.t_vertices[i][j])
 			end
 	end
 	
@@ -418,7 +418,7 @@ function load_object(object_vertices,object_faces,x,y,z,ax,ay,az,obstacle,color_
 
 		for i=1,#object_faces do
 			for j=1,#object_faces[i] do
-				printh ("iface[" .. (i - 1) .. "][" .. (j - 1) .. "]: " .. (object_faces[i][j]-1))
+				--~ printh ("iface[" .. (i - 1) .. "][" .. (j - 1) .. "]: " .. (object_faces[i][j]-1))
 			end
 		end
 	
@@ -429,9 +429,9 @@ function load_object(object_vertices,object_faces,x,y,z,ax,ay,az,obstacle,color_
 	object.ax=ax or 0
 	object.ay=ay or 0
 	object.az=az or 0
-	printh ("object.ax: " .. (object.ax))
-	printh ("object.ay: " .. (object.ay))
-	printh ("object.az: " .. (object.az))
+	--~ printh ("object.ax: " .. (object.ax))
+	--~ printh ("object.ay: " .. (object.ay))
+	--~ printh ("object.az: " .. (object.az))
 	
 	transform_object(object)
 	
@@ -441,15 +441,15 @@ function load_object(object_vertices,object_faces,x,y,z,ax,ay,az,obstacle,color_
 	object.x=x or 0
 	object.y=y or 0
 	object.z=z or 0
-	printh ("object.x: " .. (object.x))
-	printh ("object.y: " .. (object.y))
-	printh ("object.z: " .. (object.z))
+	--~ printh ("object.x: " .. (object.x))
+	--~ printh ("object.y: " .. (object.y))
+	--~ printh ("object.z: " .. (object.z))
 	
 	object.color = color or 8
 	object.color_mode= color_mode or k_colorize_static
 	object.obstacle = obstacle or false
-	printh ("object.color: " .. (object.color))
-	printh ("object.color_mode: " .. (object.color_mode))
+	--~ printh ("object.color: " .. (object.color))
+	--~ printh ("object.color_mode: " .. (object.color_mode))
 	
 	if(obstacle)add(obstacle_list,object)
 	
@@ -457,24 +457,24 @@ function load_object(object_vertices,object_faces,x,y,z,ax,ay,az,obstacle,color_
 		color_faces(object,color)
 	end
 	
-	printh ("END_LOAD_OBJECT")
+	--~ printh ("END_LOAD_OBJECT")
 	
 	return object
 end
 
 function set_radius(object)
-	printh ("BEGIN_SET_RADIUS")
+	--~ printh ("BEGIN_SET_RADIUS")
 	for vertex in all(object.vertices) do
 		object.radius=max(object.radius,vertex[1]*vertex[1]+vertex[2]*vertex[2]+vertex[3]*vertex[3])
-		printh ("object.radius: " .. (object.radius))
+		--~ printh ("object.radius: " .. (object.radius))
 	end
 	object.radius=sqrt(object.radius)
-		printh ("object.radius: " .. (object.radius))
-	printh ("END_SET_RADIUS")
+		--~ printh ("object.radius: " .. (object.radius))
+	--~ printh ("END_SET_RADIUS")
 end
 
 function set_bounding_box(object)
-	printh ("BEGIN_SET_BOUNDING_BOX")
+	--~ printh ("BEGIN_SET_BOUNDING_BOX")
 	for vertex in all(object.t_vertices) do
 		object.min_x=min(vertex[1],object.min_x)
 		object.min_y=min(vertex[2],object.min_y)
@@ -482,36 +482,36 @@ function set_bounding_box(object)
 		object.max_x=max(vertex[1],object.max_x)
 		object.max_y=max(vertex[2],object.max_y)
 		object.max_z=max(vertex[3],object.max_z)
-		printh ("vertex[0]: " .. (vertex[1]))
-		printh ("vertex[1]: " .. (vertex[2]))
-		printh ("vertex[2]: " .. (vertex[3]))
-		printh ("object.min_x: " .. (object.min_x))
-		printh ("object.min_y: " .. (object.min_y))
-		printh ("object.min_z: " .. (object.min_z))
-		printh ("object.max_x: " .. (object.max_x))
-		printh ("object.max_y: " .. (object.max_y))
-		printh ("object.max_z: " .. (object.max_z))
+		--~ printh ("vertex[0]: " .. (vertex[1]))
+		--~ printh ("vertex[1]: " .. (vertex[2]))
+		--~ printh ("vertex[2]: " .. (vertex[3]))
+		--~ printh ("object.min_x: " .. (object.min_x))
+		--~ printh ("object.min_y: " .. (object.min_y))
+		--~ printh ("object.min_z: " .. (object.min_z))
+		--~ printh ("object.max_x: " .. (object.max_x))
+		--~ printh ("object.max_y: " .. (object.max_y))
+		--~ printh ("object.max_z: " .. (object.max_z))
 	end
 
-	printh ("END_SET_BOUNDING_BOX")
+	--~ printh ("END_SET_BOUNDING_BOX")
 end
 
 function intersect_bounding_box(object_a, object_b)
 
-local test = 0
+--~ local test = 0
 
-if ((object_a.min_x+object_a.x < object_b.max_x+object_b.x) and (object_a.max_x+object_a.x > object_b.min_x+object_b.x) and
-         (object_a.min_y+object_a.y < object_b.max_y+object_b.y) and (object_a.max_y+object_a.y > object_b.min_y+object_b.y) and
-         (object_a.min_z+object_a.z < object_b.max_z+object_b.z) and (object_a.max_z+object_a.z > object_b.min_z+object_b.z)) then
-    test = 1
-end
+--~ if ((object_a.min_x+object_a.x < object_b.max_x+object_b.x) and (object_a.max_x+object_a.x > object_b.min_x+object_b.x) and
+         --~ (object_a.min_y+object_a.y < object_b.max_y+object_b.y) and (object_a.max_y+object_a.y > object_b.min_y+object_b.y) and
+         --~ (object_a.min_z+object_a.z < object_b.max_z+object_b.z) and (object_a.max_z+object_a.z > object_b.min_z+object_b.z)) then
+    --~ test = 1
+--~ end
 
 
-	printh ("BEGIN_INTERSECT_BOUNDING_BOX")
+	--~ printh ("BEGIN_INTERSECT_BOUNDING_BOX")
 	
-	printh ("ibb: " .. (test))
+	--~ printh ("ibb: " .. (test))
 	
-	printh ("END_INTERSECT_BOUNDING_BOX")
+	--~ printh ("END_INTERSECT_BOUNDING_BOX")
 
 	return 
         ((object_a.min_x+object_a.x < object_b.max_x+object_b.x) and (object_a.max_x+object_a.x > object_b.min_x+object_b.x) and
@@ -612,17 +612,17 @@ function update_visible(object)
 
 		local px,py,pz = object.x-cam_x,object.y-cam_y,object.z-cam_z
 		
-		printh ("BEGIN_UPDATE_VIS")
-		printh ("px: " .. px)
-		printh ("py: " .. py)
-		printh ("pz: " .. pz)
-		printh ("object.x: " .. object.x)
-		printh ("object.y: " .. object.y)
-		printh ("object.z: " .. object.z)
-		printh ("cam_x: " .. cam_x)
-		printh ("cam_y: " .. cam_y)
-		printh ("cam_z: " .. cam_z)
-		printh ("END_UPDATE_VIS")
+		--~ printh ("BEGIN_UPDATE_VIS")
+		--~ printh ("px: " .. px)
+		--~ printh ("py: " .. py)
+		--~ printh ("pz: " .. pz)
+		--~ printh ("object.x: " .. object.x)
+		--~ printh ("object.y: " .. object.y)
+		--~ printh ("object.z: " .. object.z)
+		--~ printh ("cam_x: " .. cam_x)
+		--~ printh ("cam_y: " .. cam_y)
+		--~ printh ("cam_z: " .. cam_z)
+		--~ printh ("END_UPDATE_VIS")
 		
 		object.tx, object.ty, object.tz =rotate_cam_point(px,py,pz)
 		
@@ -632,7 +632,7 @@ function update_visible(object)
 end
 
 function cam_transform_object(object)
-	printh ("BEGIN_CAM_TRANSFORM")
+	--~ printh ("BEGIN_CAM_TRANSFORM")
 	if(object.visible)then
 
 		for i=1, #object.vertices do
@@ -642,34 +642,34 @@ function cam_transform_object(object)
 			vertex[2]+=object.y - cam_y
 			vertex[3]+=object.z - cam_z
 			
-			printh ("vertex[0]: " .. (vertex[1]))
-			printh ("vertex[1]: " .. (vertex[2]))
-			printh ("vertex[2]: " .. (vertex[3]))
+			--~ printh ("vertex[0]: " .. (vertex[1]))
+			--~ printh ("vertex[1]: " .. (vertex[2]))
+			--~ printh ("vertex[2]: " .. (vertex[3]))
 			
 			vertex[1],vertex[2],vertex[3]=rotate_cam_point(vertex[1],vertex[2],vertex[3])
 			
-			printh ("vertex[0]: " .. (vertex[1]))
-			printh ("vertex[1]: " .. (vertex[2]))
-			printh ("vertex[2]: " .. (vertex[3]))
+			--~ printh ("vertex[0]: " .. (vertex[1]))
+			--~ printh ("vertex[1]: " .. (vertex[2]))
+			--~ printh ("vertex[2]: " .. (vertex[3]))
 		
 		end
 	
 
 	end
-	printh ("END_CAM_TRANSFORM")
+	--~ printh ("END_CAM_TRANSFORM")
 end
 
 function transform_object(object)
 	
-		printh ("BEGIN_TRANSFORM_OBJ")
+		--~ printh ("BEGIN_TRANSFORM_OBJ")
 	
 	if(object.visible)then
 		--~ printh ("object.visible: 1")
 		
 		
-		printh ("object.ax: " .. object.ax)
-		printh ("object.ay: " .. object.ay)
-		printh ("object.az: " .. object.az)
+		--~ printh ("object.ax: " .. object.ax)
+		--~ printh ("object.ay: " .. object.ay)
+		--~ printh ("object.az: " .. object.az)
 		generate_matrix_transform(object.ax,object.ay,object.az)
 		for i=1, #object.vertices do
 			local t_vertex=object.t_vertices[i]
@@ -680,13 +680,13 @@ function transform_object(object)
 	else
 		--~ printh ("object.visible: 0")
 	end
-		printh ("END_TRANSFORM_OBJ")
+		--~ printh ("END_TRANSFORM_OBJ")
 end
 
 function generate_matrix_transform(xa,ya,za)
 
 	
-	printh ("BEGIN_GMT")
+	--~ printh ("BEGIN_GMT")
 	
 	local sx=sin(xa)
 	local sy=sin(ya)
@@ -696,12 +696,12 @@ function generate_matrix_transform(xa,ya,za)
 	local cz=cos(za)
 	
 	
-	printh ("gmt_sx: " .. sx)
-	printh ("gmt_sy: " .. sy)
-	printh ("gmt_sz: " .. sz)
-	printh ("gmt_cx: " .. cx)
-	printh ("gmt_cy: " .. cy)
-	printh ("gmt_cz: " .. cz)
+	--~ printh ("gmt_sx: " .. sx)
+	--~ printh ("gmt_sy: " .. sy)
+	--~ printh ("gmt_sz: " .. sz)
+	--~ printh ("gmt_cx: " .. cx)
+	--~ printh ("gmt_cy: " .. cy)
+	--~ printh ("gmt_cz: " .. cz)
 	
 	mat00=cz*cy
 	mat10=-sz
@@ -713,16 +713,16 @@ function generate_matrix_transform(xa,ya,za)
 	mat12=sx*cz
 	mat22=sx*sz*sy+cx*cy
 
-	printh ("gmt_mat00: " .. mat00)
-	printh ("gmt_mat10: " .. mat10)
-	printh ("gmt_mat20: " .. mat20)
-	printh ("gmt_mat01: " .. mat01)
-	printh ("gmt_mat11: " .. mat11)
-	printh ("gmt_mat21: " .. mat21)
-	printh ("gmt_mat02: " .. mat02)
-	printh ("gmt_mat12: " .. mat12)
-	printh ("gmt_mat22: " .. mat22)
-	printh ("END_GMT")
+	--~ printh ("gmt_mat00: " .. mat00)
+	--~ printh ("gmt_mat10: " .. mat10)
+	--~ printh ("gmt_mat20: " .. mat20)
+	--~ printh ("gmt_mat01: " .. mat01)
+	--~ printh ("gmt_mat11: " .. mat11)
+	--~ printh ("gmt_mat21: " .. mat21)
+	--~ printh ("gmt_mat02: " .. mat02)
+	--~ printh ("gmt_mat12: " .. mat12)
+	--~ printh ("gmt_mat22: " .. mat22)
+	--~ printh ("END_GMT")
 end
 
 function generate_cam_matrix_transform(xa,ya,za)
@@ -748,7 +748,7 @@ function generate_cam_matrix_transform(xa,ya,za)
 end
 
 function	matrix_inverse()
-	printh ("BEGIN_MATRIX_INVERSE")
+	--~ printh ("BEGIN_MATRIX_INVERSE")
 	local det = mat00* (mat11 * mat22- mat21 * mat12) -
                 mat01* (mat10 * mat22- mat12 * mat20) +
                 mat02* (mat10 * mat21- mat11 * mat20)
@@ -758,70 +758,70 @@ function	matrix_inverse()
 		
 		mat00,mat01,mat02,mat10,mat11,mat12,mat20,mat21,mat22=(mat11 * mat22 - mat21 * mat12) * invdet,(mat02 * mat21 - mat01 * mat22) * invdet,(mat01 * mat12 - mat02 * mat11) * invdet,(mat12 * mat20 - mat10 * mat22) * invdet,(mat00 * mat22 - mat02 * mat20) * invdet,(mat10 * mat02 - mat00 * mat12) * invdet,(mat10 * mat21 - mat20 * mat11) * invdet,(mat20 * mat01 - mat00 * mat21) * invdet,(mat00 * mat11 - mat10 * mat01) * invdet
 
-	printh ("det: " .. (det))
-	printh ("invdet: " .. (invdet))
-	printh ("mat00: " .. ( mat00))
-	printh ("mat01: " .. ( mat01))
-	printh ("mat02: " .. ( mat02))
-	printh ("mat10: " .. ( mat10))
-	printh ("mat11: " .. ( mat11))
-	printh ("mat12: " .. ( mat12))
-	printh ("mat20: " .. ( mat20))
-	printh ("mat21: " .. ( mat21))
-	printh ("mat22: " .. ( mat22))
+	--~ printh ("det: " .. (det))
+	--~ printh ("invdet: " .. (invdet))
+	--~ printh ("mat00: " .. ( mat00))
+	--~ printh ("mat01: " .. ( mat01))
+	--~ printh ("mat02: " .. ( mat02))
+	--~ printh ("mat10: " .. ( mat10))
+	--~ printh ("mat11: " .. ( mat11))
+	--~ printh ("mat12: " .. ( mat12))
+	--~ printh ("mat20: " .. ( mat20))
+	--~ printh ("mat21: " .. ( mat21))
+	--~ printh ("mat22: " .. ( mat22))
 
 
 
 		--uh yeah i looked this one up :-)
-	printh ("END_MATRIX_INVERSE")
+	--~ printh ("END_MATRIX_INVERSE")
 end
 
 function rotate_point(x,y,z)
 	
-	printh ("BEGIN_ROTATE_POINT")
-	printh ("in0: " .. ( x))
-	printh ("in1: " .. ( y))
-	printh ("in2: " .. ( z))
+	--~ printh ("BEGIN_ROTATE_POINT")
+	--~ printh ("in0: " .. ( x))
+	--~ printh ("in1: " .. ( y))
+	--~ printh ("in2: " .. ( z))
 	
-	printh ("mat00: " .. (mat00));
-	printh ("mat10: " .. (mat10));
-	printh ("mat20: " .. (mat20));
-	printh ("mat01: " .. (mat01));
-	printh ("mat11: " .. (mat11));
-	printh ("mat21: " .. (mat21));
-	printh ("mat02: " .. (mat02));
-	printh ("mat12: " .. (mat12));
-	printh ("mat22: " .. (mat22));
+	--~ printh ("mat00: " .. (mat00));
+	--~ printh ("mat10: " .. (mat10));
+	--~ printh ("mat20: " .. (mat20));
+	--~ printh ("mat01: " .. (mat01));
+	--~ printh ("mat11: " .. (mat11));
+	--~ printh ("mat21: " .. (mat21));
+	--~ printh ("mat02: " .. (mat02));
+	--~ printh ("mat12: " .. (mat12));
+	--~ printh ("mat22: " .. (mat22));
 	
-	printh ("out0: " .. ((x)*mat00+(y)*mat10+(z)*mat20))
-	printh ("out1: " .. ((x)*mat01+(y)*mat11+(z)*mat21))
-	printh ("out2: " .. ((x)*mat02+(y)*mat12+(z)*mat22))
-	printh ("END_ROTATE_POINT")
+	--~ printh ("out0: " .. ((x)*mat00+(y)*mat10+(z)*mat20))
+	--~ printh ("out1: " .. ((x)*mat01+(y)*mat11+(z)*mat21))
+	--~ printh ("out2: " .. ((x)*mat02+(y)*mat12+(z)*mat22))
+	--~ printh ("END_ROTATE_POINT")
 
 	return (x)*mat00+(y)*mat10+(z)*mat20,(x)*mat01+(y)*mat11+(z)*mat21,(x)*mat02+(y)*mat12+(z)*mat22
 end
 
 function rotate_cam_point(x,y,z)
 	
-	printh ("BEGIN_ROTATE_CAMP")
-	printh ("cam_mat00: " .. ( cam_mat00))
-	printh ("cam_mat10: " .. ( cam_mat10))
-	printh ("cam_mat20: " .. ( cam_mat20))
-	printh ("cam_mat01: " .. ( cam_mat01))
-	printh ("cam_mat11: " .. ( cam_mat11))
-	printh ("cam_mat21: " .. ( cam_mat21))
-	printh ("cam_mat02: " .. ( cam_mat02))
-	printh ("cam_mat12: " .. ( cam_mat12))
-	printh ("cam_mat22: " .. ( cam_mat22))
+	--~ printh ("BEGIN_ROTATE_CAMP")
+	--~ printh ("cam_mat00: " .. ( cam_mat00))
+	--~ printh ("cam_mat10: " .. ( cam_mat10))
+	--~ printh ("cam_mat20: " .. ( cam_mat20))
+	--~ printh ("cam_mat01: " .. ( cam_mat01))
+	--~ printh ("cam_mat11: " .. ( cam_mat11))
+	--~ printh ("cam_mat21: " .. ( cam_mat21))
+	--~ printh ("cam_mat02: " .. ( cam_mat02))
+	--~ printh ("cam_mat12: " .. ( cam_mat12))
+	--~ printh ("cam_mat22: " .. ( cam_mat22))
 	
-	printh ("x: " .. (x))
-	printh ("y: " .. (y))
-	printh ("z: " .. (z))
+	--~ printh ("x: " .. (x))
+	--~ printh ("y: " .. (y))
+	--~ printh ("z: " .. (z))
 	
-	printh ("tx: " .. (x)*cam_mat00+(y)*cam_mat10+(z)*cam_mat20)
-	printh ("ty: " .. (x)*cam_mat01+(y)*cam_mat11+(z)*cam_mat21)
-	printh ("tz: " .. (x)*cam_mat02+(y)*cam_mat12+(z)*cam_mat22)
-	printh ("END_ROTATE_CAMP")
+	--~ printh ("tx: " .. (x)*cam_mat00+(y)*cam_mat10+(z)*cam_mat20)
+	--~ printh ("ty: " .. (x)*cam_mat01+(y)*cam_mat11+(z)*cam_mat21)
+	--~ printh ("tz: " .. (x)*cam_mat02+(y)*cam_mat12+(z)*cam_mat22)
+	--~ printh ("END_ROTATE_CAMP")
 	
 	return (x)*cam_mat00+(y)*cam_mat10+(z)*cam_mat20,(x)*cam_mat01+(y)*cam_mat11+(z)*cam_mat21,(x)*cam_mat02+(y)*cam_mat12+(z)*cam_mat22
 end
@@ -1013,6 +1013,7 @@ function quicksort(t, start, endi)
   if(endi - start < 1) then return t end
   local pivot = start
   for i = start + 1, endi do
+	printh ("t.tz: " .. (t[i].tz))
     if t[i].tz <= t[pivot].tz then
       if i == pivot + 1 then
         t[pivot],t[pivot+1] = t[pivot+1],t[pivot]
@@ -1051,28 +1052,28 @@ function z_clip_line(p1x,p1y,p1z,p2x,p2y,p2z,clip)
 end
 
 function project_point(x,y,z)
-	printh ("BEGIN_PROJECT_POINT")
-	printh ("x: " .. (x))
-	printh ("y: " .. (y))
-	printh ("z: " .. (z))
+	--~ printh ("BEGIN_PROJECT_POINT")
+	--~ printh ("x: " .. (x))
+	--~ printh ("y: " .. (y))
+	--~ printh ("z: " .. (z))
 	
-	printh ("sx: " .. (x*k_screen_scale/z+k_x_center))
-	printh ("sy: " .. (y*k_screen_scale/z+k_x_center))
+	--~ printh ("sx: " .. (x*k_screen_scale/z+k_x_center))
+	--~ printh ("sy: " .. (y*k_screen_scale/z+k_x_center))
 	
-	printh ("k_screen_scale: " .. (k_screen_scale))
-	printh ("k_x_center: " .. (k_x_center))
-	printh ("END_PROJECT_POINT")
+	--~ printh ("k_screen_scale: " .. (k_screen_scale))
+	--~ printh ("k_x_center: " .. (k_x_center))
+	--~ printh ("END_PROJECT_POINT")
 	
 	return x*k_screen_scale/z+k_x_center,y*k_screen_scale/z+k_x_center
 end
 
 function project_radius(r,z)
-	printh ("BEGIN_PR")
-	printh ("sradius: " .. (r*k_screen_scale/abs(z)))
-	printh ("r: " .. (r))
-	printh ("z: " .. (abs(z)))
-	printh ("kss: " .. (k_screen_scale))
-	printh ("END_PR")
+	--~ printh ("BEGIN_PR")
+	--~ printh ("sradius: " .. (r*k_screen_scale/abs(z)))
+	--~ printh ("r: " .. (r))
+	--~ printh ("z: " .. (abs(z)))
+	--~ printh ("kss: " .. (k_screen_scale))
+	--~ printh ("END_PR")
 	return r*k_screen_scale/abs(z)
 end
 
@@ -1220,14 +1221,14 @@ function init_3d()
 end
 
 function update_3d()
-	printh ("BEGIN_UPDATE_3D")
+	--~ printh ("BEGIN_UPDATE_3D")
 	for object in all(object_list) do
 			update_visible(object)
 			transform_object(object)
 			cam_transform_object(object)
 			update_light()
 	end
-	printh ("END_UPDATE_3D")
+	--~ printh ("END_UPDATE_3D")
 end
 
 function draw_3d()

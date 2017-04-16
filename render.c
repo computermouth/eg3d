@@ -466,15 +466,15 @@ void normalize(float * norm_x, float * norm_y, float * norm_z){
 }
 
 void init_light(){
-	printf("BEGIN_INIT_LIGHT\r\n");
-	printf("prelight1_x: %f\n", light1_x);
-	printf("prelight1_y: %f\n", light1_y);
-	printf("prelight1_z: %f\n", light1_z);
+	//~ printf("BEGIN_INIT_LIGHT\r\n");
+	//~ printf("prelight1_x: %f\n", light1_x);
+	//~ printf("prelight1_y: %f\n", light1_y);
+	//~ printf("prelight1_z: %f\n", light1_z);
 	normalize(&light1_x, &light1_y, &light1_z);
-	printf("light1_x: %f\n", light1_x);
-	printf("light1_y: %f\n", light1_y);
-	printf("light1_z: %f\n", light1_z);
-	printf("END_INIT_LIGHT\n");
+	//~ printf("light1_x: %f\n", light1_x);
+	//~ printf("light1_y: %f\n", light1_y);
+	//~ printf("light1_z: %f\n", light1_z);
+	//~ printf("END_INIT_LIGHT\n");
 }
 
 void init_3d(){
@@ -562,7 +562,7 @@ triangle_t * add_triangle_to_list(){
 	triangle_list[triangle_list_used] = return_triangle;
 	
 	triangle_list_used++;
-	printf("%d\n", triangle_list_used);
+	//~ printf("%d\n", triangle_list_used);
 	
 	return return_triangle;
 }
@@ -652,7 +652,7 @@ float pico_cos(float in){
 
 void generate_matrix_transform(float xa, float ya, float za){
 
-	printf("BEGIN_GMT\n");
+	//~ printf("BEGIN_GMT\n");
 	
 	float sx=pico_sin(xa);
 	float sy=pico_sin(ya);
@@ -661,12 +661,12 @@ void generate_matrix_transform(float xa, float ya, float za){
 	float cy=pico_cos(ya);
 	float cz=pico_cos(za);
 	
-	printf("gmt_sx: %f\n", sx);
-	printf("gmt_sy: %f\n", sy);
-	printf("gmt_sz: %f\n", sz);
-	printf("gmt_cx: %f\n", cx);
-	printf("gmt_cy: %f\n", cy);
-	printf("gmt_cz: %f\n", cz);
+	//~ printf("gmt_sx: %f\n", sx);
+	//~ printf("gmt_sy: %f\n", sy);
+	//~ printf("gmt_sz: %f\n", sz);
+	//~ printf("gmt_cx: %f\n", cx);
+	//~ printf("gmt_cy: %f\n", cy);
+	//~ printf("gmt_cz: %f\n", cz);
 	
 	mat00=cz*cy;
 	mat10=-1*sz;
@@ -678,17 +678,17 @@ void generate_matrix_transform(float xa, float ya, float za){
 	mat12=sx*cz;
 	mat22=sx*sz*sy+cx*cy;
 	
-	printf("gmt_mat00: %f\n", mat00);
-	printf("gmt_mat10: %f\n", mat10);
-	printf("gmt_mat20: %f\n", mat20);
-	printf("gmt_mat01: %f\n", mat01);
-	printf("gmt_mat11: %f\n", mat11);
-	printf("gmt_mat21: %f\n", mat21);
-	printf("gmt_mat02: %f\n", mat02);
-	printf("gmt_mat12: %f\n", mat12);
-	printf("gmt_mat22: %f\n", mat22);
+	//~ printf("gmt_mat00: %f\n", mat00);
+	//~ printf("gmt_mat10: %f\n", mat10);
+	//~ printf("gmt_mat20: %f\n", mat20);
+	//~ printf("gmt_mat01: %f\n", mat01);
+	//~ printf("gmt_mat11: %f\n", mat11);
+	//~ printf("gmt_mat21: %f\n", mat21);
+	//~ printf("gmt_mat02: %f\n", mat02);
+	//~ printf("gmt_mat12: %f\n", mat12);
+	//~ printf("gmt_mat22: %f\n", mat22);
 
-	printf("END_GMT\n");
+	//~ printf("END_GMT\n");
 }
 
 void generate_cam_matrix_transform(float xa, float ya, float za){
@@ -713,80 +713,80 @@ void generate_cam_matrix_transform(float xa, float ya, float za){
 }
 
 void rotate_point(float f0, float f1, float f2, float * vx, float * vy, float * vz){
-	printf("BEGIN_ROTATE_POINT\n");
+	//~ printf("BEGIN_ROTATE_POINT\n");
 	
-	printf("in0: %f\n", f0);
-	printf("in1: %f\n", f1);
-	printf("in2: %f\n", f2);
+	//~ printf("in0: %f\n", f0);
+	//~ printf("in1: %f\n", f1);
+	//~ printf("in2: %f\n", f2);
 	*vx = (f0 * mat00 + f1 * mat10 + f2 * mat20);
 	*vy = (f0 * mat01 + f1 * mat11 + f2 * mat21);
 	*vz = (f0 * mat02 + f1 * mat12 + f2 * mat22);
 	
-	printf("mat00: %f\n", mat00);
-	printf("mat10: %f\n", mat10);
-	printf("mat20: %f\n", mat20);
-	printf("mat01: %f\n", mat01);
-	printf("mat11: %f\n", mat11);
-	printf("mat21: %f\n", mat21);
-	printf("mat02: %f\n", mat02);
-	printf("mat12: %f\n", mat12);
-	printf("mat22: %f\n", mat22);
+	//~ printf("mat00: %f\n", mat00);
+	//~ printf("mat10: %f\n", mat10);
+	//~ printf("mat20: %f\n", mat20);
+	//~ printf("mat01: %f\n", mat01);
+	//~ printf("mat11: %f\n", mat11);
+	//~ printf("mat21: %f\n", mat21);
+	//~ printf("mat02: %f\n", mat02);
+	//~ printf("mat12: %f\n", mat12);
+	//~ printf("mat22: %f\n", mat22);
 	
-	printf("out0: %f\n", *vx);
-	printf("out1: %f\n", *vy);
-	printf("out2: %f\n", *vz);
+	//~ printf("out0: %f\n", *vx);
+	//~ printf("out1: %f\n", *vy);
+	//~ printf("out2: %f\n", *vz);
 	
-	printf("END_ROTATE_POINT\n");
+	//~ printf("END_ROTATE_POINT\n");
 }
 
 void rotate_point_arrays(float v[3], float t[3]){
-	printf("BEGIN_ROTATE_POINT_A\n");
+	//~ printf("BEGIN_ROTATE_POINT_A\n");
 	
-	printf("in0: %f\n", v[0]);
-	printf("in1: %f\n", v[1]);
-	printf("in2: %f\n", v[2]);
+	//~ printf("in0: %f\n", v[0]);
+	//~ printf("in1: %f\n", v[1]);
+	//~ printf("in2: %f\n", v[2]);
 		
 	t[0] = (v[0] * mat00 + v[1] * mat10 + v[2] * mat20);
 	t[1] = (v[0] * mat01 + v[1] * mat11 + v[2] * mat21);
 	t[2] = (v[0] * mat02 + v[1] * mat12 + v[2] * mat22);
 	
-	printf("mat00: %f\n", mat00);
-	printf("mat10: %f\n", mat10);
-	printf("mat20: %f\n", mat20);
-	printf("mat01: %f\n", mat01);
-	printf("mat11: %f\n", mat11);
-	printf("mat21: %f\n", mat21);
-	printf("mat02: %f\n", mat02);
-	printf("mat12: %f\n", mat12);
-	printf("mat22: %f\n", mat22);
+	//~ printf("mat00: %f\n", mat00);
+	//~ printf("mat10: %f\n", mat10);
+	//~ printf("mat20: %f\n", mat20);
+	//~ printf("mat01: %f\n", mat01);
+	//~ printf("mat11: %f\n", mat11);
+	//~ printf("mat21: %f\n", mat21);
+	//~ printf("mat02: %f\n", mat02);
+	//~ printf("mat12: %f\n", mat12);
+	//~ printf("mat22: %f\n", mat22);
 	
-	printf("out0: %f\n", t[0]);
-	printf("out1: %f\n", t[1]);
-	printf("out2: %f\n", t[2]);
+	//~ printf("out0: %f\n", t[0]);
+	//~ printf("out1: %f\n", t[1]);
+	//~ printf("out2: %f\n", t[2]);
 	
-	printf("END_ROTATE_POINT_A\n");
+	//~ printf("END_ROTATE_POINT_A\n");
 }
 
 void transform_object(object_t * object){
 	//shouldn't this not be happening if all the axes are 0?
 	//~ printf("object.visible: %d\n", object->visible);
-		printf("BEGIN_TRANSFORM_OBJ\n");
+		//~ printf("BEGIN_TRANSFORM_OBJ\n");
 	if(object->visible){
 		
-		printf("object.ax: %f\n", object->ax);
-		printf("object.ay: %f\n", object->ay);
-		printf("object.az: %f\n", object->az);
+		//~ printf("object.ax: %f\n", object->ax);
+		//~ printf("object.ay: %f\n", object->ay);
+		//~ printf("object.az: %f\n", object->az);
 		generate_matrix_transform(object->ax, object->ay, object->az);
 		for(int i = 0; i < object->num_vertices; i++){
 			//pass direct access to objects verts
 			rotate_point_arrays(object->vertices[i], object->t_vertices[i]);
 		}
 	}
-		printf("END_TRANSFORM_OBJ\n");
+		//~ printf("END_TRANSFORM_OBJ\n");
 }
 
 void set_radius(object_t * object){
-		printf("BEGIN_SET_RADIUS\n");
+		//~ printf("BEGIN_SET_RADIUS\n");
 	
 	for(int i = 0; i < object->num_vertices; i++){
 		object->radius = MAX(
@@ -797,16 +797,16 @@ void set_radius(object_t * object){
 				object->vertices[i][2] * object->vertices[i][2]
 			)
 		);
-		printf("object.radius: %f\n", object->radius);
+		//~ printf("object.radius: %f\n", object->radius);
 	}
 	object->radius=sqrt(object->radius);
-		printf("object.radius: %f\n", object->radius);
+		//~ printf("object.radius: %f\n", object->radius);
 	
-		printf("END_SET_RADIUS\n");
+		//~ printf("END_SET_RADIUS\n");
 }
 
 void set_bounding_box(object_t * object){
-		printf("BEGIN_SET_BOUNDING_BOX\n");
+		//~ printf("BEGIN_SET_BOUNDING_BOX\n");
 	
 	for(int i = 0; i < object->num_vertices; i++){
 		if( object->min_x > object->t_vertices[i][0] )
@@ -824,17 +824,17 @@ void set_bounding_box(object_t * object){
 			object->max_z = object->t_vertices[i][2];
 		
 		
-		printf("vertex[0]: %f\n", object->t_vertices[i][0]);
-		printf("vertex[1]: %f\n", object->t_vertices[i][1]);
-		printf("vertex[2]: %f\n", object->t_vertices[i][2]);
-		printf("object.min_x: %f\n", object->min_x);
-		printf("object.min_y: %f\n", object->min_y);
-		printf("object.min_z: %f\n", object->min_z);
-		printf("object.max_x: %f\n", object->max_x);
-		printf("object.max_y: %f\n", object->max_y);
-		printf("object.max_z: %f\n", object->max_z);
+		//~ printf("vertex[0]: %f\n", object->t_vertices[i][0]);
+		//~ printf("vertex[1]: %f\n", object->t_vertices[i][1]);
+		//~ printf("vertex[2]: %f\n", object->t_vertices[i][2]);
+		//~ printf("object.min_x: %f\n", object->min_x);
+		//~ printf("object.min_y: %f\n", object->min_y);
+		//~ printf("object.min_z: %f\n", object->min_z);
+		//~ printf("object.max_x: %f\n", object->max_x);
+		//~ printf("object.max_y: %f\n", object->max_y);
+		//~ printf("object.max_z: %f\n", object->max_z);
 	}
-		printf("END_SET_BOUNDING_BOX\n");
+		//~ printf("END_SET_BOUNDING_BOX\n");
 
 }
 
@@ -917,56 +917,56 @@ object_t * load_object(
 	float x, float y, float z, float ax, float ay, float az,
 	int obstacle, int color_mode, int color){
 	
-	printf("BEGIN_LOAD_OBJECT\n");
+	//~ printf("BEGIN_LOAD_OBJECT\n");
 	
 	object_t * object = new_object();
 	
 	object->num_vertices = num_vertices;
 	object->num_faces = num_faces;
 	
-	printf("object.num_faces: %d\n", object->num_faces);
-	printf("object.num_vertices: %d\n", object->num_vertices);
-	printf("object.x: %f\n", object->x);
-	printf("object.y: %f\n", object->y);
-	printf("object.z: %f\n", object->z);
-	printf("object.rx: %d\n", object->rx);
-	printf("object.ry: %d\n", object->ry);
-	printf("object.rz: %d\n", object->rz);
-	printf("object.tx: %f\n", object->tx);
-	printf("object.ty: %f\n", object->ty);
-	printf("object.tz: %f\n", object->tz);
-	printf("object.ax: %f\n", object->ax);
-	printf("object.ay: %f\n", object->ay);
-	printf("object.az: %f\n", object->az);
-	printf("object.sx: %f\n", object->sx);
-	printf("object.sy: %f\n", object->sy);
-	printf("object.color: %d\n", color);
-	printf("object.color_mode: %d\n", color_mode);
-	printf("object.radius: %f\n", object->radius);
-	printf("object.sradius: %f\n", object->sradius);
-	//bools
-	printf("object.obstacle: %d\n", object->obstacle);
-	printf("object.visible: %d\n", object->visible);
-	printf("object.render: %d\n", object->render);
-	printf("object.background: %d\n", object->background);
-	printf("object.collision_x: %d\n", object->collision_x);
-	printf("object.collision_y: %d\n", object->collision_y);
-	printf("object.collision_down: %d\n", object->collision_down);
-	printf("object.collision_up: %d\n", object->collision_up);
-	printf("object.collision_left: %d\n", object->collision_left);
-	printf("object.ring: %d\n", object->ring);
-	//end bools
-	printf("object.min_x: %f\n", object->min_x);
-	printf("object.min_y: %f\n", object->min_y);
-	printf("object.min_z: %f\n", object->min_z);
-	printf("object.max_x: %f\n", object->max_x);
-	printf("object.max_y: %f\n", object->max_y);
-	printf("object.max_z: %f\n", object->max_z);
-	printf("object.vx: %d\n", object->vx);
-	printf("object.vy: %d\n", object->vy);
-	printf("object.vz: %d\n", object->vz);
-	printf("object.age: %d\n", object->age);
-	printf("object.health: %d\n", object->health);
+	//~ printf("object.num_faces: %d\n", object->num_faces);
+	//~ printf("object.num_vertices: %d\n", object->num_vertices);
+	//~ printf("object.x: %f\n", object->x);
+	//~ printf("object.y: %f\n", object->y);
+	//~ printf("object.z: %f\n", object->z);
+	//~ printf("object.rx: %d\n", object->rx);
+	//~ printf("object.ry: %d\n", object->ry);
+	//~ printf("object.rz: %d\n", object->rz);
+	//~ printf("object.tx: %f\n", object->tx);
+	//~ printf("object.ty: %f\n", object->ty);
+	//~ printf("object.tz: %f\n", object->tz);
+	//~ printf("object.ax: %f\n", object->ax);
+	//~ printf("object.ay: %f\n", object->ay);
+	//~ printf("object.az: %f\n", object->az);
+	//~ printf("object.sx: %f\n", object->sx);
+	//~ printf("object.sy: %f\n", object->sy);
+	//~ printf("object.color: %d\n", color);
+	//~ printf("object.color_mode: %d\n", color_mode);
+	//~ printf("object.radius: %f\n", object->radius);
+	//~ printf("object.sradius: %f\n", object->sradius);
+	//~ //bools
+	//~ printf("object.obstacle: %d\n", object->obstacle);
+	//~ printf("object.visible: %d\n", object->visible);
+	//~ printf("object.render: %d\n", object->render);
+	//~ printf("object.background: %d\n", object->background);
+	//~ printf("object.collision_x: %d\n", object->collision_x);
+	//~ printf("object.collision_y: %d\n", object->collision_y);
+	//~ printf("object.collision_down: %d\n", object->collision_down);
+	//~ printf("object.collision_up: %d\n", object->collision_up);
+	//~ printf("object.collision_left: %d\n", object->collision_left);
+	//~ printf("object.ring: %d\n", object->ring);
+	//~ //end bools
+	//~ printf("object.min_x: %f\n", object->min_x);
+	//~ printf("object.min_y: %f\n", object->min_y);
+	//~ printf("object.min_z: %f\n", object->min_z);
+	//~ printf("object.max_x: %f\n", object->max_x);
+	//~ printf("object.max_y: %f\n", object->max_y);
+	//~ printf("object.max_z: %f\n", object->max_z);
+	//~ printf("object.vx: %d\n", object->vx);
+	//~ printf("object.vy: %d\n", object->vy);
+	//~ printf("object.vz: %d\n", object->vz);
+	//~ printf("object.age: %d\n", object->age);
+	//~ printf("object.health: %d\n", object->health);
 	
 	
 	//copy verts
@@ -975,8 +975,8 @@ object_t * load_object(
 		object->vertices[i] = calloc( 3, sizeof(float) );
 		for(int j = 0; j < 3; j++){
 			object->vertices[i][j] = object_vertices[i][j];
-			printf("ivert[%d][%d]: %f\n", i, j, object_vertices[i][j]);
-			printf("overt[%d][%d]: %f\n", i, j, object->vertices[i][j]);
+			//~ printf("ivert[%d][%d]: %f\n", i, j, object_vertices[i][j]);
+			//~ printf("overt[%d][%d]: %f\n", i, j, object->vertices[i][j]);
 		}
 	}
 	
@@ -986,8 +986,8 @@ object_t * load_object(
 		object->t_vertices[i] = calloc( 5, sizeof(float) );
 		for(int j = 0; j < 3; j++){
 			object->t_vertices[i][j] = object_vertices[i][j];
-			printf("itvert[%d][%d]: %f\n", i, j, object_vertices[i][j]);
-			printf("otvert[%d][%d]: %f\n", i, j, object->t_vertices[i][j]);
+			//~ printf("itvert[%d][%d]: %f\n", i, j, object_vertices[i][j]);
+			//~ printf("otvert[%d][%d]: %f\n", i, j, object->t_vertices[i][j]);
 		}
 	}
 	
@@ -998,7 +998,7 @@ object_t * load_object(
 		object->faces[i] = calloc( 6, sizeof(unsigned char) );
 		for(int j = 0; j < 3; j++){
 			object->faces[i][j] = object_faces[i][j];
-			printf("iface[%d][%d]: %d\n", i, j, object_faces[i][j]);
+			//~ printf("iface[%d][%d]: %d\n", i, j, object_faces[i][j]);
 		}
 	}
 
@@ -1025,9 +1025,9 @@ object_t * load_object(
 	object->num_faces = num_faces;
 	
 	
-	printf("object.ax: %f\n", object->ax);
-	printf("object.ay: %f\n", object->ay);
-	printf("object.az: %f\n", object->az);
+	//~ printf("object.ax: %f\n", object->ax);
+	//~ printf("object.ay: %f\n", object->ay);
+	//~ printf("object.az: %f\n", object->az);
 	
 	transform_object(object);
 	
@@ -1041,16 +1041,16 @@ object_t * load_object(
 	object->y = y;
 	object->z = z;
 	
-	printf("object.x: %f\n", object->x);
-	printf("object.y: %f\n", object->y);
-	printf("object.z: %f\n", object->z);
+	//~ printf("object.x: %f\n", object->x);
+	//~ printf("object.y: %f\n", object->y);
+	//~ printf("object.z: %f\n", object->z);
 	
 	object->color = color;
 	object->color_mode = color_mode;
 	object->obstacle = obstacle;
 	
-	printf("object.color: %d\n", object->color);
-	printf("object.color_mode: %d\n", object->color_mode);
+	//~ printf("object.color: %d\n", object->color);
+	//~ printf("object.color_mode: %d\n", object->color_mode);
 	
 	if(obstacle)
 		add_obstacle_to_list(object);
@@ -1061,7 +1061,7 @@ object_t * load_object(
 		color_faces(object);
 	}
 		
-	printf("END_LOAD_OBJECT\n");
+	//~ printf("END_LOAD_OBJECT\n");
 	
 	return object;
 }
@@ -1203,6 +1203,7 @@ unsigned char intersect_bounding_box( object_t * obj){
 }
 
 void update_player(){
+	
 	float old_x = player.x;
 	//~ float old_y = player.y; //UNUSED
 	float old_z = player.z;
@@ -1285,7 +1286,7 @@ void update_camera(){
 }
 
 void matrix_inverse(){
-	printf("BEGIN_MATRIX_INVERSE\n");
+	//~ printf("BEGIN_MATRIX_INVERSE\n");
 	
 	float det = (
 		mat00* (mat11 * mat22- mat21 * mat12) -
@@ -1316,19 +1317,19 @@ void matrix_inverse(){
 	mat21 = (o_mat20 * o_mat01 - o_mat00 * o_mat21) * invdet;
 	mat22 = (o_mat00 * o_mat11 - o_mat10 * o_mat01) * invdet;
 	
-	printf("det: %f\n", det);
-	printf("invdet: %f\n", invdet);
-	printf("mat00: %f\n", mat00);
-	printf("mat01: %f\n", mat01);
-	printf("mat02: %f\n", mat02);
-	printf("mat10: %f\n", mat10);
-	printf("mat11: %f\n", mat11);
-	printf("mat12: %f\n", mat12);
-	printf("mat20: %f\n", mat20);
-	printf("mat21: %f\n", mat21);
-	printf("mat22: %f\n", mat22);
+	//~ printf("det: %f\n", det);
+	//~ printf("invdet: %f\n", invdet);
+	//~ printf("mat00: %f\n", mat00);
+	//~ printf("mat01: %f\n", mat01);
+	//~ printf("mat02: %f\n", mat02);
+	//~ printf("mat10: %f\n", mat10);
+	//~ printf("mat11: %f\n", mat11);
+	//~ printf("mat12: %f\n", mat12);
+	//~ printf("mat20: %f\n", mat20);
+	//~ printf("mat21: %f\n", mat21);
+	//~ printf("mat22: %f\n", mat22);
 	
-	printf("END_MATRIX_INVERSE\n");
+	//~ printf("END_MATRIX_INVERSE\n");
 }
 
 void handle_input(){
@@ -1380,33 +1381,33 @@ void rotate_cam_point(float x, float y, float z, float * tx, float * ty, float *
 	*tz = (x)*cam_mat02+(y)*cam_mat12+(z)*cam_mat22;
 	  //~ (x)*cam_mat02+(y)*cam_mat12+(z)*cam_mat22
 	
-	printf("BEGIN_ROTATE_CAMP\n");
-	printf("cam_mat00: %f\n", cam_mat00);
-	printf("cam_mat10: %f\n", cam_mat10);
-	printf("cam_mat20: %f\n", cam_mat20);
-	printf("cam_mat01: %f\n", cam_mat01);
-	printf("cam_mat11: %f\n", cam_mat11);
-	printf("cam_mat21: %f\n", cam_mat21);
-	printf("cam_mat02: %f\n", cam_mat02);
-	printf("cam_mat12: %f\n", cam_mat12);
-	printf("cam_mat22: %f\n", cam_mat22);
+	//~ printf("BEGIN_ROTATE_CAMP\n");
+	//~ printf("cam_mat00: %f\n", cam_mat00);
+	//~ printf("cam_mat10: %f\n", cam_mat10);
+	//~ printf("cam_mat20: %f\n", cam_mat20);
+	//~ printf("cam_mat01: %f\n", cam_mat01);
+	//~ printf("cam_mat11: %f\n", cam_mat11);
+	//~ printf("cam_mat21: %f\n", cam_mat21);
+	//~ printf("cam_mat02: %f\n", cam_mat02);
+	//~ printf("cam_mat12: %f\n", cam_mat12);
+	//~ printf("cam_mat22: %f\n", cam_mat22);
 	
-	printf("x: %f\n", x);
-	printf("y: %f\n", y);
-	printf("z: %f\n", z);
-	printf("tx: %f\n", *tx);
-	printf("ty: %f\n", *ty);
-	printf("tz: %f\n", *tz);
-	printf("END_ROTATE_CAMP\n");
+	//~ printf("x: %f\n", x);
+	//~ printf("y: %f\n", y);
+	//~ printf("z: %f\n", z);
+	//~ printf("tx: %f\n", *tx);
+	//~ printf("ty: %f\n", *ty);
+	//~ printf("tz: %f\n", *tz);
+	//~ printf("END_ROTATE_CAMP\n");
 	
 }
 
 void project_point(float x, float y, float z, float * sx, float * sy){
 	
-	printf("BEGIN_PROJECT_POINT\n");
-	printf("x: %f\n", x);
-	printf("y: %f\n", y);
-	printf("z: %f\n", z);
+	//~ printf("BEGIN_PROJECT_POINT\n");
+	//~ printf("x: %f\n", x);
+	//~ printf("y: %f\n", y);
+	//~ printf("z: %f\n", z);
 	
 	//~ if ( z == 0 || x == 0 || k_screen_scale == 0 ) { 
 		//~ *sx = 99999;
@@ -1416,11 +1417,11 @@ void project_point(float x, float y, float z, float * sx, float * sy){
 		*sy = y * k_screen_scale / z + k_x_center;
 	//~ }
 	
-	printf("sx: %f\n", *sx);
-	printf("sz: %f\n", *sy);
-	printf("k_screen_scale: %d\n", k_screen_scale);
-	printf("k_x_center: %d\n", k_x_center);
-	printf("END_PROJECT_POINT\n");
+	//~ printf("sx: %f\n", *sx);
+	//~ printf("sz: %f\n", *sy);
+	//~ printf("k_screen_scale: %d\n", k_screen_scale);
+	//~ printf("k_x_center: %d\n", k_x_center);
+	//~ printf("END_PROJECT_POINT\n");
 	
 }
 
@@ -1429,12 +1430,12 @@ void project_radius(float radius, float tz, float * sradius){
 		tz *= -1;
 	
 	*sradius = radius * k_screen_scale/tz;
-	printf("BEGIN_PR\n");
-	printf("sradius: %f\n", *sradius);
-	printf("r: %f\n", radius);
-	printf("z: %f\n", tz);
-	printf("kss: %d\n", k_screen_scale);
-	printf("END_PR\n");
+	//~ printf("BEGIN_PR\n");
+	//~ printf("sradius: %f\n", *sradius);
+	//~ printf("r: %f\n", radius);
+	//~ printf("z: %f\n", tz);
+	//~ printf("kss: %d\n", k_screen_scale);
+	//~ printf("END_PR\n");
 }
 
 void is_visible(object_t * obj){
@@ -1471,17 +1472,17 @@ void update_visible(object_t * object){
 	float py = object->y - cam_y;
 	float pz = object->z - cam_z;
 	
-	printf("BEGIN_UPDATE_VIS\n");
-	printf("px: %f\n", px);
-	printf("py: %f\n", py);
-	printf("pz: %f\n", pz);
-	printf("object.x: %f\n", object->x);
-	printf("object.y: %f\n", object->y);
-	printf("object.z: %f\n", object->z);
-	printf("cam_x: %f\n", cam_x);
-	printf("cam_y: %f\n", cam_y);
-	printf("cam_z: %f\n", cam_z);
-	printf("END_UPDATE_VIS\n");
+	//~ printf("BEGIN_UPDATE_VIS\n");
+	//~ printf("px: %f\n", px);
+	//~ printf("py: %f\n", py);
+	//~ printf("pz: %f\n", pz);
+	//~ printf("object.x: %f\n", object->x);
+	//~ printf("object.y: %f\n", object->y);
+	//~ printf("object.z: %f\n", object->z);
+	//~ printf("cam_x: %f\n", cam_x);
+	//~ printf("cam_y: %f\n", cam_y);
+	//~ printf("cam_z: %f\n", cam_z);
+	//~ printf("END_UPDATE_VIS\n");
 	
 	rotate_cam_point(px, py, pz, &object->tx, &object->ty, &object->tz);
 	project_point(object->tx, object->ty, object->tz, &object->sx, &object->sy);
@@ -1491,16 +1492,16 @@ void update_visible(object_t * object){
 }
 
 void cam_transform_object(object_t * obj){
-	printf("BEGIN_CAM_TRANSFORM\n");
+	//~ printf("BEGIN_CAM_TRANSFORM\n");
 	if(obj->visible){
 		for(int i = 0; i < obj->num_vertices; i++){
 			obj->t_vertices[i][0] += (obj->x - cam_x);
 			obj->t_vertices[i][1] += (obj->y - cam_y);
 			obj->t_vertices[i][2] += (obj->z - cam_z);
 			
-			printf("vertex[0]: %f\n", obj->t_vertices[i][0]);
-			printf("vertex[1]: %f\n", obj->t_vertices[i][1]);
-			printf("vertex[2]: %f\n", obj->t_vertices[i][2]);
+			//~ printf("vertex[0]: %f\n", obj->t_vertices[i][0]);
+			//~ printf("vertex[1]: %f\n", obj->t_vertices[i][1]);
+			//~ printf("vertex[2]: %f\n", obj->t_vertices[i][2]);
 			
 			rotate_cam_point(
 				obj->t_vertices[i][0],
@@ -1511,12 +1512,12 @@ void cam_transform_object(object_t * obj){
 				&obj->t_vertices[i][2]
 			);
 			
-			printf("vertex[0]: %f\n", obj->t_vertices[i][0]);
-			printf("vertex[1]: %f\n", obj->t_vertices[i][1]);
-			printf("vertex[2]: %f\n", obj->t_vertices[i][2]);
+			//~ printf("vertex[0]: %f\n", obj->t_vertices[i][0]);
+			//~ printf("vertex[1]: %f\n", obj->t_vertices[i][1]);
+			//~ printf("vertex[2]: %f\n", obj->t_vertices[i][2]);
 		}
 	}
-	printf("END_CAM_TRANSFORM\n");
+	//~ printf("END_CAM_TRANSFORM\n");
 }
 
 void update_light(){
@@ -1524,7 +1525,7 @@ void update_light(){
 }
 
 void update_3d(){
-	printf("BEGIN_UPDATE_3D\n");
+	//~ printf("BEGIN_UPDATE_3D\n");
 	for(int i = 0; i < object_list_used; i++){
 		object_t * tmp_o = object_list[i];
 		update_visible(tmp_o);
@@ -1532,58 +1533,74 @@ void update_3d(){
 		cam_transform_object(tmp_o);
 		update_light();
 	}
-	printf("END_UPDATE_3D\n");
+	//~ printf("END_UPDATE_3D\n");
 }
 
-void quicksort_object_list(int start, int end){
-	if((end - start) < 1)
-		return;
+//~ void quicksort_object_list(int start, int end){
+	//~ if((end - start) < 1)
+		//~ return;
 	
-	int pivot = start;
-	for(int i = start + 1; i < end; i++){
-		if(object_list[i]->tz <= object_list[pivot]->tz){
-			if(i == pivot + 1){
-				object_t * tmp = object_list[pivot];
-				object_list[pivot] = object_list[pivot + 1];
-				object_list[pivot + 1] = tmp;
-			} else {
-				object_t * tmp = object_list[pivot];
-				object_t * tmp_plus_1 = object_list[pivot + 1];
-				object_list[pivot] = object_list[i];
-				object_list[pivot+1] = tmp;
-				object_list[i] = tmp_plus_1;
-			}
-			pivot++;
-		}
-	}
-	quicksort_object_list(start, pivot - 1);
-	quicksort_object_list(pivot + 1, end);	
+	//~ int pivot = start;
+	//~ for(int i = start + 1; i < end; i++){
+		//~ printf("t.tz: %f\n", object_list[i]->tz);
+		//~ if(object_list[i]->tz <= object_list[pivot]->tz){
+			//~ if(i == pivot + 1){
+				//~ object_t * tmp = object_list[pivot];
+				//~ object_list[pivot] = object_list[pivot + 1];
+				//~ object_list[pivot + 1] = tmp;
+			//~ } else {
+				//~ object_t * tmp = object_list[pivot];
+				//~ object_t * tmp_plus_1 = object_list[pivot + 1];
+				//~ object_list[pivot] = object_list[i];
+				//~ object_list[pivot+1] = tmp;
+				//~ object_list[i] = tmp_plus_1;
+			//~ }
+			//~ pivot++;
+		//~ }
+	//~ }
+	//~ quicksort_object_list(start, pivot - 1);
+	//~ quicksort_object_list(pivot + 1, end);	
+//~ }
+
+int cmp_object_list(const void * a, const void * b){
+	object_t * cmp_a = *(object_t**)a;
+	object_t * cmp_b = *(object_t**)b;
+	
+	return ( cmp_a->tz - cmp_b->tz );
 }
 
-void quicksort_triangle_list(int start, int end){
-	if((end - start) < 1)
-		return;
+int cmp_triangle_list(const void * a, const void * b){
+	triangle_t * cmp_a = *(triangle_t**)a;
+	triangle_t * cmp_b = *(triangle_t**)b;
 	
-	int pivot = start;
-	for(int i = start + 1; i < end; i++){
-		if(triangle_list[i]->tz <= triangle_list[pivot]->tz){
-			if(i == pivot + 1){
-				triangle_t * tmp = triangle_list[pivot];
-				triangle_list[pivot] = triangle_list[pivot + 1];
-				triangle_list[pivot + 1] = tmp;
-			} else {
-				triangle_t * tmp = triangle_list[pivot];
-				triangle_t * tmp_plus_1 = triangle_list[pivot + 1];
-				triangle_list[pivot] = triangle_list[i];
-				triangle_list[pivot + 1] = tmp;
-				triangle_list[pivot] = tmp_plus_1;
-			}
-			pivot++;
-		}
-	}
-	quicksort_triangle_list(start, pivot - 1);
-	quicksort_triangle_list(pivot + 1, end);	
+	return ( cmp_a->tz - cmp_b->tz );
 }
+
+//~ void quicksort_triangle_list(int start, int end){
+	//~ if((end - start) < 1)
+		//~ return;
+	
+	//~ int pivot = start;
+	//~ for(int i = start + 1; i < end; i++){
+		//~ printf("t.tz: %f\n", triangle_list[i]->tz);
+		//~ if(triangle_list[i]->tz <= triangle_list[pivot]->tz){
+			//~ if(i == pivot + 1){
+				//~ triangle_t * tmp = triangle_list[pivot];
+				//~ triangle_list[pivot] = triangle_list[pivot + 1];
+				//~ triangle_list[pivot + 1] = tmp;
+			//~ } else {
+				//~ triangle_t * tmp = triangle_list[pivot];
+				//~ triangle_t * tmp_plus_1 = triangle_list[pivot + 1];
+				//~ triangle_list[pivot] = triangle_list[i];
+				//~ triangle_list[pivot + 1] = tmp;
+				//~ triangle_list[pivot] = tmp_plus_1;
+			//~ }
+			//~ pivot++;
+		//~ }
+	//~ }
+	//~ quicksort_triangle_list(start, pivot - 1);
+	//~ quicksort_triangle_list(pivot + 1, end);	
+//~ }
 
 void three_point_sort(
 	float * p1x, float * p1y, float * p1z, 
@@ -1958,7 +1975,8 @@ void draw_3d(){
 		triangle_list_used = 0;
 	}
 	
-	quicksort_object_list(0, object_list_used);
+	//~ quicksort_object_list(0, object_list_used);
+	qsort(object_list, object_list_used, sizeof(object_t*), cmp_object_list);
 	
 	for(int i = 0; i < object_list_used; i++){
 		if( object_list[i]->visible == 1 &&
@@ -1967,7 +1985,8 @@ void draw_3d(){
 		}
 	}
 	
-	quicksort_triangle_list(0, triangle_list_used);
+	//~ quicksort_triangle_list(0, triangle_list_used);
+	qsort(triangle_list, triangle_list_used, sizeof(triangle_t*), cmp_triangle_list);
 	
 	draw_triangle_list();
 	
@@ -2028,13 +2047,13 @@ int main(){
 	SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
 	SDL_RenderClear( renderer );
 	
-	while (!quit){
+	//~ while (!quit){
 		SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
 		SDL_RenderClear( renderer );
 		update();
 		draw();
 		SDL_RenderPresent( renderer );
-	}
+	//~ }
 	
 	cleanup();
 	
