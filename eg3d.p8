@@ -629,12 +629,12 @@ function generate_cam_matrix_transform(xa,ya,za)
 	local cy=cos(ya)
 	local cz=cos(za)
 	
-	printh ("sx: " .. sx)
-	printh ("sy: " .. sy)
-	printh ("sz: " .. sz)
-	printh ("cx: " .. cx)
-	printh ("cy: " .. cy)
-	printh ("cz: " .. cz)
+	--~ printh ("sx: " .. sx)
+	--~ printh ("sy: " .. sy)
+	--~ printh ("sz: " .. sz)
+	--~ printh ("cx: " .. cx)
+	--~ printh ("cy: " .. cy)
+	--~ printh ("cz: " .. cz)
 	
 	cam_mat00=cz*cy
 	cam_mat10=-sz
@@ -646,15 +646,15 @@ function generate_cam_matrix_transform(xa,ya,za)
 	cam_mat12=sx*cz
 	cam_mat22=sx*sz*sy+cx*cy
 
-	printh ("cam_mat00: " .. cam_mat00)
-	printh ("cam_mat10: " .. cam_mat10)
-	printh ("cam_mat20: " .. cam_mat20)
-	printh ("cam_mat01: " .. cam_mat01)
-	printh ("cam_mat11: " .. cam_mat11)
-	printh ("cam_mat21: " .. cam_mat21)
-	printh ("cam_mat02: " .. cam_mat02)
-	printh ("cam_mat12: " .. cam_mat12)
-	printh ("cam_mat22: " .. cam_mat22)
+	--~ printh ("cam_mat00: " .. cam_mat00)
+	--~ printh ("cam_mat10: " .. cam_mat10)
+	--~ printh ("cam_mat20: " .. cam_mat20)
+	--~ printh ("cam_mat01: " .. cam_mat01)
+	--~ printh ("cam_mat11: " .. cam_mat11)
+	--~ printh ("cam_mat21: " .. cam_mat21)
+	--~ printh ("cam_mat02: " .. cam_mat02)
+	--~ printh ("cam_mat12: " .. cam_mat12)
+	--~ printh ("cam_mat22: " .. cam_mat22)
 
 	printh ("END_CAM_GMT")
 end
@@ -752,20 +752,20 @@ function	vector_cross_3d(px,py,pz,ax,ay,az,bx,by,bz)
 	 by-=py
 	 bz-=pz
 	
-	printh("ax: " .. (ax))
-	printh("ay: " .. (ay))
-	printh("az: " .. (az))
-	printh("bx: " .. (bx))
-	printh("by: " .. (by))
-	printh("bz: " .. (bz))
+	--~ printh("ax: " .. (ax))
+	--~ printh("ay: " .. (ay))
+	--~ printh("az: " .. (az))
+	--~ printh("bx: " .. (bx))
+	--~ printh("by: " .. (by))
+	--~ printh("bz: " .. (bz))
 	
 	local dx=ay*bz-az*by
 	local dy=az*bx-ax*bz
 	local dz=ax*by-ay*bx
 	
-	printh("nx: " .. (dx))
-	printh("ny: " .. (dy))
-	printh("nz: " .. (dz))
+	--~ printh("nx: " .. (dx))
+	--~ printh("ny: " .. (dy))
+	--~ printh("nz: " .. (dz))
 	
 	
 	printh("END_VECTOR_CROSS_3D")
@@ -777,7 +777,7 @@ end
 function	vector_dot_3d(ax,ay,az,bx,by,bz)
 
 	printh("BEGIN_VECTOR_DOT_3D")
-	printh("vd3d: " .. (ax*bx+ay*by+az*bz))
+	--~ printh("vd3d: " .. (ax*bx+ay*by+az*bz))
 	
 	
 	printh("END_VECTOR_DOT_3D")
@@ -790,10 +790,10 @@ function color_shade(color,brightness)
 	local b= band(brightness*10,0xffff)
 	local c= (color+1)*2
 	
-	printh("b: "  .. b )
-	printh("c: "  .. c )
-	printh("f4: " .. (double_color_list[ c-1 ][b]))
-	printh("f5: " .. (double_color_list[ c ][b]))
+	--~ printh("b: "  .. b )
+	--~ printh("c: "  .. c )
+	--~ printh("f4: " .. (double_color_list[ c-1 ][b]))
+	--~ printh("f5: " .. (double_color_list[ c ][b]))
 	
 	printh ("END_COLOR_SHADE")
 	return double_color_list[ c-1 ][b] , double_color_list[ c ][b] 
@@ -1301,18 +1301,18 @@ end
 function is_visible(object)
 
 	printh ("BEGIN_IS_VIS")
-	--~ printh ("object.tz: " .. (object.tz))
-	--~ printh ("object.radius: " .. (object.radius))
-	--~ printh ("z_max: " .. (z_max))
-	--~ printh ("object.tz: " .. (object.tz))
-	--~ printh ("object.radius: " .. (object.radius))
-	--~ printh ("z_clip: " .. (z_clip))
+	printh ("object.tz: " .. (object.tz))
+	printh ("object.radius: " .. (object.radius))
+	printh ("z_max: " .. (z_max))
+	printh ("object.tz: " .. (object.tz))
+	printh ("object.radius: " .. (object.radius))
+	printh ("z_clip: " .. (z_clip))
 	
-	--~ printh ("object.sx: " .. (object.sx))
-	--~ printh ("object.sradius: " .. (object.sradius))
+	printh ("object.sx: " .. (object.sx))
+	printh ("object.sradius: " .. (object.sradius))
 	
-	--~ printh ("object.sy: " .. (object.sy))
-	--~ printh ("object.sradius: " .. (object.sradius))
+	printh ("object.sy: " .. (object.sy))
+	printh ("object.sradius: " .. (object.sradius))
 	printh ("END_IS_VIS")
 	
 	
@@ -1337,13 +1337,15 @@ function update_visible(object)
 		--~ printh ("cam_x: " .. cam_x)
 		--~ printh ("cam_y: " .. cam_y)
 		--~ printh ("cam_z: " .. cam_z)
-		printh ("END_UPDATE_VIS")
 		
 		object.tx, object.ty, object.tz =rotate_cam_point(px,py,pz)
 		
 		object.sx,object.sy = project_point(object.tx,object.ty,object.tz)
 		object.sradius=project_radius(object.radius,object.tz)
 		object.visible= is_visible(object)
+		
+		printh("obj->visible: " .. (object.visible and 1 or 0))
+		printh ("END_UPDATE_VIS")
 end
 
 function cam_transform_object(object)
@@ -1454,6 +1456,9 @@ function render_object(object)
 	for i=1, #object.t_vertices do
 		local vertex=object.t_vertices[i]
 		vertex[4],vertex[5] = vertex[1]*k_screen_scale/vertex[3]+k_x_center,vertex[2]*k_screen_scale/vertex[3]+k_x_center
+		printh ("vertex[3]: " .. vertex[4])
+		printh ("vertex[4]: " .. vertex[5])
+		
 	end
 
 	for i=1,#object.faces do
@@ -1736,10 +1741,10 @@ function _draw()
 	
 	print("z for next scene",2,120,7)
 	
+	printh("END_DRAW")
 	while true do
 	end
 
-	printh("END_DRAW")
 end
 
 
