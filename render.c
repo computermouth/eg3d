@@ -9,8 +9,8 @@
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAX(a,b) (((a)>(b))?(a):(b))
 
-SDL_Window * window = NULL;
-SDL_Renderer * renderer = NULL;
+//~ SDL_Window * window = NULL;
+//~ SDL_Renderer * renderer = NULL;
 const int SCREEN_WIDTH = 128;
 const int SCREEN_HEIGHT = 128;
 const int k_x_center = 64;
@@ -313,24 +313,25 @@ unsigned char fountain_f_string[][3] = {
 	{ 0x00, 0x02, 0x14 }
 };
 
-typedef struct {
-	float min_x;
-	float min_y;
-	float min_z;
-	float max_x;
-	float max_y;
-	float max_z;
-	float x;
-	float y;
-	float z;
-	float ax;
-	float ay;
-	float az;
-	float vx;
-	float vy;
-	float vz;
-} player_t;
-player_t player;
+//~ typedef struct {
+	//~ float min_x;
+	//~ float min_y;
+	//~ float min_z;
+	//~ float max_x;
+	//~ float max_y;
+	//~ float max_z;
+	//~ float x;
+	//~ float y;
+	//~ float z;
+	//~ float ax;
+	//~ float ay;
+	//~ float az;
+	//~ float vx;
+	//~ float vy;
+	//~ float vz;
+//~ } player_t;
+
+//~ player_t player;
 
 typedef struct {
 	void *fake;
@@ -415,105 +416,9 @@ int obstacle_list_used = 0;
 int obstacle_list_length = 0;
 
 object_t * hole = NULL;
-object_t * pyramids[2] = { NULL };
+object_t * pyramids[5] = { NULL };
+object_t * player = NULL;
 
-void init_player(){
-	player.min_x = -4.5;
-	player.min_y = -4.5;
-	player.min_z = -4.5;
-	player.max_x = 4.5;
-	player.max_y = 4.5;
-	player.max_z = 4.5;
-	player.x = 0;
-	player.y = 8;
-	player.z = 15;
-	player.ax = 0;
-	player.ay = 0;
-	player.az = 0;
-	player.vx = 0;
-	player.vy = 0;
-	player.vz = 0;
-	
-	//~ printf("player.min_x: %f\n", player.min_x);
-	//~ printf("player.min_y: %f\n", player.min_y);
-	//~ printf("player.min_z: %f\n", player.min_z);
-	//~ printf("player.max_x: %f\n", player.max_x);
-	//~ printf("player.max_y: %f\n", player.max_y);
-	//~ printf("player.max_z: %f\n", player.max_z);
-	//~ printf("player.x: %f\n", player.x);
-	//~ printf("player.y: %f\n", player.y);
-	//~ printf("player.z: %f\n", player.z);
-	//~ printf("player.ax: %f\n", player.ax);
-	//~ printf("player.ay: %f\n", player.ay);
-	//~ printf("player.az: %f\n", player.az);
-	//~ printf("player.vx: %f\n", player.vx);
-	//~ printf("player.vy: %f\n", player.vy);
-	//~ printf("player.vz: %f\n", player.vz);
-}
-
-void normalize(float * norm_x, float * norm_y, float * norm_z){
-	*norm_x *= 4;
-	*norm_y *= 4;
-	*norm_z *= 4;
-	
-	float inv_dist=1/sqrt((*norm_x) * (*norm_x)
-		+ (*norm_y) * (*norm_y) 
-		+ (*norm_z) * (*norm_z));
-	
-	*norm_x *= inv_dist;
-	*norm_y *= inv_dist;
-	*norm_z *= inv_dist;
-}
-
-void init_light(){
-	//~ printf("BEGIN_INIT_LIGHT\r\n");
-	//~ printf("prelight1_x: %f\n", light1_x);
-	//~ printf("prelight1_y: %f\n", light1_y);
-	//~ printf("prelight1_z: %f\n", light1_z);
-	normalize(&light1_x, &light1_y, &light1_z);
-	//~ printf("light1_x: %f\n", light1_x);
-	//~ printf("light1_y: %f\n", light1_y);
-	//~ printf("light1_z: %f\n", light1_z);
-	//~ printf("END_INIT_LIGHT\n");
-}
-
-void init_3d(){
-	
-	init_player();
-	init_light();
-	
-	if (object_list != NULL){
-		for(int i = 0; i < object_list_used; i++){
-			for(int j = 0; j < object_list[i]->num_vertices; j++){
-				free(object_list[i]->vertices);
-				free(object_list[i]->t_vertices);
-			}
-			for(int j = 0; j < object_list[i]->num_faces; j++){
-				free(object_list[i]->faces);
-				free(object_list[i]->base_faces);
-			}
-		}
-		object_list_used = 0;
-		object_list = NULL;
-	}
-	
-	//~ particle_list_t p_l = { .fake = NULL };
-	
-}
-
-void load_scene(void (*init_func)(), void (*update_func)(), void (*background_func)()){
-	scene_update_func = update_func;
-	scene_background_func = background_func;
-	init_3d();
-	init_func();
-}
-
-void init_stars(){
-	for(int i = 0; i < 150; i++){
-		star_list[i].x = rand() % 508;
-		star_list[i].y = rand() % 55;
-	}
-}
 
 object_t * add_object_to_list(){
 	if (object_list_used == object_list_length){
@@ -573,6 +478,9 @@ void del_triangle_from_list(int i){
 }
 
 object_t * new_object(){
+	
+	printf("BEGIN_NEW_OBJECT\n");
+	
 	object_t * obj = add_object_to_list();
 	
 	obj->num_faces = 0;
@@ -619,6 +527,8 @@ object_t * new_object(){
 	obj->age = 0;
 	obj->health = 2;
 	
+	printf("END_NEW_OBJECT\n");
+	
 	return obj;
 }
 
@@ -626,6 +536,8 @@ triangle_t * new_triangle(
 	float p1x, float p1y, float p2x, float p2y, float p3x, float p3y,
 	float tz, int c1, int c2
 	){
+	
+	printf("BEGIN_NEW_TRIANGLE\n");
 	
 	triangle_t * tri = add_triangle_to_list();
 	
@@ -638,8 +550,142 @@ triangle_t * new_triangle(
 	tri->tz = tz;
 	tri->c1 = c1;
 	tri->c2 = c2;
-		
+	
+	
+	//~ printf("p1x: %f\n", p1x);
+	//~ printf("p1y: %f\n", p1y);
+	//~ printf("p2x: %f\n", p2x);
+	//~ printf("p2y: %f\n", p2y);
+	//~ printf("p3x: %f\n", p3x);
+	//~ printf("p3y: %f\n", p3y);
+	//~ printf("tz : %f\n", tz );
+	//~ printf("c1 : %d\n", c1 );
+	//~ printf("c2 : %d\n", c2 );
+	
+	printf("END_NEW_TRIANGLE\n");
+	
 	return tri;
+}
+
+
+void init_player(){
+	
+	printf("BEGIN_INIT_PLAYER\n");
+	//~ if (player == NULL){
+		player = new_object();
+	//~ }
+	
+	
+	player->min_x = -4.5;
+	player->min_y = -4.5;
+	player->min_z = -4.5;
+	player->max_x = 4.5;
+	player->max_y = 4.5;
+	player->max_z = 4.5;
+	player->x = 0;
+	player->y = 8;
+	player->z = 15;
+	player->ax = 0;
+	player->ay = 0;
+	player->az = 0;
+	player->vx = 0;
+	player->vy = 0;
+	player->vz = 0;
+	
+	player->vertices = NULL;
+	player->t_vertices = NULL;
+	player->faces = NULL;
+	player->base_faces = NULL;
+	
+	//~ printf("player.min_x: %f\n", player.min_x);
+	//~ printf("player.min_y: %f\n", player.min_y);
+	//~ printf("player.min_z: %f\n", player.min_z);
+	//~ printf("player.max_x: %f\n", player.max_x);
+	//~ printf("player.max_y: %f\n", player.max_y);
+	//~ printf("player.max_z: %f\n", player.max_z);
+	//~ printf("player.x: %f\n", player.x);
+	//~ printf("player.y: %f\n", player.y);
+	//~ printf("player.z: %f\n", player.z);
+	//~ printf("player.ax: %f\n", player.ax);
+	//~ printf("player.ay: %f\n", player.ay);
+	//~ printf("player.az: %f\n", player.az);
+	//~ printf("player.vx: %f\n", player.vx);
+	//~ printf("player.vy: %f\n", player.vy);
+	//~ printf("player.vz: %f\n", player.vz);
+	printf("END_INIT_PLAYER\n");
+}
+
+void normalize(float * norm_x, float * norm_y, float * norm_z){
+	printf("BEGIN_NORMALIZE\n");
+	*norm_x *= 4;
+	*norm_y *= 4;
+	*norm_z *= 4;
+	
+	float inv_dist=1/sqrt((*norm_x) * (*norm_x)
+		+ (*norm_y) * (*norm_y) 
+		+ (*norm_z) * (*norm_z));
+	
+	*norm_x *= inv_dist;
+	*norm_y *= inv_dist;
+	*norm_z *= inv_dist;
+	printf("END_NORMALIZE\n");
+}
+
+void init_light(){
+	printf("BEGIN_INIT_LIGHT\n");
+	//~ printf("prelight1_x: %f\n", light1_x);
+	//~ printf("prelight1_y: %f\n", light1_y);
+	//~ printf("prelight1_z: %f\n", light1_z);
+	normalize(&light1_x, &light1_y, &light1_z);
+	//~ printf("light1_x: %f\n", light1_x);
+	//~ printf("light1_y: %f\n", light1_y);
+	//~ printf("light1_z: %f\n", light1_z);
+	printf("END_INIT_LIGHT\n");
+}
+
+void init_3d(){
+	
+	printf("BEGIN_INIT_3D\n");
+	init_light();
+	
+	if (object_list != NULL){
+		for(int i = 0; i < object_list_used; i++){
+			for(int j = 0; j < object_list[i]->num_vertices; j++){
+				free(object_list[i]->vertices);
+				free(object_list[i]->t_vertices);
+			}
+			for(int j = 0; j < object_list[i]->num_faces; j++){
+				free(object_list[i]->faces);
+				free(object_list[i]->base_faces);
+			}
+		}
+		object_list_used = 0;
+		object_list = NULL;
+	}
+	
+	init_player();
+	
+	//~ particle_list_t p_l = { .fake = NULL };
+	
+	printf("END_INIT_3D\n");
+}
+
+void load_scene(void (*init_func)(), void (*update_func)(), void (*background_func)()){
+	printf("BEGIN_LOAD_SCENE\n");
+	scene_update_func = update_func;
+	scene_background_func = background_func;
+	init_3d();
+	init_func();
+	printf("END_LOAD_SCENE\n");
+}
+
+void init_stars(){
+	printf("BEGIN_INIT_STARS\n");
+	for(int i = 0; i < 150; i++){
+		star_list[i].x = rand() % 508;
+		star_list[i].y = rand() % 55;
+	}
+	printf("END_INIT_STARS\n");
 }
 
 float pico_sin(float in){
@@ -652,7 +698,7 @@ float pico_cos(float in){
 
 void generate_matrix_transform(float xa, float ya, float za){
 
-	//~ printf("BEGIN_GMT\n");
+	printf("BEGIN_GMT\n");
 	
 	float sx=pico_sin(xa);
 	float sy=pico_sin(ya);
@@ -661,12 +707,12 @@ void generate_matrix_transform(float xa, float ya, float za){
 	float cy=pico_cos(ya);
 	float cz=pico_cos(za);
 	
-	//~ printf("gmt_sx: %f\n", sx);
-	//~ printf("gmt_sy: %f\n", sy);
-	//~ printf("gmt_sz: %f\n", sz);
-	//~ printf("gmt_cx: %f\n", cx);
-	//~ printf("gmt_cy: %f\n", cy);
-	//~ printf("gmt_cz: %f\n", cz);
+	//~ printf("sx: %f\n", sx);
+	//~ printf("sy: %f\n", sy);
+	//~ printf("sz: %f\n", sz);
+	//~ printf("cx: %f\n", cx);
+	//~ printf("cy: %f\n", cy);
+	//~ printf("cz: %f\n", cz);
 	
 	mat00=cz*cy;
 	mat10=-1*sz;
@@ -678,27 +724,36 @@ void generate_matrix_transform(float xa, float ya, float za){
 	mat12=sx*cz;
 	mat22=sx*sz*sy+cx*cy;
 	
-	//~ printf("gmt_mat00: %f\n", mat00);
-	//~ printf("gmt_mat10: %f\n", mat10);
-	//~ printf("gmt_mat20: %f\n", mat20);
-	//~ printf("gmt_mat01: %f\n", mat01);
-	//~ printf("gmt_mat11: %f\n", mat11);
-	//~ printf("gmt_mat21: %f\n", mat21);
-	//~ printf("gmt_mat02: %f\n", mat02);
-	//~ printf("gmt_mat12: %f\n", mat12);
-	//~ printf("gmt_mat22: %f\n", mat22);
+	//~ printf("mat00: %f\n", mat00);
+	//~ printf("mat10: %f\n", mat10);
+	//~ printf("mat20: %f\n", mat20);
+	//~ printf("mat01: %f\n", mat01);
+	//~ printf("mat11: %f\n", mat11);
+	//~ printf("mat21: %f\n", mat21);
+	//~ printf("mat02: %f\n", mat02);
+	//~ printf("mat12: %f\n", mat12);
+	//~ printf("mat22: %f\n", mat22);
 
-	//~ printf("END_GMT\n");
+	printf("END_GMT\n");
 }
 
 void generate_cam_matrix_transform(float xa, float ya, float za){
 
+	printf("BEGIN_CAM_GMT\n");
+	
 	float sx=pico_sin(xa);
 	float sy=pico_sin(ya);
 	float sz=pico_sin(za);
 	float cx=pico_cos(xa);
 	float cy=pico_cos(ya);
 	float cz=pico_cos(za);
+	
+	printf("sx: %f\n", sx);
+	printf("sy: %f\n", sy);
+	printf("sz: %f\n", sz);
+	printf("cx: %f\n", cx);
+	printf("cy: %f\n", cy);
+	printf("cz: %f\n", cz);
 	
 	cam_mat00=cz*cy;
 	cam_mat10=-1*sz;
@@ -710,10 +765,22 @@ void generate_cam_matrix_transform(float xa, float ya, float za){
 	cam_mat12=sx*cz;
 	cam_mat22=sx*sz*sy+cx*cy;
 
+	printf("cam_mat00: %f\n", cam_mat00);
+	printf("cam_mat10: %f\n", cam_mat10);
+	printf("cam_mat20: %f\n", cam_mat20);
+	printf("cam_mat01: %f\n", cam_mat01);
+	printf("cam_mat11: %f\n", cam_mat11);
+	printf("cam_mat21: %f\n", cam_mat21);
+	printf("cam_mat02: %f\n", cam_mat02);
+	printf("cam_mat12: %f\n", cam_mat12);
+	printf("cam_mat22: %f\n", cam_mat22);
+
+	printf("END_CAM_GMT\n");
+
 }
 
 void rotate_point(float f0, float f1, float f2, float * vx, float * vy, float * vz){
-	//~ printf("BEGIN_ROTATE_POINT\n");
+	printf("BEGIN_ROTATE_POINT\n");
 	
 	//~ printf("in0: %f\n", f0);
 	//~ printf("in1: %f\n", f1);
@@ -736,11 +803,11 @@ void rotate_point(float f0, float f1, float f2, float * vx, float * vy, float * 
 	//~ printf("out1: %f\n", *vy);
 	//~ printf("out2: %f\n", *vz);
 	
-	//~ printf("END_ROTATE_POINT\n");
+	printf("END_ROTATE_POINT\n");
 }
 
 void rotate_point_arrays(float v[3], float t[3]){
-	//~ printf("BEGIN_ROTATE_POINT_A\n");
+	printf("BEGIN_ROTATE_POINT_A\n");
 	
 	//~ printf("in0: %f\n", v[0]);
 	//~ printf("in1: %f\n", v[1]);
@@ -764,13 +831,13 @@ void rotate_point_arrays(float v[3], float t[3]){
 	//~ printf("out1: %f\n", t[1]);
 	//~ printf("out2: %f\n", t[2]);
 	
-	//~ printf("END_ROTATE_POINT_A\n");
+	printf("END_ROTATE_POINT_A\n");
 }
 
 void transform_object(object_t * object){
 	//shouldn't this not be happening if all the axes are 0?
 	//~ printf("object.visible: %d\n", object->visible);
-		//~ printf("BEGIN_TRANSFORM_OBJ\n");
+		printf("BEGIN_TRANSFORM_OBJ\n");
 	if(object->visible){
 		
 		//~ printf("object.ax: %f\n", object->ax);
@@ -782,11 +849,11 @@ void transform_object(object_t * object){
 			rotate_point_arrays(object->vertices[i], object->t_vertices[i]);
 		}
 	}
-		//~ printf("END_TRANSFORM_OBJ\n");
+		printf("END_TRANSFORM_OBJ\n");
 }
 
 void set_radius(object_t * object){
-		//~ printf("BEGIN_SET_RADIUS\n");
+		printf("BEGIN_SET_RADIUS\n");
 	
 	for(int i = 0; i < object->num_vertices; i++){
 		object->radius = MAX(
@@ -802,11 +869,11 @@ void set_radius(object_t * object){
 	object->radius=sqrt(object->radius);
 		//~ printf("object.radius: %f\n", object->radius);
 	
-		//~ printf("END_SET_RADIUS\n");
+		printf("END_SET_RADIUS\n");
 }
 
 void set_bounding_box(object_t * object){
-		//~ printf("BEGIN_SET_BOUNDING_BOX\n");
+		printf("BEGIN_SET_BOUNDING_BOX\n");
 	
 	for(int i = 0; i < object->num_vertices; i++){
 		if( object->min_x > object->t_vertices[i][0] )
@@ -834,7 +901,7 @@ void set_bounding_box(object_t * object){
 		//~ printf("object.max_y: %f\n", object->max_y);
 		//~ printf("object.max_z: %f\n", object->max_z);
 	}
-		//~ printf("END_SET_BOUNDING_BOX\n");
+		printf("END_SET_BOUNDING_BOX\n");
 
 }
 
@@ -844,30 +911,59 @@ void vector_cross_3d(
 	float bx, float by, float bz,
 	float * nx, float * ny, float * nz){
 	
-	ax = px * -1;
-	ay = py * -1;
-	az = pz * -1;
-	bx = px * -1;
-	by = py * -1;
-	bz = pz * -1;
+	printf("BEGIN_VECTOR_CROSS_3D\n");
+	
+	ax -= px;
+	ay -= py;
+	az -= pz;
+	bx -= px;
+	by -= py;
+	bz -= pz;
+	
+	printf("ax: %f\n", ax);
+	printf("ay: %f\n", ay);
+	printf("az: %f\n", az);
+	printf("bx: %f\n", bx);
+	printf("by: %f\n", by);
+	printf("bz: %f\n", bz);
 	
 	*nx = ay * bz - az * by;
 	*ny = az * bx - ax * bz;
 	*nz = ax * by - ay * bx;
+	
+	printf("nx: %f\n", *nx);
+	printf("ny: %f\n", *ny);
+	printf("nz: %f\n", *nz);
+	
+	
+	printf("END_VECTOR_CROSS_3D\n");
 }
 
 float vector_dot_3d(float ax, float ay, float az, float bx, float by, float bz){
+	
+	printf("BEGIN_VECTOR_DOT_3D\n");
+	printf("vd3d: %f\n", (ax * bx + ay * by + az * bz));
+	printf("END_VECTOR_DOT_3D\n");
 	return (ax * bx + ay * by + az * bz);
 }
 
 void color_shade(unsigned char color, float brightness, unsigned char * f4, unsigned char * f5){
+	printf("BEGIN_COLOR_SHADE\n");
+	
 	int b = (int)(brightness*10) & 0xffff;
 	unsigned char c = (color + 1) * 2;
 	*f4 = double_color_list[c - 1][b];
 	*f5 = double_color_list[c][b];
+	
+	printf("b: %d\n", b);
+	printf("c: %d\n", c);
+	printf("f4: %d\n", *f4);
+	printf("f5: %d\n", *f5);
+	printf("END_COLOR_SHADE\n");
 }
 
 void color_faces(object_t * object){
+	printf("BEGIN_COLOR_FACES\n");
 	
 	
 	for(int i = 0; i < object->num_faces; i++){
@@ -907,9 +1003,8 @@ void color_faces(object_t * object){
 		
 	}
 	
+	printf("END_COLOR_FACES\n");
 }
-
-int debug_load_object_cnt = 0;
 
 object_t * load_object(
 	float object_vertices[][3], unsigned short num_vertices,
@@ -917,7 +1012,7 @@ object_t * load_object(
 	float x, float y, float z, float ax, float ay, float az,
 	int obstacle, int color_mode, int color){
 	
-	//~ printf("BEGIN_LOAD_OBJECT\n");
+	printf("BEGIN_LOAD_OBJECT\n");
 	
 	object_t * object = new_object();
 	
@@ -1061,12 +1156,13 @@ object_t * load_object(
 		color_faces(object);
 	}
 		
-	//~ printf("END_LOAD_OBJECT\n");
+	printf("END_LOAD_OBJECT\n");
 	
 	return object;
 }
 
 void load_temple(){
+	printf("BEGIN_LOAD_TEMPLE\n");
 	
 	init_stars();
 	
@@ -1104,84 +1200,91 @@ void load_temple(){
 		(sizeof(hole_f_string)/sizeof(hole_f_string[0])),
 		0,11,0,.125,.125,.125,0,k_colorize_dynamic,12
 	);
-		
-	// create 5 pyramids
-	for(int i = 0; i < 5; i++){
-		float l = 25;
-		float a = (float)(i+1)/5+.125;
-		float x = pico_sin(a)*l;
-		float z = pico_cos(a)*l;
-		pyramids[i] = load_object(
-			pyramid_v_string,
-			(sizeof(pyramid_v_string)/sizeof(pyramid_v_string[0])),
-			pyramid_f_string,
-			(sizeof(pyramid_f_string)/sizeof(pyramid_f_string[0])),
-			x, 0, z, 0, 0, 0, 0, k_colorize_static, 13
-		);
-	}
 	
+	//~ // create 5 pyramids
+	//~ for(int i = 0; i < 5; i++){
+		//~ float l = 25;
+		//~ float a = (float)(i+1)/5+.125;
+		//~ float x = pico_sin(a)*l;
+		//~ float z = pico_cos(a)*l;
+		//~ pyramids[i] = load_object(
+			//~ pyramid_v_string,
+			//~ (sizeof(pyramid_v_string)/sizeof(pyramid_v_string[0])),
+			//~ pyramid_f_string,
+			//~ (sizeof(pyramid_f_string)/sizeof(pyramid_f_string[0])),
+			//~ x, 0, z, 0, 0, 0, 0, k_colorize_static, 13
+		//~ );
+	//~ }
+	
+	printf("END_LOAD_TEMPLE\n");
 }
 
 void update_temple(){
+	printf("BEGIN_UPDATE_TEMPLE\n");
 	hole->ax += -.004;
 	hole->az += .001;
 	hole->ax += .002;
 	hole->y = 11 + pico_sin(cur_frame/100);
 		
-	for(int i = 0; i < 5; i++){
-		int l = 35;
-		float a = i / 5 + .125 + cur_frame / 1000;
-		//float x = sin(a)*l; UNUSED
-		//float z = cos(a)*l; UNUSED
-		pyramids[i]->x = pico_sin(a)*l;
-		pyramids[i]->z = pico_cos(a)*l;
-		pyramids[i]->y = 10 + pico_sin(a - cur_frame/ 200) * 4;
-		pyramids[i]->ax += .003;
-		pyramids[i]->ay += .002;
-		pyramids[i]->az += .004;
-	}
+	//~ for(int i = 0; i < 5; i++){
+		//~ int l = 35;
+		//~ float a = i / 5 + .125 + cur_frame / 1000;
+		//~ //float x = sin(a)*l; UNUSED
+		//~ //float z = cos(a)*l; UNUSED
+		//~ pyramids[i]->x = pico_sin(a)*l;
+		//~ pyramids[i]->z = pico_cos(a)*l;
+		//~ pyramids[i]->y = 10 + pico_sin(a - cur_frame/ 200) * 4;
+		//~ pyramids[i]->ax += .003;
+		//~ pyramids[i]->ay += .002;
+		//~ pyramids[i]->az += .004;
+	//~ }
+	printf("END_UPDATE_TEMPLE\n");
 }
 
 void draw_stars(){
-	SDL_SetRenderDrawColor( renderer, 2 * 16, 4 * 16, 6 * 16, 0xFF );
+	printf("BEGIN_DRAW_STARS\n");
+	//~ SDL_SetRenderDrawColor( renderer, 2 * 16, 4 * 16, 6 * 16, 0xFF );
 	for(int i = 0; i < 150; i++){
-		SDL_RenderDrawPoint(renderer, star_list[i].x, star_list[i].y);
+		//~ SDL_RenderDrawPoint(renderer, star_list[i].x, star_list[i].y);
 	}
+	printf("END_DRAW_STARS\n");
 }
 
 void draw_temple_background(){
 	
-	SDL_Rect rectfill = { 0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT/2 };
-	SDL_SetRenderDrawColor( 
-		renderer, 14 * 16 , 14 * 16, 14 * 16, 
-		0xFF );		
-	SDL_RenderFillRect( renderer, &rectfill );
+	printf("BEGIN_DRAW_TEMPLE_BACKGROUND\n");
+	//~ SDL_Rect rectfill = { 0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT/2 };
+	//~ SDL_SetRenderDrawColor( 
+		//~ renderer, 14 * 16 , 14 * 16, 14 * 16, 
+		//~ 0xFF );		
+	//~ SDL_RenderFillRect( renderer, &rectfill );
 	
 	draw_stars();
 	
-	SDL_Rect rectfill_lower = { 0, SCREEN_HEIGHT/2, SCREEN_WIDTH - 1, SCREEN_HEIGHT };
-	SDL_SetRenderDrawColor( 
-		renderer, 5 * 16 , 5 * 16, 5 * 16, 
-		0xFF );		
-	SDL_RenderFillRect( renderer, &rectfill_lower );
+	//~ SDL_Rect rectfill_lower = { 0, SCREEN_HEIGHT/2, SCREEN_WIDTH - 1, SCREEN_HEIGHT };
+	//~ SDL_SetRenderDrawColor( 
+		//~ renderer, 5 * 16 , 5 * 16, 5 * 16, 
+		//~ 0xFF );		
+	//~ SDL_RenderFillRect( renderer, &rectfill_lower );
 	
+	printf("END_DRAW_TEMPLE_BACKGROUND\n");
 }
 
 void init_sdl(){
 	
-	if( SDL_Init ( SDL_INIT_VIDEO ) < 0) printf("shit!\n");
-	window = SDL_CreateWindow("eg3d", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-	if( window == NULL ) printf("shit!\n");
-	renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-	if( renderer == NULL ) printf("shit!\n");
-	SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
-	SDL_RenderClear( renderer );
+	//~ if( SDL_Init ( SDL_INIT_VIDEO ) < 0) printf("shit!\n");
+	//~ window = SDL_CreateWindow("eg3d", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+	//~ if( window == NULL ) printf("shit!\n");
+	//~ renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	//~ if( renderer == NULL ) printf("shit!\n");
+	//~ SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
+	//~ SDL_RenderClear( renderer );
 	
 }
 
 void init(){
 	
-	init_3d();
+	//~ init_3d();
 	init_sdl();
 	load_scene(&load_temple, &update_temple, &draw_temple_background);
 	
@@ -1190,23 +1293,24 @@ void init(){
 unsigned char intersect_bounding_box( object_t * obj){
 	printf("BEGIN_INTERSECT_BOUNDING_BOX\n");
 	printf("ibb: %d\n", 
-		((obj->min_x+obj->x < player.max_x+player.x) && (obj->max_x+obj->x > player.min_x+player.x) &&
-		(obj->min_y+obj->y < player.max_y+player.y) && (obj->max_y+obj->y > player.min_y+player.y) &&
-		(obj->min_z+obj->z < player.max_z+player.z) && (obj->max_z+obj->z > player.min_z+player.z))
+		((obj->min_x+obj->x < player->max_x+player->x) && (obj->max_x+obj->x > player->min_x+player->x) &&
+		(obj->min_y+obj->y < player->max_y+player->y) && (obj->max_y+obj->y > player->min_y+player->y) &&
+		(obj->min_z+obj->z < player->max_z+player->z) && (obj->max_z+obj->z > player->min_z+player->z))
 	);
 	printf("END_INTERSECT_BOUNDING_BOX\n");
 	return (
-		(obj->min_x+obj->x < player.max_x+player.x) && (obj->max_x+obj->x > player.min_x+player.x) &&
-		(obj->min_y+obj->y < player.max_y+player.y) && (obj->max_y+obj->y > player.min_y+player.y) &&
-		(obj->min_z+obj->z < player.max_z+player.z) && (obj->max_z+obj->z > player.min_z+player.z)
+		(obj->min_x+obj->x < player->max_x+player->x) && (obj->max_x+obj->x > player->min_x+player->x) &&
+		(obj->min_y+obj->y < player->max_y+player->y) && (obj->max_y+obj->y > player->min_y+player->y) &&
+		(obj->min_z+obj->z < player->max_z+player->z) && (obj->max_z+obj->z > player->min_z+player->z)
 	);
 }
 
 void update_player(){
+	printf("BEGIN_UPDATE_PLAYER\n");
 	
-	float old_x = player.x;
+	float old_x = player->x;
 	//~ float old_y = player.y; //UNUSED
-	float old_z = player.z;
+	float old_z = player->z;
 	
 	//~ printf("player.x: %f\n", player.x);
 	//~ printf("player.y: %f\n", player.y);
@@ -1214,16 +1318,16 @@ void update_player(){
 	
 	// this repeats to check per each vector, which movement to reject
 	// could be optimized by passing player vars and only loop once
-	player.x += player.vx;
+	player->x += player->vx;
 	
 	//~ printf("player.x: %f\n", player.x);
 	//~ printf("player.y: %f\n", player.y);
 	//~ printf("player.z: %f\n", player.z);
 	
-	for(int i = 0; i < obstacle_list_used; i++){
+	for(int i = 0; i <= obstacle_list_used; i++){
 		if(intersect_bounding_box(object_list[i])){
-			player.vx = 0;
-			player.x = old_x;
+			player->vx = 0;
+			player->x = old_x;
 		}
 	}
 	
@@ -1232,7 +1336,7 @@ void update_player(){
 	//~ printf("player.y: %f\n", player.y);
 	//~ printf("player.z: %f\n", player.z);
 	
-	player.y += player.vy;
+	player->y += player->vy;
 	
 	//~ printf("player.x: %f\n", player.x);
 	//~ printf("player.y: %f\n", player.y);
@@ -1248,45 +1352,48 @@ void update_player(){
 	//~ printf("player.y: %f\n", player.y);
 	//~ printf("player.z: %f\n", player.z);
 	
-	player.z += player.vz;
+	player->z += player->vz;
 	
 	//~ printf("player.x: %f\n", player.x);
 	//~ printf("player.y: %f\n", player.y);
 	//~ printf("player.z: %f\n", player.z);
 	
-	for(int i = 0; i < obstacle_list_used; i++){
+	for(int i = 0; i <= obstacle_list_used; i++){
 		if(intersect_bounding_box(object_list[i])){
-			player.vz = 0;
-			player.z = old_z;
+			player->vz = 0;
+			player->z = old_z;
 		}
 	}
 	
 	//~ printf("player.x: %f\n", player.x);
 	//~ printf("player.y: %f\n", player.y);
 	//~ printf("player.z: %f\n", player.z);
-	player.vx *= k_friction;
-	player.vy *= k_friction;
-	player.vz *= k_friction;
+	player->vx *= k_friction;
+	player->vy *= k_friction;
+	player->vz *= k_friction;
 	
 	//~ printf("player.x: %f\n", player.x);
 	//~ printf("player.y: %f\n", player.y);
 	//~ printf("player.z: %f\n", player.z);
+	printf("END_UPDATE_PLAYER\n");
 }
 
 void update_camera(){
-	cam_x = player.x;
-	cam_y = player.y;
-	cam_z = player.z;
+	printf("BEGIN_UPDATE_CAMERA\n");
+	cam_x = player->x;
+	cam_y = player->y;
+	cam_z = player->z;
 	
-	cam_ax = player.ax;
-	cam_ay = player.ay;
-	cam_az = player.az;
+	cam_ax = player->ax;
+	cam_ay = player->ay;
+	cam_az = player->az;
 	
 	generate_cam_matrix_transform(cam_ax, cam_ay, cam_az);
+	printf("END_UPDATE_CAMERA\n");
 }
 
 void matrix_inverse(){
-	//~ printf("BEGIN_MATRIX_INVERSE\n");
+	printf("BEGIN_MATRIX_INVERSE\n");
 	
 	float det = (
 		mat00* (mat11 * mat22- mat21 * mat12) -
@@ -1329,22 +1436,23 @@ void matrix_inverse(){
 	//~ printf("mat21: %f\n", mat21);
 	//~ printf("mat22: %f\n", mat22);
 	
-	//~ printf("END_MATRIX_INVERSE\n");
+	printf("END_MATRIX_INVERSE\n");
 }
 
 void handle_input(){
+	printf("BEGIN_HANDLE_INPUT\n");
 	
-	SDL_Event e;
+	//~ SDL_Event e;
 
-	//Handle events on queue
-	while( SDL_PollEvent( &e ) != 0 )
-	{
-		//User requests quit
-		if( e.type == SDL_QUIT )
-		{
-			quit = 1;
-		}
-	}
+	//~ //Handle events on queue
+	//~ while( SDL_PollEvent( &e ) != 0 )
+	//~ {
+		//~ //User requests quit
+		//~ if( e.type == SDL_QUIT )
+		//~ {
+			//~ quit = 1;
+		//~ }
+	//~ }
 	
 	generate_matrix_transform(cam_ax, cam_ay, cam_az);
 	matrix_inverse();
@@ -1354,10 +1462,12 @@ void handle_input(){
 	rotate_point(0, 0, .2, &vx, &vy, &vz);
 	
 	
+	printf("END_HANDLE_INPUT\n");
 }
 
 void update(){
 	
+	printf("BEGIN_UPDATE\n");
 	// INPUT HANDLING
 	//~ if(btnp(4))then
 		//~ scene_index+=1
@@ -1371,6 +1481,7 @@ void update(){
 	update_camera();
 	scene_update_func();
 	
+	printf("END_UPDATE\n");
 }
 
 void rotate_cam_point(float x, float y, float z, float * tx, float * ty, float * tz){
@@ -1381,7 +1492,7 @@ void rotate_cam_point(float x, float y, float z, float * tx, float * ty, float *
 	*tz = (x)*cam_mat02+(y)*cam_mat12+(z)*cam_mat22;
 	  //~ (x)*cam_mat02+(y)*cam_mat12+(z)*cam_mat22
 	
-	//~ printf("BEGIN_ROTATE_CAMP\n");
+	printf("BEGIN_ROTATE_CAMP\n");
 	//~ printf("cam_mat00: %f\n", cam_mat00);
 	//~ printf("cam_mat10: %f\n", cam_mat10);
 	//~ printf("cam_mat20: %f\n", cam_mat20);
@@ -1398,13 +1509,13 @@ void rotate_cam_point(float x, float y, float z, float * tx, float * ty, float *
 	//~ printf("tx: %f\n", *tx);
 	//~ printf("ty: %f\n", *ty);
 	//~ printf("tz: %f\n", *tz);
-	//~ printf("END_ROTATE_CAMP\n");
+	printf("END_ROTATE_CAMP\n");
 	
 }
 
 void project_point(float x, float y, float z, float * sx, float * sy){
 	
-	//~ printf("BEGIN_PROJECT_POINT\n");
+	printf("BEGIN_PROJECT_POINT\n");
 	//~ printf("x: %f\n", x);
 	//~ printf("y: %f\n", y);
 	//~ printf("z: %f\n", z);
@@ -1421,7 +1532,7 @@ void project_point(float x, float y, float z, float * sx, float * sy){
 	//~ printf("sz: %f\n", *sy);
 	//~ printf("k_screen_scale: %d\n", k_screen_scale);
 	//~ printf("k_x_center: %d\n", k_x_center);
-	//~ printf("END_PROJECT_POINT\n");
+	printf("END_PROJECT_POINT\n");
 	
 }
 
@@ -1430,17 +1541,17 @@ void project_radius(float radius, float tz, float * sradius){
 		tz *= -1;
 	
 	*sradius = radius * k_screen_scale/tz;
-	//~ printf("BEGIN_PR\n");
+	printf("BEGIN_PR\n");
 	//~ printf("sradius: %f\n", *sradius);
 	//~ printf("r: %f\n", radius);
 	//~ printf("z: %f\n", tz);
 	//~ printf("kss: %d\n", k_screen_scale);
-	//~ printf("END_PR\n");
+	printf("END_PR\n");
 }
 
 void is_visible(object_t * obj){
 	
-	//~ printf ("BEGIN_IS_VIS\n");
+	printf ("BEGIN_IS_VIS\n");
 	//~ printf ("object.tz: %f\n",(obj->tz));
 	//~ printf ("object.radius: %f\n",(obj->radius));
 	//~ printf ("z_max: %d\n",(z_max));
@@ -1453,7 +1564,7 @@ void is_visible(object_t * obj){
 	
 	//~ printf ("object.sy: %f\n",(obj->sy));
 	//~ printf ("object.sradius: %f\n",(obj->sradius));
-	//~ printf ("END_IS_VIS\n");
+	printf ("END_IS_VIS\n");
 	
 	obj->visible = (
 		obj->tz + obj->radius  > z_max	&& 
@@ -1472,7 +1583,7 @@ void update_visible(object_t * object){
 	float py = object->y - cam_y;
 	float pz = object->z - cam_z;
 	
-	//~ printf("BEGIN_UPDATE_VIS\n");
+	printf("BEGIN_UPDATE_VIS\n");
 	//~ printf("px: %f\n", px);
 	//~ printf("py: %f\n", py);
 	//~ printf("pz: %f\n", pz);
@@ -1482,7 +1593,7 @@ void update_visible(object_t * object){
 	//~ printf("cam_x: %f\n", cam_x);
 	//~ printf("cam_y: %f\n", cam_y);
 	//~ printf("cam_z: %f\n", cam_z);
-	//~ printf("END_UPDATE_VIS\n");
+	printf("END_UPDATE_VIS\n");
 	
 	rotate_cam_point(px, py, pz, &object->tx, &object->ty, &object->tz);
 	project_point(object->tx, object->ty, object->tz, &object->sx, &object->sy);
@@ -1492,7 +1603,7 @@ void update_visible(object_t * object){
 }
 
 void cam_transform_object(object_t * obj){
-	//~ printf("BEGIN_CAM_TRANSFORM\n");
+	printf("BEGIN_CAM_TRANSFORM\n");
 	if(obj->visible){
 		for(int i = 0; i < obj->num_vertices; i++){
 			obj->t_vertices[i][0] += (obj->x - cam_x);
@@ -1517,15 +1628,18 @@ void cam_transform_object(object_t * obj){
 			//~ printf("vertex[2]: %f\n", obj->t_vertices[i][2]);
 		}
 	}
-	//~ printf("END_CAM_TRANSFORM\n");
+	printf("END_CAM_TRANSFORM\n");
 }
 
 void update_light(){
+	printf("BEGIN_UPDATE_LIGHT\n");
+	printf("END_UPDATE_LIGHT\n");
+	
 	rotate_cam_point(light1_x, light1_y, light1_z, &t_light_x, &t_light_y, &t_light_z);
 }
 
 void update_3d(){
-	//~ printf("BEGIN_UPDATE_3D\n");
+	printf("BEGIN_UPDATE_3D\n");
 	for(int i = 0; i < object_list_used; i++){
 		object_t * tmp_o = object_list[i];
 		update_visible(tmp_o);
@@ -1533,7 +1647,7 @@ void update_3d(){
 		cam_transform_object(tmp_o);
 		update_light();
 	}
-	//~ printf("END_UPDATE_3D\n");
+	printf("END_UPDATE_3D\n");
 }
 
 //~ void quicksort_object_list(int start, int end){
@@ -1607,6 +1721,9 @@ void three_point_sort(
 	float * p2x, float * p2y, float * p2z, 
 	float * p3x, float * p3y, float * p3z){
 	
+	
+	printf("BEGIN_TPS\n");
+	
 	float tmp;
 	if (p1z > p2z){
 		tmp = *p1z;
@@ -1648,12 +1765,14 @@ void three_point_sort(
 		*p3y = tmp;
 	}
 	
+	printf("END_TPS\n");
 }
 
 void z_clip_line(
 	float p1x, float p1y, float p1z, float p2x, float p2y, float p2z, float clip,
 	float * nx, float * ny, float * nz){
 	
+	printf("BEGIN_ZCL\n");
 	if( p1z > p2z ){
 		float tmp;
 		tmp = p1x;
@@ -1677,9 +1796,11 @@ void z_clip_line(
 		*ny = p1y * (1.0 - alpha) + p2y * alpha;
 		*nz = p1z * (1.0 - alpha) + p2z * alpha;
 	}
+	printf("END_ZCL\n");
 }
 
 void render_object(object_t * object){
+	printf("BEGIN_RENDER_OBJECT\n");
 	for(int i = 0; i < object->num_vertices; i++){
 		object->t_vertices[i][3] = object->t_vertices[i][0] * k_screen_scale / object->t_vertices[i][4] + k_x_center;
 		object->t_vertices[i][4] = object->t_vertices[i][0] * k_screen_scale / object->t_vertices[i][4] + k_x_center;
@@ -1819,9 +1940,11 @@ void render_object(object_t * object){
 			}
 		}
 	}	
+	printf("END_RENDER_OBJECT\n");
 }
 
 void shade_trifill(triangle_t * tri){
+	printf("BEGIN_SHADE_TRIFILL\n");
 	//hell, are these supposed to be ints?
 	int x1 = ((int)tri->p1x & 0xffff);
 	int x2 = ((int)tri->p2x & 0xffff);
@@ -1884,17 +2007,17 @@ void shade_trifill(triangle_t * tri){
 		for(int i = min_y; i < max_y - 1; i++){
 			
 			if ( (i & 1) == 0 ){
-				SDL_Rect rectfill = { nsx, i, nex, i };
-				SDL_SetRenderDrawColor( 
-					renderer, tri->c1 * 16 , tri->c1 * 16, tri->c1 * 16, 
-					0xFF );		
-				SDL_RenderFillRect( renderer, &rectfill );
+				//~ SDL_Rect rectfill = { nsx, i, nex, i };
+				//~ SDL_SetRenderDrawColor( 
+					//~ renderer, tri->c1 * 16 , tri->c1 * 16, tri->c1 * 16, 
+					//~ 0xFF );		
+				//~ SDL_RenderFillRect( renderer, &rectfill );
 			} else {
-				SDL_Rect rectfill = { nsx, i, nex, i };
-				SDL_SetRenderDrawColor( 
-					renderer, tri->c2 * 16 , tri->c2 * 16, tri->c2 * 16, 
-					0xFF );		
-				SDL_RenderFillRect( renderer, &rectfill );
+				//~ SDL_Rect rectfill = { nsx, i, nex, i };
+				//~ SDL_SetRenderDrawColor( 
+					//~ renderer, tri->c2 * 16 , tri->c2 * 16, tri->c2 * 16, 
+					//~ 0xFF );		
+				//~ SDL_RenderFillRect( renderer, &rectfill );
 			}
 			
 			nsx += delta_sx;
@@ -1923,17 +2046,17 @@ void shade_trifill(triangle_t * tri){
 		for(int i = min_y; i < max_y; i++){
 			
 			if ( (i & 1) == 0 ){
-				SDL_Rect rectfill = { nsx, i, nex, i };
-				SDL_SetRenderDrawColor( 
-					renderer, tri->c1 * 16 , tri->c1 * 16, tri->c1 * 16, 
-					0xFF );		
-				SDL_RenderFillRect( renderer, &rectfill );
+				//~ SDL_Rect rectfill = { nsx, i, nex, i };
+				//~ SDL_SetRenderDrawColor( 
+					//~ renderer, tri->c1 * 16 , tri->c1 * 16, tri->c1 * 16, 
+					//~ 0xFF );		
+				//~ SDL_RenderFillRect( renderer, &rectfill );
 			} else {
-				SDL_Rect rectfill = { nsx, i, nex, i };
-				SDL_SetRenderDrawColor( 
-					renderer, tri->c2 * 16 , tri->c2 * 16, tri->c2 * 16, 
-					0xFF );		
-				SDL_RenderFillRect( renderer, &rectfill );
+				//~ SDL_Rect rectfill = { nsx, i, nex, i };
+				//~ SDL_SetRenderDrawColor( 
+					//~ renderer, tri->c2 * 16 , tri->c2 * 16, tri->c2 * 16, 
+					//~ 0xFF );		
+				//~ SDL_RenderFillRect( renderer, &rectfill );
 			}
 			
 			nsx += delta_sx;
@@ -1945,30 +2068,34 @@ void shade_trifill(triangle_t * tri){
 		//where is the original value Y coming into scope here????
 		int i = 0; // just to get it to compile, I guess.
 		if ( (i & 1) == 0 ){
-			SDL_Rect rectfill = { nsx, i, nex, i };
-			SDL_SetRenderDrawColor( 
-				renderer, tri->c1 * 16 , tri->c1 * 16, tri->c1 * 16, 
-				0xFF );		
-			SDL_RenderFillRect( renderer, &rectfill );
+			//~ SDL_Rect rectfill = { nsx, i, nex, i };
+			//~ SDL_SetRenderDrawColor( 
+				//~ renderer, tri->c1 * 16 , tri->c1 * 16, tri->c1 * 16, 
+				//~ 0xFF );		
+			//~ SDL_RenderFillRect( renderer, &rectfill );
 		} else {
-			SDL_Rect rectfill = { nsx, i, nex, i };
-			SDL_SetRenderDrawColor( 
-				renderer, tri->c2 * 16 , tri->c2 * 16, tri->c2 * 16, 
-				0xFF );		
-			SDL_RenderFillRect( renderer, &rectfill );
+			//~ SDL_Rect rectfill = { nsx, i, nex, i };
+			//~ SDL_SetRenderDrawColor( 
+				//~ renderer, tri->c2 * 16 , tri->c2 * 16, tri->c2 * 16, 
+				//~ 0xFF );		
+			//~ SDL_RenderFillRect( renderer, &rectfill );
 		}
 	}
 	
+	printf("END_SHADE_TRIFILL\n");
 }
 
 void draw_triangle_list(){
+	printf("BEGIN_DRAW_TRIANGLE_LIST\n");
 	
 	for(int i = 0; i < triangle_list_used; i++){
 		shade_trifill(triangle_list[i]);
 	}
+	printf("END_DRAW_TRIANGLE_LIST\n");
 }
 
 void draw_3d(){
+	printf("BEGIN_DRAW_3D\n");
 	
 	for(int i = 0; i < triangle_list_used; i++){
 		free(triangle_list[i]);
@@ -1990,9 +2117,11 @@ void draw_3d(){
 	
 	draw_triangle_list();
 	
+	printf("END_DRAW_3D\n");
 }
 
 void draw(){
+	printf("BEGIN_DRAW\n");
 	
 	cur_frame += 1;
 	scene_background_func();
@@ -2001,6 +2130,7 @@ void draw(){
 	
 	draw_3d();
 	
+	printf("END_DRAW\n");
 }
 
 void cleanup(){
@@ -2008,21 +2138,31 @@ void cleanup(){
 	
 	for(int i = 0; i < object_list_used; i++){
 		//free the verts
-		for(int j = 0; j < object_list[i]->num_vertices; j++){
-			free(object_list[i]->vertices[j]);
-			free(object_list[i]->t_vertices[j]);
+		if (object_list[i]->vertices != NULL){
+			for(int j = 0; j < object_list[i]->num_vertices; j++)
+				free(object_list[i]->vertices[j]);
+			free(object_list[i]->vertices);
 		}
-		free(object_list[i]->vertices);
-		free(object_list[i]->t_vertices);
-		
+		//free the t_verts
+		if (object_list[i]->t_vertices != NULL){
+			for(int j = 0; j < object_list[i]->num_vertices; j++)
+				free(object_list[i]->t_vertices[j]);
+			free(object_list[i]->t_vertices);
+		}
 		//free the faces
-		for(int j = 0; j < object_list[i]->num_faces; j++){
-			free(object_list[i]->faces[j]);
-			free(object_list[i]->base_faces[j]);
+		if (object_list[i]->faces != NULL){
+			for(int j = 0; j < object_list[i]->num_faces; j++)
+				free(object_list[i]->faces[j]);
+			free(object_list[i]->faces);
 		}
-		free(object_list[i]->faces);
-		free(object_list[i]->base_faces);
+		//free the base_faces
+		if (object_list[i]->base_faces != NULL){
+			for(int j = 0; j < object_list[i]->num_faces; j++)
+				free(object_list[i]->base_faces[j]);
+			free(object_list[i]->base_faces);
+		}
 	}
+	
 	for(int i = 0; i < object_list_used; i++)
 		free(object_list[i]);
 	
@@ -2032,9 +2172,9 @@ void cleanup(){
 		
 	if(triangle_list != NULL) free(triangle_list);
 
-	SDL_DestroyRenderer( renderer );
-	SDL_DestroyWindow( window );
-	SDL_Quit();
+	//~ SDL_DestroyRenderer( renderer );
+	//~ SDL_DestroyWindow( window );
+	//~ SDL_Quit();
 
 }
 
@@ -2044,15 +2184,15 @@ int main(){
 	
 	init();
 	
-	SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
-	SDL_RenderClear( renderer );
+	//~ SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
+	//~ SDL_RenderClear( renderer );
 	
 	//~ while (!quit){
-		SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
-		SDL_RenderClear( renderer );
+		//~ SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
+		//~ SDL_RenderClear( renderer );
 		update();
 		draw();
-		SDL_RenderPresent( renderer );
+		//~ SDL_RenderPresent( renderer );
 	//~ }
 	
 	cleanup();

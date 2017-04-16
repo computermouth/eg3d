@@ -143,6 +143,27 @@ k_min_y=0
 k_max_y=128
 
 
+k_ambient=.3
+
+
+light1_x=.1
+light1_y=.35
+light1_z=.2
+
+--t_light gets written to
+t_light_x=0
+t_light_y=0
+t_light_z=0
+
+
+
+k_colorize_static = 1
+k_colorize_dynamic = 2
+k_multi_color_static = 3
+k_multi_color_dynamic = 4
+k_preset_color = 5
+
+k_friction=.7
 
 --these are used for the 2 scanline color shading scheme
 double_color_list=	{{0,0,0,0,0,0,0,0,0,0},
@@ -195,8 +216,591 @@ double_color_list=	{{0,0,0,0,0,0,0,0,0,0},
 					}
 
 
-k_ambient=.3
+function delete_object(object)
+	del(object_list,object)
+end
+
+function new_object()
+	printh ("BEGIN_NEW_OBJECT")
+	object={}
+	object.vertices={}
+	object.faces={}
+	
+	object.t_vertices={}
+
+	
+	object.x=0
+	object.y=0
+	object.z=0
+	
+	object.rx=0
+	object.ry=0
+	object.rz=0
+	
+	object.tx=0
+	object.ty=0
+	object.tz=0
+	
+	object.ax=0
+	object.ay=0
+	object.az=0
+	
+	object.sx=0
+	object.sy=0
+	object.radius=10
+	object.sradius=10
+	object.visible=true
+	
+	object.render=true
+	object.background=false
+	object.collision_x=true
+	object.collision_y=false
+	object.collision_down=false
+	object.collision_up=false
+	object.collision_left=false
+	object.ring=false
+	
+	object.min_x=100
+	object.min_y=100
+	object.min_z=100
+	
+	object.max_x=-100
+	object.max_y=-100
+	object.max_z=-100
+	
+	object.vx=0
+	object.vy=0
+	object.vz=0
+
+	object.age=0
+	object.health=2
+	add(object_list,object)
+	printh ("END_NEW_OBJECT")
+	return object
+
+end
+
+function new_triangle(p1x,p1y,p2x,p2y,p3x,p3y,z,c1,c2)
+
+	printf("BEGIN_NEW_TRIANGLE");
+	
+	add(triangle_list,{p1x=p1x,
+	                   p1y=p1y,
+	                   p2x=p2x,
+	                   p2y=p2y,
+	                   p3x=p3x,
+	                   p3y=p3y,
+	                   tz=z,
+	                   c1=c1,
+	                   c2=c2})
+	
+	--~ printh ("p1x: " .. (p1x));
+	--~ printh ("p1y: " .. (p1y));
+	--~ printh ("p2x: " .. (p2x));
+	--~ printh ("p2y: " .. (p2y));
+	--~ printh ("p3x: " .. (p3x));
+	--~ printh ("p3y: " .. (p3y));
+	--~ printh ("tz : " .. (tz ));
+	--~ printh ("c1 : " .. (c1 ));
+	--~ printh ("c2 : " .. (c2 ));
+	
+	printh ("END_NEW_TRIANGLE");
+	
+end
+
+
+
+function init_player()
+	printh ("BEGIN_INIT_PLAYER")
+	player=new_object()
+	player.min_x=-4.5
+	player.min_y=-4.5
+	player.min_z=-4.5
+	player.max_x=4.5
+	player.max_y=4.5
+	player.max_z=4.5
+	
+	player.x=0
+	player.y=8
+	player.z=15
+	
+	player.vx=0
+	player.vy=0
+	player.vz=0
+	
+	--~ printh ("player.min_x: " .. (player.min_x))
+	--~ printh ("player.min_y: " .. (player.min_x))
+	--~ printh ("player.min_z: " .. (player.min_x))
+	--~ printh ("player.max_x: " .. (player.max_x))
+	--~ printh ("player.max_y: " .. (player.max_y))
+	--~ printh ("player.max_z: " .. (player.max_z))
+	--~ printh ("player.x: " .. (player.x))
+	--~ printh ("player.y: " .. (player.y))
+	--~ printh ("player.z: " .. (player.z))
+	--~ printh ("player.ax: " .. (player.ax))
+	--~ printh ("player.ay: " .. (player.ay))
+	--~ printh ("player.az: " .. (player.az))
+	--~ printh ("player.vx: " .. (player.vx))
+	--~ printh ("player.vy: " .. (player.vy))
+	--~ printh ("player.vz: " .. (player.vz))
+	printh ("END_INIT_PLAYER")
+end
+
+function normalize(x,y,z)
+	printh("BEGIN_NORMALIZE")
+	local x1=shl(x,2)
+	local y1=shl(y,2)
+	local z1=shl(z,2)
+	
+	local inv_dist=1/sqrt(x1*x1+y1*y1+z1*z1)
+	
+	printh("END_NORMALIZE")
+	return x1*inv_dist,y1*inv_dist,z1*inv_dist
+	
+end
+
+function init_light()
+
+	printh ("BEGIN_INIT_LIGHT")
+	--~ printh ("prelight1_x: " .. (light1_x))
+	--~ printh ("prelight1_y: " .. (light1_y))
+	--~ printh ("prelight1_z: " .. (light1_z))
+	light1_x,light1_y,light1_z=normalize(light1_x,light1_y,light1_z)
+	--~ printh ("light1_x: " .. (light1_x))
+	--~ printh ("light1_y: " .. (light1_y))
+	--~ printh ("light1_z: " .. (light1_z))
+	printh ("END_INIT_LIGHT")
+end
+
+function init_3d()
+	printh ("BEGIN_INIT_3D")
+	init_light()
+	object_list={}
+	obstacle_list={}
+	
+	init_player()
+	
+	particle_list={}
+	printh ("END_INIT_3D")
+end
+
+
+function load_scene(init_func,update_func,background_func)
+	printh("BEGIN_LOAD_SCENE")
+	scene_update_func=update_func
+	scene_background_function=background_func
+	init_3d()
+	init_func()
+	printh("END_LOAD_SCENE")
+end
+
+function init_stars()
+	printh("BEGIN_INIT_STARS")
+	star_list={}
+	for i=1,150 do
+		star_list[i]={}
+		star_list[i].x=rnd(508)
+		star_list[i].y=rnd(55)
+	end
+	printh("END_INIT_STARS")
+end
+	
+
+
+--function load object:
+--object_vertices: vertex list for object (see above)
+--object_faces: face list for object (see above)
+--x,y,z: translated center for the the object
+--ax,ay,az: rotation of object about these axis
+--obstacle: boolean will the player collide with this?
+--color mode:
+--k_colorize_static = 1 : shade the model at init with one shaded color
+--k_colorize_dynamic = 2 : color the model dynamically with one shade color -- slow
+--k_multi_color_static = 3 : shade the model based on colors defined in face list
+--k_multi_color_dynamic = 4 : shade the model dynamically based on colors define din face list -- slow
+--k_preset_color = 5 : use the colors defined in face list only -- no lighting effects
+
+
+
+
+
+
+
+
+
+
+
+
+function	cross_product_2d(p0x,p0y,p1x,p1y,p2x,p2y)
+	return ( ( (p0x-p1x)*(p2y-p1y)-(p0y-p1y)*(p2x-p1x)) > 0 )
+end
+
+
+
+
+
+
+
+function lerp(a,b,alpha)
+  return a*(1.0-alpha)+b*alpha
+end
+
+
+
+
+
+
+
+
+----------------------------------end copy-------------------------------------------------------
+----------------------------------electric gryphon's 3d library----------------------------------
+-------------------------------------------------------------------------------------------------
+
+
+function center_text(text,x,y,c)
+	x=x-#text/2*4
+	print(text,x,y,1)
+	print(text,x+1,y,1)
+	print(text,x,y-1,1)
+	print(text,x,y+1,1)
+	
+	
+	print(text,x,y,c)
+end
+
+function draw_background()
+	rectfill(0,0,127,64,14)
+	draw_stars()
+
+	
+	rectfill(0,64,127,127,5)
+	
+	for i=0,2 do
+		rectfill(0,66+i*2,127,66+i*2,6)
+		rectfill(0,60-i*2,127,60-i*2,15)
+	end
+end
+
+
+
+
+
+function start_timer()
+	timer_value=stat(1)
+end
+
+function stop_timer()
+	return stat(1)-timer_value
+end
+
+function load_factory()
+	factory_data={}
+	for i=-2,2 do
+		factory_data[i]={}
+		for j=-2,2 do
+			--if(rnd(1)>.5)then v=1 else v=2 end
+			factory_data[i][j]=1
+		end
+	end
+	--factory_data[0][0]=0
+	--factory_data[1][0]=2
+	--factory_data[-1][0]=2
+	--factory_data[0][1]=2
+	--factory_data[0][-1]=2
+	
+
+	
+
+	player.x=10
+	player.z=10
+	for i=-2,2 do
+		for j=-2,2 do
+			
+				if(factory_data[i][j]==1)load_object(read_vector_string(factory_v_string),read_face_string(factory_f_string),i*20,0,j*20,0,0,0,true,k_colorize_static,6)
+				if(factory_data[i][j]==2)load_object(read_vector_string(tower_v_string),read_face_string(tower_f_string),i*20,0,j*20,0,0,0,true,k_colorize_static,6)
+				
+			
+		end
+	end
+	
+	clouds={}
+	for i=1,10 do
+		clouds[i]={}
+		clouds[i].x=rnd(160)-15
+		clouds[i].y=rnd(160)-15
+	end
+end
+
+
+function update_factory()
+	if(player.x>10)player.x-=20 
+	if(player.x<-10)player.x+=20
+	if(player.z>10)player.z-=20
+	if(player.z<-10)player.z+=20
+
+end
+
+function draw_factory_background()
+	cls(1)
+	
+	srand(1)
+	
+	for cloud in all(clouds) do
+		circfill((cloud.x-player.ay*400)%127,cloud.y,15,13)
+		cloud.y-=1
+		if(cloud.y<-15)then cloud.y=127 end
+	end
+	
+	rectfill(0,64,127,127,13)
+
+end
+
+function load_fox_dynamic()
+	fox_v=read_vector_string(fox_v_string)
+	fox_f=read_face_string(fox_f_string)
+	fox=load_object(fox_v,fox_f,0,0,0,0,-.35,0,false,k_colorize_dynamic,8)
+end
+
+function update_fox_dynamic()
+	fox.ay+=.01
+end
+
+function init_stars()
+	printh("BEGIN_INIT_STARS")
+	star_list={}
+	for i=1,150 do
+		star_list[i]={}
+		star_list[i].x=rnd(508)
+		star_list[i].y=rnd(55)
+	end
+	printh("END_INIT_STARS")
+end
+
+function generate_matrix_transform(xa,ya,za)
+
+	
+	printh ("BEGIN_GMT")
+	
+	local sx=sin(xa)
+	local sy=sin(ya)
+	local sz=sin(za)
+	local cx=cos(xa)
+	local cy=cos(ya)
+	local cz=cos(za)
+	
+	
+	--~ printh ("sx: " .. sx)
+	--~ printh ("sy: " .. sy)
+	--~ printh ("sz: " .. sz)
+	--~ printh ("cx: " .. cx)
+	--~ printh ("cy: " .. cy)
+	--~ printh ("cz: " .. cz)
+	
+	mat00=cz*cy
+	mat10=-sz
+	mat20=cz*sy
+	mat01=cx*sz*cy+sx*sy
+	mat11=cx*cz
+	mat21=cx*sz*sy-sx*cy
+	mat02=sx*sz*cy-cx*sy
+	mat12=sx*cz
+	mat22=sx*sz*sy+cx*cy
+
+	--~ printh ("mat00: " .. mat00)
+	--~ printh ("mat10: " .. mat10)
+	--~ printh ("mat20: " .. mat20)
+	--~ printh ("mat01: " .. mat01)
+	--~ printh ("mat11: " .. mat11)
+	--~ printh ("mat21: " .. mat21)
+	--~ printh ("mat02: " .. mat02)
+	--~ printh ("mat12: " .. mat12)
+	--~ printh ("mat22: " .. mat22)
+	printh ("END_GMT")
+end
+
+function generate_cam_matrix_transform(xa,ya,za)
+
+	printh ("BEGIN_CAM_GMT")
+	
+	local sx=sin(xa)
+	local sy=sin(ya)
+	local sz=sin(za)
+	local cx=cos(xa)
+	local cy=cos(ya)
+	local cz=cos(za)
+	
+	printh ("sx: " .. sx)
+	printh ("sy: " .. sy)
+	printh ("sz: " .. sz)
+	printh ("cx: " .. cx)
+	printh ("cy: " .. cy)
+	printh ("cz: " .. cz)
+	
+	cam_mat00=cz*cy
+	cam_mat10=-sz
+	cam_mat20=cz*sy
+	cam_mat01=cx*sz*cy+sx*sy
+	cam_mat11=cx*cz
+	cam_mat21=cx*sz*sy-sx*cy
+	cam_mat02=sx*sz*cy-cx*sy
+	cam_mat12=sx*cz
+	cam_mat22=sx*sz*sy+cx*cy
+
+	printh ("cam_mat00: " .. cam_mat00)
+	printh ("cam_mat10: " .. cam_mat10)
+	printh ("cam_mat20: " .. cam_mat20)
+	printh ("cam_mat01: " .. cam_mat01)
+	printh ("cam_mat11: " .. cam_mat11)
+	printh ("cam_mat21: " .. cam_mat21)
+	printh ("cam_mat02: " .. cam_mat02)
+	printh ("cam_mat12: " .. cam_mat12)
+	printh ("cam_mat22: " .. cam_mat22)
+
+	printh ("END_CAM_GMT")
+end
+
+function rotate_point(x,y,z)
+	
+	printh ("BEGIN_ROTATE_POINT")
+	--~ printh ("in0: " .. ( x))
+	--~ printh ("in1: " .. ( y))
+	--~ printh ("in2: " .. ( z))
+	
+	--~ printh ("mat00: " .. (mat00));
+	--~ printh ("mat10: " .. (mat10));
+	--~ printh ("mat20: " .. (mat20));
+	--~ printh ("mat01: " .. (mat01));
+	--~ printh ("mat11: " .. (mat11));
+	--~ printh ("mat21: " .. (mat21));
+	--~ printh ("mat02: " .. (mat02));
+	--~ printh ("mat12: " .. (mat12));
+	--~ printh ("mat22: " .. (mat22));
+	
+	--~ printh ("out0: " .. ((x)*mat00+(y)*mat10+(z)*mat20))
+	--~ printh ("out1: " .. ((x)*mat01+(y)*mat11+(z)*mat21))
+	--~ printh ("out2: " .. ((x)*mat02+(y)*mat12+(z)*mat22))
+	printh ("END_ROTATE_POINT")
+
+	return (x)*mat00+(y)*mat10+(z)*mat20,(x)*mat01+(y)*mat11+(z)*mat21,(x)*mat02+(y)*mat12+(z)*mat22
+end
+
+function transform_object(object)
+	
+		printh ("BEGIN_TRANSFORM_OBJ")
+	
+	if(object.visible)then
+		--~ printh ("object.visible: 1")
+		
+		
+		--~ printh ("object.ax: " .. object.ax)
+		--~ printh ("object.ay: " .. object.ay)
+		--~ printh ("object.az: " .. object.az)
+		generate_matrix_transform(object.ax,object.ay,object.az)
+		for i=1, #object.vertices do
+			local t_vertex=object.t_vertices[i]
+			local vertex=object.vertices[i]
+			
+			t_vertex[1],t_vertex[2],t_vertex[3]=rotate_point(vertex[1],vertex[2],vertex[3])
+		end
+	else
+		--~ printh ("object.visible: 0")
+	end
+		printh ("END_TRANSFORM_OBJ")
+end
+
+function set_radius(object)
+	printh ("BEGIN_SET_RADIUS")
+	for vertex in all(object.vertices) do
+		object.radius=max(object.radius,vertex[1]*vertex[1]+vertex[2]*vertex[2]+vertex[3]*vertex[3])
+		--~ printh ("object.radius: " .. (object.radius))
+	end
+	object.radius=sqrt(object.radius)
+		--~ printh ("object.radius: " .. (object.radius))
+	printh ("END_SET_RADIUS")
+end
+
+function set_bounding_box(object)
+	printh ("BEGIN_SET_BOUNDING_BOX")
+	for vertex in all(object.t_vertices) do
+		object.min_x=min(vertex[1],object.min_x)
+		object.min_y=min(vertex[2],object.min_y)
+		object.min_z=min(vertex[3],object.min_z)
+		object.max_x=max(vertex[1],object.max_x)
+		object.max_y=max(vertex[2],object.max_y)
+		object.max_z=max(vertex[3],object.max_z)
+		--~ printh ("vertex[0]: " .. (vertex[1]))
+		--~ printh ("vertex[1]: " .. (vertex[2]))
+		--~ printh ("vertex[2]: " .. (vertex[3]))
+		--~ printh ("object.min_x: " .. (object.min_x))
+		--~ printh ("object.min_y: " .. (object.min_y))
+		--~ printh ("object.min_z: " .. (object.min_z))
+		--~ printh ("object.max_x: " .. (object.max_x))
+		--~ printh ("object.max_y: " .. (object.max_y))
+		--~ printh ("object.max_z: " .. (object.max_z))
+	end
+
+	printh ("END_SET_BOUNDING_BOX")
+end
+
+function	vector_cross_3d(px,py,pz,ax,ay,az,bx,by,bz)
+
+	printh("BEGIN_VECTOR_CROSS_3D")
+	 ax-=px
+	 ay-=py
+	 az-=pz
+	 bx-=px
+	 by-=py
+	 bz-=pz
+	
+	printh("ax: " .. (ax))
+	printh("ay: " .. (ay))
+	printh("az: " .. (az))
+	printh("bx: " .. (bx))
+	printh("by: " .. (by))
+	printh("bz: " .. (bz))
+	
+	local dx=ay*bz-az*by
+	local dy=az*bx-ax*bz
+	local dz=ax*by-ay*bx
+	
+	printh("nx: " .. (dx))
+	printh("ny: " .. (dy))
+	printh("nz: " .. (dz))
+	
+	
+	printh("END_VECTOR_CROSS_3D")
+	
+	
+	return dx,dy,dz
+end
+
+function	vector_dot_3d(ax,ay,az,bx,by,bz)
+
+	printh("BEGIN_VECTOR_DOT_3D")
+	printh("vd3d: " .. (ax*bx+ay*by+az*bz))
+	
+	
+	printh("END_VECTOR_DOT_3D")
+	return ax*bx+ay*by+az*bz
+end
+			
+function color_shade(color,brightness)
+	printh ("BEGIN_COLOR_SHADE")
+	--return double_color_list[ (color+1)*2-1 ][flr(brightness*10)] , double_color_list[ (color+1)*2 ][flr(brightness*10)] 
+	local b= band(brightness*10,0xffff)
+	local c= (color+1)*2
+	
+	printh("b: "  .. b )
+	printh("c: "  .. c )
+	printh("f4: " .. (double_color_list[ c-1 ][b]))
+	printh("f5: " .. (double_color_list[ c ][b]))
+	
+	printh ("END_COLOR_SHADE")
+	return double_color_list[ c-1 ][b] , double_color_list[ c ][b] 
+end		
+
 function color_faces(object,base)
+	printh("BEGIN_COLOR_FACES")
 	--local p1x,p1y,p1z,p2x,p2y,p2z,p3x,p3y,p3z
 	
 		
@@ -233,102 +837,12 @@ function color_faces(object,base)
 		end
 	end
 	
-end
-
-					
-function color_shade(color,brightness)
-	--return double_color_list[ (color+1)*2-1 ][flr(brightness*10)] , double_color_list[ (color+1)*2 ][flr(brightness*10)] 
-	local b= band(brightness*10,0xffff)
-	local c= (color+1)*2
-	return double_color_list[ c-1 ][b] , double_color_list[ c ][b] 
-end			
-	
-
-
-light1_x=.1
-light1_y=.35
-light1_z=.2
-
---t_light gets written to
-t_light_x=0
-t_light_y=0
-t_light_z=0
-
-function init_light()
-
-	--~ printh ("BEGIN_INIT_LIGHT")
-	--~ printh ("prelight1_x: " .. (light1_x))
-	--~ printh ("prelight1_y: " .. (light1_y))
-	--~ printh ("prelight1_z: " .. (light1_z))
-	light1_x,light1_y,light1_z=normalize(light1_x,light1_y,light1_z)
-	--~ printh ("light1_x: " .. (light1_x))
-	--~ printh ("light1_y: " .. (light1_y))
-	--~ printh ("light1_z: " .. (light1_z))
-	--~ printh ("END_INIT_LIGHT")
-end
-
-function update_light()
-	t_light_x,t_light_y,t_light_z = rotate_cam_point(light1_x,light1_y,light1_z)
-end
-
-function normalize(x,y,z)
-	local x1=shl(x,2)
-	local y1=shl(y,2)
-	local z1=shl(z,2)
-	
-	local inv_dist=1/sqrt(x1*x1+y1*y1+z1*z1)
-	
-	return x1*inv_dist,y1*inv_dist,z1*inv_dist
-	
-end
-
-function	vector_dot_3d(ax,ay,az,bx,by,bz)
-	return ax*bx+ay*by+az*bz
-end
-	
-function	vector_cross_3d(px,py,pz,ax,ay,az,bx,by,bz)
-
-	 ax-=px
-	 ay-=py
-	 az-=pz
-	 bx-=px
-	 by-=py
-	 bz-=pz
-	
-	
-	local dx=ay*bz-az*by
-	local dy=az*bx-ax*bz
-	local dz=ax*by-ay*bx
-	return dx,dy,dz
-end
-
-
-
-k_colorize_static = 1
-k_colorize_dynamic = 2
-k_multi_color_static = 3
-k_multi_color_dynamic = 4
-k_preset_color = 5
-
---function load object:
---object_vertices: vertex list for object (see above)
---object_faces: face list for object (see above)
---x,y,z: translated center for the the object
---ax,ay,az: rotation of object about these axis
---obstacle: boolean will the player collide with this?
---color mode:
---k_colorize_static = 1 : shade the model at init with one shaded color
---k_colorize_dynamic = 2 : color the model dynamically with one shade color -- slow
---k_multi_color_static = 3 : shade the model based on colors defined in face list
---k_multi_color_dynamic = 4 : shade the model dynamically based on colors define din face list -- slow
---k_preset_color = 5 : use the colors defined in face list only -- no lighting effects
-
-
-debug_load_object_cnt = 0
+	printh("END_COLOR_FACES")
+end	
 
 function load_object(object_vertices,object_faces,x,y,z,ax,ay,az,obstacle,color_mode,color)
 	
-	--~ printh ("BEGIN_LOAD_OBJECT")
+	printh ("BEGIN_LOAD_OBJECT")
 	
 	object=new_object()
 	
@@ -457,61 +971,122 @@ function load_object(object_vertices,object_faces,x,y,z,ax,ay,az,obstacle,color_
 		color_faces(object,color)
 	end
 	
-	--~ printh ("END_LOAD_OBJECT")
+	printh ("END_LOAD_OBJECT")
 	
 	return object
 end
 
-function set_radius(object)
-	--~ printh ("BEGIN_SET_RADIUS")
-	for vertex in all(object.vertices) do
-		object.radius=max(object.radius,vertex[1]*vertex[1]+vertex[2]*vertex[2]+vertex[3]*vertex[3])
-		--~ printh ("object.radius: " .. (object.radius))
-	end
-	object.radius=sqrt(object.radius)
-		--~ printh ("object.radius: " .. (object.radius))
-	--~ printh ("END_SET_RADIUS")
+function load_temple()
+	printh("BEGIN_LOAD_TEMPLE")
+	
+	init_stars()
+
+	--~ for i=1,5 do
+		--~ l=30
+		--~ x=sin(i/5)*l
+		--~ z=cos(i/5)*l
+		--~ --printh ("x: " .. (x))
+		--~ --printh ("i: " .. (i))
+		--~ --printh ("l: " .. (l))
+		--~ c=load_object(read_vector_string(column_v_string),read_face_string(column_f_string),x,0,z,0,0,0,true,k_colorize_static,9)--load models
+	--~ end
+	
+	--~ fnt=load_object(read_vector_string(fountain_v_string),read_face_string(fountain_f_string),0,0,0,0,.08,0,true,k_colorize_static,14)
+	hole=load_object(read_vector_string(hole_v_string),read_face_string(hole_f_string),0,11,0,.125,.125,.125,false,k_colorize_dynamic,12)
+		
+	--~ pyramids={}
+	--~ for i=1,5 do
+		--~ l=25
+		--~ a=i/5+.125
+		--~ x=sin(a)*l
+		--~ z=cos(a)*l
+		--~ pyramids[i]=load_object(read_vector_string(pyramid_v_string),read_face_string(pyramid_f_string),x,0,z,0,0,0,false,k_colorize_static,13)
+	--~ end
+	
+	printh("END_LOAD_TEMPLE")
 end
 
-function set_bounding_box(object)
-	--~ printh ("BEGIN_SET_BOUNDING_BOX")
-	for vertex in all(object.t_vertices) do
-		object.min_x=min(vertex[1],object.min_x)
-		object.min_y=min(vertex[2],object.min_y)
-		object.min_z=min(vertex[3],object.min_z)
-		object.max_x=max(vertex[1],object.max_x)
-		object.max_y=max(vertex[2],object.max_y)
-		object.max_z=max(vertex[3],object.max_z)
-		--~ printh ("vertex[0]: " .. (vertex[1]))
-		--~ printh ("vertex[1]: " .. (vertex[2]))
-		--~ printh ("vertex[2]: " .. (vertex[3]))
-		--~ printh ("object.min_x: " .. (object.min_x))
-		--~ printh ("object.min_y: " .. (object.min_y))
-		--~ printh ("object.min_z: " .. (object.min_z))
-		--~ printh ("object.max_x: " .. (object.max_x))
-		--~ printh ("object.max_y: " .. (object.max_y))
-		--~ printh ("object.max_z: " .. (object.max_z))
+function update_temple()
+	printh("BEGIN_UPDATE_TEMPLE")
+	hole.ay+=-.004 --dynamically adjust object parameters to make them move each frame
+	hole.az+=.001
+	hole.ax+=.002
+	hole.y=11+sin(cur_frame/100)
+	
+	--~ for i=1,5 do
+		--~ l=35
+		--~ a=i/5+.125+cur_frame/1000
+		--~ x=sin(a)*l
+		--~ z=cos(a)*l
+		--~ pyramids[i].x=sin(a)*l pyramids[i].z=cos(a)*l
+		--~ pyramids[i].y=10+sin(a-cur_frame/200)*4
+		--~ pyramids[i].ax+=.003 pyramids[i].ay+=.002 pyramids[i].az+=.004
+	--~ end
+	printh("END_UPDATE_TEMPLE")
+end
+
+function draw_stars()
+	printh("BEGIN_DRAW_STARS")
+	for i=1,#star_list do
+		pset((-cam_ay*508+star_list[i].x+cur_frame/20)%508,star_list[i].y,15)
+	end
+	printh("END_DRAW_STARS")
+end
+
+function draw_temple_background()
+	printh("BEGIN_DRAW_TEMPLE_BACKGROUND")
+	rectfill(0,0,127,64,14)
+	draw_stars()
+
+	
+	rectfill(0,64,127,127,5)
+	
+	for i=0,2 do
+		rectfill(0,66+i*2,127,66+i*2,6)
+		rectfill(0,60-i*2,127,60-i*2,15)
+	end
+	printh("END_DRAW_TEMPLE_BACKGROUND")
+end
+
+function draw_fox_background()
+	cls(9)
+	
+	srand(2)
+	for i=1,8 do
+		circfill((rnd(167)+cur_frame)%167-20,rnd(167),rnd(20),10)
 	end
 
-	--~ printh ("END_SET_BOUNDING_BOX")
+end
+
+scene_index=1
+scene_list={{load_fox_dynamic,update_fox_dynamic,draw_fox_background},
+			{load_temple,update_temple,draw_temple_background},
+			{load_factory,update_factory,draw_factory_background}}
+
+function _init()
+	cur_frame=0
+
+	
+	--~ init_3d() --need to call init_3d() to set up player, camera and lights
+	load_scene(load_temple,update_temple,draw_temple_background)
+
 end
 
 function intersect_bounding_box(object_a, object_b)
 
---~ local test = 0
+	printh ("BEGIN_INTERSECT_BOUNDING_BOX")
+	local test = 0
 
---~ if ((object_a.min_x+object_a.x < object_b.max_x+object_b.x) and (object_a.max_x+object_a.x > object_b.min_x+object_b.x) and
-         --~ (object_a.min_y+object_a.y < object_b.max_y+object_b.y) and (object_a.max_y+object_a.y > object_b.min_y+object_b.y) and
-         --~ (object_a.min_z+object_a.z < object_b.max_z+object_b.z) and (object_a.max_z+object_a.z > object_b.min_z+object_b.z)) then
-    --~ test = 1
---~ end
+	if ((object_a.min_x+object_a.x < object_b.max_x+object_b.x) and (object_a.max_x+object_a.x > object_b.min_x+object_b.x) and
+			 (object_a.min_y+object_a.y < object_b.max_y+object_b.y) and (object_a.max_y+object_a.y > object_b.min_y+object_b.y) and
+			 (object_a.min_z+object_a.z < object_b.max_z+object_b.z) and (object_a.max_z+object_a.z > object_b.min_z+object_b.z)) then
+		test = 1
+	end
 
-
-	--~ printh ("BEGIN_INTERSECT_BOUNDING_BOX")
 	
-	--~ printh ("ibb: " .. (test))
+	printh ("ibb: " .. (test))
 	
-	--~ printh ("END_INTERSECT_BOUNDING_BOX")
+	printh ("END_INTERSECT_BOUNDING_BOX")
 
 	return 
         ((object_a.min_x+object_a.x < object_b.max_x+object_b.x) and (object_a.max_x+object_a.x > object_b.min_x+object_b.x) and
@@ -519,236 +1094,75 @@ function intersect_bounding_box(object_a, object_b)
          (object_a.min_z+object_a.z < object_b.max_z+object_b.z) and (object_a.max_z+object_a.z > object_b.min_z+object_b.z))
 end
 
-function new_object()
-	object={}
-	object.vertices={}
-	object.faces={}
+function update_player()
 	
-	object.t_vertices={}
+	printh ("BEGIN_UPDATE_PLAYER")
+	old_x=player.x
+	old_y=player.y
+	old_z=player.z
 
+	--~ printh ("player.x: " .. player.x)
+	--~ printh ("player.y: " .. player.y)
+	--~ printh ("player.z: " .. player.z)
 	
-	object.x=0
-	object.y=0
-	object.z=0
-	
-	object.rx=0
-	object.ry=0
-	object.rz=0
-	
-	object.tx=0
-	object.ty=0
-	object.tz=0
-	
-	object.ax=0
-	object.ay=0
-	object.az=0
-	
-	object.sx=0
-	object.sy=0
-	object.radius=10
-	object.sradius=10
-	object.visible=true
-	
-	object.render=true
-	object.background=false
-	object.collision_x=true
-	object.collision_y=false
-	object.collision_down=false
-	object.collision_up=false
-	object.collision_left=false
-	object.ring=false
-	
-	object.min_x=100
-	object.min_y=100
-	object.min_z=100
-	
-	object.max_x=-100
-	object.max_y=-100
-	object.max_z=-100
-	
-	object.vx=0
-	object.vy=0
-	object.vz=0
-
-	object.age=0
-	object.health=2
-	add(object_list,object)
-	return object
-
-end
-
-function delete_object(object)
-	del(object_list,object)
-end
-
-
-function new_triangle(p1x,p1y,p2x,p2y,p3x,p3y,z,c1,c2)
-
-	add(triangle_list,{p1x=p1x,
-	                   p1y=p1y,
-	                   p2x=p2x,
-	                   p2y=p2y,
-	                   p3x=p3x,
-	                   p3y=p3y,
-	                   tz=z,
-	                   c1=c1,
-	                   c2=c2})
-	
-	
-	
-	
-end
-
-function draw_triangle_list()
-	--for t in all(triangle_list) do
-	for i=1,#triangle_list do
-		local t=triangle_list[i]
-		shade_trifill( t.p1x,t.p1y,t.p2x,t.p2y,t.p3x,t.p3y, t.c1,t.c2 )
+	player.x+=player.vx
+	--~ printh ("player.x: " .. player.x)
+	--~ printh ("player.y: " .. player.y)
+	--~ printh ("player.z: " .. player.z)
+	for object in all(obstacle_list) do
+		if( intersect_bounding_box(player, object)) player.vx=0 player.x=old_x 
 	end
-end
-
-function update_visible(object)
-		object.visible=false
-
-		local px,py,pz = object.x-cam_x,object.y-cam_y,object.z-cam_z
-		
-		--~ printh ("BEGIN_UPDATE_VIS")
-		--~ printh ("px: " .. px)
-		--~ printh ("py: " .. py)
-		--~ printh ("pz: " .. pz)
-		--~ printh ("object.x: " .. object.x)
-		--~ printh ("object.y: " .. object.y)
-		--~ printh ("object.z: " .. object.z)
-		--~ printh ("cam_x: " .. cam_x)
-		--~ printh ("cam_y: " .. cam_y)
-		--~ printh ("cam_z: " .. cam_z)
-		--~ printh ("END_UPDATE_VIS")
-		
-		object.tx, object.ty, object.tz =rotate_cam_point(px,py,pz)
-		
-		object.sx,object.sy = project_point(object.tx,object.ty,object.tz)
-		object.sradius=project_radius(object.radius,object.tz)
-		object.visible= is_visible(object)
-end
-
-function cam_transform_object(object)
-	--~ printh ("BEGIN_CAM_TRANSFORM")
-	if(object.visible)then
-
-		for i=1, #object.vertices do
-			local vertex=object.t_vertices[i]
-
-			vertex[1]+=object.x - cam_x
-			vertex[2]+=object.y - cam_y
-			vertex[3]+=object.z - cam_z
-			
-			--~ printh ("vertex[0]: " .. (vertex[1]))
-			--~ printh ("vertex[1]: " .. (vertex[2]))
-			--~ printh ("vertex[2]: " .. (vertex[3]))
-			
-			vertex[1],vertex[2],vertex[3]=rotate_cam_point(vertex[1],vertex[2],vertex[3])
-			
-			--~ printh ("vertex[0]: " .. (vertex[1]))
-			--~ printh ("vertex[1]: " .. (vertex[2]))
-			--~ printh ("vertex[2]: " .. (vertex[3]))
-		
-		end
 	
-
+	
+	--~ printh ("player.x: " .. player.x)
+	--~ printh ("player.y: " .. player.y)
+	--~ printh ("player.z: " .. player.z)
+	player.y+=player.vy
+	
+	--~ printh ("player.x: " .. player.x)
+	--~ printh ("player.y: " .. player.y)
+	--~ printh ("player.z: " .. player.z)
+	
+	
+	player.z+=player.vz
+	--~ printh ("player.x: " .. player.x)
+	--~ printh ("player.y: " .. player.y)
+	--~ printh ("player.z: " .. player.z)
+	for object in all(obstacle_list) do
+		if( intersect_bounding_box(player, object)) player.vz=0 player.z=old_z 
 	end
-	--~ printh ("END_CAM_TRANSFORM")
+	
+	--~ printh ("player.x: " .. player.x)
+	--~ printh ("player.y: " .. player.y)
+	--~ printh ("player.z: " .. player.z)
+	
+	player.vx*=k_friction
+	player.vy*=k_friction
+	player.vz*=k_friction
+	
+	--~ printh ("player.x: " .. player.x)
+	--~ printh ("player.y: " .. player.y)
+	--~ printh ("player.z: " .. player.z)
+	printh ("END_UPDATE_PLAYER")
 end
 
-function transform_object(object)
-	
-		--~ printh ("BEGIN_TRANSFORM_OBJ")
-	
-	if(object.visible)then
-		--~ printh ("object.visible: 1")
-		
-		
-		--~ printh ("object.ax: " .. object.ax)
-		--~ printh ("object.ay: " .. object.ay)
-		--~ printh ("object.az: " .. object.az)
-		generate_matrix_transform(object.ax,object.ay,object.az)
-		for i=1, #object.vertices do
-			local t_vertex=object.t_vertices[i]
-			local vertex=object.vertices[i]
-			
-			t_vertex[1],t_vertex[2],t_vertex[3]=rotate_point(vertex[1],vertex[2],vertex[3])
-		end
-	else
-		--~ printh ("object.visible: 0")
-	end
-		--~ printh ("END_TRANSFORM_OBJ")
+function update_camera()	
+	printh ("BEGIN_UPDATE_CAMERA")
+	cam_x=player.x
+	cam_y=player.y
+	cam_z=player.z
+
+	cam_ax=player.ax
+	cam_ay=player.ay
+	cam_az=player.az
+
+	generate_cam_matrix_transform(cam_ax,cam_ay,cam_az)
+	printh ("END_UPDATE_CAMERA")
 end
 
-function generate_matrix_transform(xa,ya,za)
-
-	
-	--~ printh ("BEGIN_GMT")
-	
-	local sx=sin(xa)
-	local sy=sin(ya)
-	local sz=sin(za)
-	local cx=cos(xa)
-	local cy=cos(ya)
-	local cz=cos(za)
-	
-	
-	--~ printh ("gmt_sx: " .. sx)
-	--~ printh ("gmt_sy: " .. sy)
-	--~ printh ("gmt_sz: " .. sz)
-	--~ printh ("gmt_cx: " .. cx)
-	--~ printh ("gmt_cy: " .. cy)
-	--~ printh ("gmt_cz: " .. cz)
-	
-	mat00=cz*cy
-	mat10=-sz
-	mat20=cz*sy
-	mat01=cx*sz*cy+sx*sy
-	mat11=cx*cz
-	mat21=cx*sz*sy-sx*cy
-	mat02=sx*sz*cy-cx*sy
-	mat12=sx*cz
-	mat22=sx*sz*sy+cx*cy
-
-	--~ printh ("gmt_mat00: " .. mat00)
-	--~ printh ("gmt_mat10: " .. mat10)
-	--~ printh ("gmt_mat20: " .. mat20)
-	--~ printh ("gmt_mat01: " .. mat01)
-	--~ printh ("gmt_mat11: " .. mat11)
-	--~ printh ("gmt_mat21: " .. mat21)
-	--~ printh ("gmt_mat02: " .. mat02)
-	--~ printh ("gmt_mat12: " .. mat12)
-	--~ printh ("gmt_mat22: " .. mat22)
-	--~ printh ("END_GMT")
-end
-
-function generate_cam_matrix_transform(xa,ya,za)
-
-	
-	local sx=sin(xa)
-	local sy=sin(ya)
-	local sz=sin(za)
-	local cx=cos(xa)
-	local cy=cos(ya)
-	local cz=cos(za)
-	
-	cam_mat00=cz*cy
-	cam_mat10=-sz
-	cam_mat20=cz*sy
-	cam_mat01=cx*sz*cy+sx*sy
-	cam_mat11=cx*cz
-	cam_mat21=cx*sz*sy-sx*cy
-	cam_mat02=sx*sz*cy-cx*sy
-	cam_mat12=sx*cz
-	cam_mat22=sx*sz*sy+cx*cy
-
-end
 
 function	matrix_inverse()
-	--~ printh ("BEGIN_MATRIX_INVERSE")
+	printh ("BEGIN_MATRIX_INVERSE")
 	local det = mat00* (mat11 * mat22- mat21 * mat12) -
                 mat01* (mat10 * mat22- mat12 * mat20) +
                 mat02* (mat10 * mat21- mat11 * mat20)
@@ -773,37 +1187,67 @@ function	matrix_inverse()
 
 
 		--uh yeah i looked this one up :-)
-	--~ printh ("END_MATRIX_INVERSE")
+	printh ("END_MATRIX_INVERSE")
 end
 
-function rotate_point(x,y,z)
+function handle_buttons()
 	
-	--~ printh ("BEGIN_ROTATE_POINT")
-	--~ printh ("in0: " .. ( x))
-	--~ printh ("in1: " .. ( y))
-	--~ printh ("in2: " .. ( z))
+	printh ("BEGIN_HANDLE_INPUT")
+	if(btn(0))then
+		player.ay+=-.01
+	end
 	
-	--~ printh ("mat00: " .. (mat00));
-	--~ printh ("mat10: " .. (mat10));
-	--~ printh ("mat20: " .. (mat20));
-	--~ printh ("mat01: " .. (mat01));
-	--~ printh ("mat11: " .. (mat11));
-	--~ printh ("mat21: " .. (mat21));
-	--~ printh ("mat02: " .. (mat02));
-	--~ printh ("mat12: " .. (mat12));
-	--~ printh ("mat22: " .. (mat22));
+	if(btn(1))then
+		player.ay+=.01
+	end
 	
-	--~ printh ("out0: " .. ((x)*mat00+(y)*mat10+(z)*mat20))
-	--~ printh ("out1: " .. ((x)*mat01+(y)*mat11+(z)*mat21))
-	--~ printh ("out2: " .. ((x)*mat02+(y)*mat12+(z)*mat22))
-	--~ printh ("END_ROTATE_POINT")
+	generate_matrix_transform(cam_ax,cam_ay,cam_az)
+	matrix_inverse()
+	vx,vy,vz=rotate_point(0,0,.2)
+	
+	if(btn(2))then
+	
+		player.vx=-vx
+		player.vy=-vy
+		player.vz=-vz
+	
 
-	return (x)*mat00+(y)*mat10+(z)*mat20,(x)*mat01+(y)*mat11+(z)*mat21,(x)*mat02+(y)*mat12+(z)*mat22
+	end
+	
+	if(btn(3))then
+
+		player.vx=vx
+		player.vy=vy
+		player.vz=vz
+	end
+	
+	printh ("END_HANDLE_INPUT")
+end
+
+function _update()
+	
+	printh ("BEGIN_UPDATE")
+	if(btnp(4))then
+		scene_index+=1
+		if(scene_index>#scene_list)scene_index=1
+		load_scene(scene_list[scene_index][1],scene_list[scene_index][2],scene_list[scene_index][3])
+	end
+
+	local t=stat(1)
+	handle_buttons() -- handle default buttons for player-- this can be overwritten obviously.
+	update_player() -- update the player with default movement, stopping at obstacles
+	
+	
+	update_camera() -- update the camera based on player location and direction
+	utility_time=stat(1)-t
+	scene_update_func()
+
+	printh ("END_UPDATE")
 end
 
 function rotate_cam_point(x,y,z)
 	
-	--~ printh ("BEGIN_ROTATE_CAMP")
+	printh ("BEGIN_ROTATE_CAMP")
 	--~ printh ("cam_mat00: " .. ( cam_mat00))
 	--~ printh ("cam_mat10: " .. ( cam_mat10))
 	--~ printh ("cam_mat20: " .. ( cam_mat20))
@@ -821,14 +1265,42 @@ function rotate_cam_point(x,y,z)
 	--~ printh ("tx: " .. (x)*cam_mat00+(y)*cam_mat10+(z)*cam_mat20)
 	--~ printh ("ty: " .. (x)*cam_mat01+(y)*cam_mat11+(z)*cam_mat21)
 	--~ printh ("tz: " .. (x)*cam_mat02+(y)*cam_mat12+(z)*cam_mat22)
-	--~ printh ("END_ROTATE_CAMP")
+	printh ("END_ROTATE_CAMP")
 	
 	return (x)*cam_mat00+(y)*cam_mat10+(z)*cam_mat20,(x)*cam_mat01+(y)*cam_mat11+(z)*cam_mat21,(x)*cam_mat02+(y)*cam_mat12+(z)*cam_mat22
 end
 
+
+function project_point(x,y,z)
+	printh ("BEGIN_PROJECT_POINT")
+	--~ printh ("x: " .. (x))
+	--~ printh ("y: " .. (y))
+	--~ printh ("z: " .. (z))
+	
+	--~ printh ("sx: " .. (x*k_screen_scale/z+k_x_center))
+	--~ printh ("sy: " .. (y*k_screen_scale/z+k_x_center))
+	
+	--~ printh ("k_screen_scale: " .. (k_screen_scale))
+	--~ printh ("k_x_center: " .. (k_x_center))
+	printh ("END_PROJECT_POINT")
+	
+	return x*k_screen_scale/z+k_x_center,y*k_screen_scale/z+k_x_center
+end
+
+
+function project_radius(r,z)
+	printh ("BEGIN_PR")
+	--~ printh ("sradius: " .. (r*k_screen_scale/abs(z)))
+	--~ printh ("r: " .. (r))
+	--~ printh ("z: " .. (abs(z)))
+	--~ printh ("kss: " .. (k_screen_scale))
+	printh ("END_PR")
+	return r*k_screen_scale/abs(z)
+end
+
 function is_visible(object)
 
-	--~ printh ("BEGIN_IS_VIS")
+	printh ("BEGIN_IS_VIS")
 	--~ printh ("object.tz: " .. (object.tz))
 	--~ printh ("object.radius: " .. (object.radius))
 	--~ printh ("z_max: " .. (z_max))
@@ -841,7 +1313,7 @@ function is_visible(object)
 	
 	--~ printh ("object.sy: " .. (object.sy))
 	--~ printh ("object.sradius: " .. (object.sradius))
-	--~ printh ("END_IS_VIS")
+	printh ("END_IS_VIS")
 	
 	
 	if(object.tz+object.radius>z_max and object.tz-object.radius<z_clip and
@@ -850,11 +1322,132 @@ function is_visible(object)
 	   then return true else return false end
 end
 
-function	cross_product_2d(p0x,p0y,p1x,p1y,p2x,p2y)
-	return ( ( (p0x-p1x)*(p2y-p1y)-(p0y-p1y)*(p2x-p1x)) > 0 )
+function update_visible(object)
+		object.visible=false
+
+		local px,py,pz = object.x-cam_x,object.y-cam_y,object.z-cam_z
+		
+		printh ("BEGIN_UPDATE_VIS")
+		--~ printh ("px: " .. px)
+		--~ printh ("py: " .. py)
+		--~ printh ("pz: " .. pz)
+		--~ printh ("object.x: " .. object.x)
+		--~ printh ("object.y: " .. object.y)
+		--~ printh ("object.z: " .. object.z)
+		--~ printh ("cam_x: " .. cam_x)
+		--~ printh ("cam_y: " .. cam_y)
+		--~ printh ("cam_z: " .. cam_z)
+		printh ("END_UPDATE_VIS")
+		
+		object.tx, object.ty, object.tz =rotate_cam_point(px,py,pz)
+		
+		object.sx,object.sy = project_point(object.tx,object.ty,object.tz)
+		object.sradius=project_radius(object.radius,object.tz)
+		object.visible= is_visible(object)
+end
+
+function cam_transform_object(object)
+	printh ("BEGIN_CAM_TRANSFORM")
+	if(object.visible)then
+
+		for i=1, #object.vertices do
+			local vertex=object.t_vertices[i]
+
+			vertex[1]+=object.x - cam_x
+			vertex[2]+=object.y - cam_y
+			vertex[3]+=object.z - cam_z
+			
+			--~ printh ("vertex[0]: " .. (vertex[1]))
+			--~ printh ("vertex[1]: " .. (vertex[2]))
+			--~ printh ("vertex[2]: " .. (vertex[3]))
+			
+			vertex[1],vertex[2],vertex[3]=rotate_cam_point(vertex[1],vertex[2],vertex[3])
+			
+			--~ printh ("vertex[0]: " .. (vertex[1]))
+			--~ printh ("vertex[1]: " .. (vertex[2]))
+			--~ printh ("vertex[2]: " .. (vertex[3]))
+		
+		end
+	
+
+	end
+	printh ("END_CAM_TRANSFORM")
+end
+
+
+
+function update_light()
+	printh ("BEGIN_UPDATE_LIGHT")
+	printh ("END_UPDATE_LIGHT")
+	t_light_x,t_light_y,t_light_z = rotate_cam_point(light1_x,light1_y,light1_z)
+end
+
+function update_3d()
+	printh ("BEGIN_UPDATE_3D")
+	for object in all(object_list) do
+			update_visible(object)
+			transform_object(object)
+			cam_transform_object(object)
+			update_light()
+	end
+	printh ("END_UPDATE_3D")
+end
+
+function quicksort(t, start, endi)
+   start, endi = start or 1, endi or #t
+  --partition w.r.t. first element
+  if(endi - start < 1) then return t end
+  local pivot = start
+  for i = start + 1, endi do
+    if t[i].tz <= t[pivot].tz then
+      if i == pivot + 1 then
+        t[pivot],t[pivot+1] = t[pivot+1],t[pivot]
+      else
+        t[pivot],t[pivot+1],t[i] = t[i],t[pivot],t[pivot+1]
+      end
+      pivot = pivot + 1
+    end
+  end
+   t = quicksort(t, start, pivot - 1)
+  return quicksort(t, pivot + 1, endi)
+end
+
+function three_point_sort(p1x,p1y,p1z,p2x,p2y,p2z,p3x,p3y,p3z)
+	printh("BEGIN_TPS")
+	if(p1z>p2z) p1z,p2z = p2z,p1z p1x,p2x = p2x,p1x p1y,p2y = p2y,p1y
+	if(p1z>p3z) p1z,p3z = p3z,p1z p1x,p3x = p3x,p1x p1y,p3y = p3y,p1y
+	if(p2z>p3z) p2z,p3z = p3z,p2z p2x,p3x = p3x,p2x p2y,p3y = p3y,p2y
+	
+	printf("END_TPS")
+	return p1x,p1y,p1z,p2x,p2y,p2z,p3x,p3y,p3z
+end
+
+function z_clip_line(p1x,p1y,p1z,p2x,p2y,p2z,clip)
+	printh("BEGIN_ZCL")
+	if(p1z>p2z)then
+		p1x,p2x=p2x,p1x
+		p1z,p2z=p2z,p1z
+		p1y,p2y=p2y,p1y
+	end
+	
+	if(clip>p1z and clip<=p2z)then
+
+	--	line(p1x+64,p1z+64,p2x+64,p2z+64,14)
+		alpha= abs((p1z-clip)/(p2z-p1z))
+		nx=lerp(p1x,p2x,alpha)
+		ny=lerp(p1y,p2y,alpha)
+		nz=lerp(p1z,p2z,alpha)
+				
+	--	circ(nx+64,nz+64,1,12)
+		return nx,ny,nz
+	else
+		return false
+	end
+	printh("END_ZCL")
 end
 
 function render_object(object)
+	printh("BEGIN_RENDER_OBJECT")
 
 	--project all points in object to screen space
 	--it's faster to go through the array linearly than to use a for all()
@@ -993,269 +1586,12 @@ function render_object(object)
 			
 			end
 		end
-		
 	end
-
-
+	printh("END_RENDER_OBJECT")
 end
-
-function three_point_sort(p1x,p1y,p1z,p2x,p2y,p2z,p3x,p3y,p3z)
-	if(p1z>p2z) p1z,p2z = p2z,p1z p1x,p2x = p2x,p1x p1y,p2y = p2y,p1y
-	if(p1z>p3z) p1z,p3z = p3z,p1z p1x,p3x = p3x,p1x p1y,p3y = p3y,p1y
-	if(p2z>p3z) p2z,p3z = p3z,p2z p2x,p3x = p3x,p2x p2y,p3y = p3y,p2y
-	
-	return p1x,p1y,p1z,p2x,p2y,p2z,p3x,p3y,p3z
-end
-
-function quicksort(t, start, endi)
-   start, endi = start or 1, endi or #t
-  --partition w.r.t. first element
-  if(endi - start < 1) then return t end
-  local pivot = start
-  for i = start + 1, endi do
-	printh ("t.tz: " .. (t[i].tz))
-    if t[i].tz <= t[pivot].tz then
-      if i == pivot + 1 then
-        t[pivot],t[pivot+1] = t[pivot+1],t[pivot]
-      else
-        t[pivot],t[pivot+1],t[i] = t[i],t[pivot],t[pivot+1]
-      end
-      pivot = pivot + 1
-    end
-  end
-   t = quicksort(t, start, pivot - 1)
-  return quicksort(t, pivot + 1, endi)
-end
-
-
-
-function z_clip_line(p1x,p1y,p1z,p2x,p2y,p2z,clip)
-	if(p1z>p2z)then
-		p1x,p2x=p2x,p1x
-		p1z,p2z=p2z,p1z
-		p1y,p2y=p2y,p1y
-	end
-	
-	if(clip>p1z and clip<=p2z)then
-
-	--	line(p1x+64,p1z+64,p2x+64,p2z+64,14)
-		alpha= abs((p1z-clip)/(p2z-p1z))
-		nx=lerp(p1x,p2x,alpha)
-		ny=lerp(p1y,p2y,alpha)
-		nz=lerp(p1z,p2z,alpha)
-				
-	--	circ(nx+64,nz+64,1,12)
-		return nx,ny,nz
-	else
-		return false
-	end
-end
-
-function project_point(x,y,z)
-	--~ printh ("BEGIN_PROJECT_POINT")
-	--~ printh ("x: " .. (x))
-	--~ printh ("y: " .. (y))
-	--~ printh ("z: " .. (z))
-	
-	--~ printh ("sx: " .. (x*k_screen_scale/z+k_x_center))
-	--~ printh ("sy: " .. (y*k_screen_scale/z+k_x_center))
-	
-	--~ printh ("k_screen_scale: " .. (k_screen_scale))
-	--~ printh ("k_x_center: " .. (k_x_center))
-	--~ printh ("END_PROJECT_POINT")
-	
-	return x*k_screen_scale/z+k_x_center,y*k_screen_scale/z+k_x_center
-end
-
-function project_radius(r,z)
-	--~ printh ("BEGIN_PR")
-	--~ printh ("sradius: " .. (r*k_screen_scale/abs(z)))
-	--~ printh ("r: " .. (r))
-	--~ printh ("z: " .. (abs(z)))
-	--~ printh ("kss: " .. (k_screen_scale))
-	--~ printh ("END_PR")
-	return r*k_screen_scale/abs(z)
-end
-
-
-
-function lerp(a,b,alpha)
-  return a*(1.0-alpha)+b*alpha
-end
-
-function handle_buttons()
-	
-	if(btn(0))then
-		player.ay+=-.01
-	end
-	
-	if(btn(1))then
-		player.ay+=.01
-	end
-	
-	generate_matrix_transform(cam_ax,cam_ay,cam_az)
-	matrix_inverse()
-	vx,vy,vz=rotate_point(0,0,.2)
-	
-	if(btn(2))then
-	
-		player.vx=-vx
-		player.vy=-vy
-		player.vz=-vz
-	
-
-	end
-	
-	if(btn(3))then
-
-		player.vx=vx
-		player.vy=vy
-		player.vz=vz
-	end
-	
-end
-
-function init_player()
-	player=new_object()
-	player.min_x=-4.5
-	player.min_y=-4.5
-	player.min_z=-4.5
-	player.max_x=4.5
-	player.max_y=4.5
-	player.max_z=4.5
-	
-	player.x=0
-	player.y=8
-	player.z=15
-	
-	player.vx=0
-	player.vy=0
-	player.vz=0
-	
-	--~ printh ("player.min_x: " .. (player.min_x))
-	--~ printh ("player.min_y: " .. (player.min_x))
-	--~ printh ("player.min_z: " .. (player.min_x))
-	--~ printh ("player.max_x: " .. (player.max_x))
-	--~ printh ("player.max_y: " .. (player.max_y))
-	--~ printh ("player.max_z: " .. (player.max_z))
-	--~ printh ("player.x: " .. (player.x))
-	--~ printh ("player.y: " .. (player.y))
-	--~ printh ("player.z: " .. (player.z))
-	--~ printh ("player.ax: " .. (player.ax))
-	--~ printh ("player.ay: " .. (player.ay))
-	--~ printh ("player.az: " .. (player.az))
-	--~ printh ("player.vx: " .. (player.vx))
-	--~ printh ("player.vy: " .. (player.vy))
-	--~ printh ("player.vz: " .. (player.vz))
-end
-
-k_friction=.7
-function update_player()
-	
-	old_x=player.x
-	old_y=player.y
-	old_z=player.z
-
-	--~ printh ("player.x: " .. player.x)
-	--~ printh ("player.y: " .. player.y)
-	--~ printh ("player.z: " .. player.z)
-	
-	player.x+=player.vx
-	--~ printh ("player.x: " .. player.x)
-	--~ printh ("player.y: " .. player.y)
-	--~ printh ("player.z: " .. player.z)
-	for object in all(obstacle_list) do
-		if( intersect_bounding_box(player, object)) player.vx=0 player.x=old_x 
-	end
-	
-	
-	--~ printh ("player.x: " .. player.x)
-	--~ printh ("player.y: " .. player.y)
-	--~ printh ("player.z: " .. player.z)
-	player.y+=player.vy
-	
-	--~ printh ("player.x: " .. player.x)
-	--~ printh ("player.y: " .. player.y)
-	--~ printh ("player.z: " .. player.z)
-	
-	
-	player.z+=player.vz
-	--~ printh ("player.x: " .. player.x)
-	--~ printh ("player.y: " .. player.y)
-	--~ printh ("player.z: " .. player.z)
-	for object in all(obstacle_list) do
-		if( intersect_bounding_box(player, object)) player.vz=0 player.z=old_z 
-	end
-	
-	--~ printh ("player.x: " .. player.x)
-	--~ printh ("player.y: " .. player.y)
-	--~ printh ("player.z: " .. player.z)
-	
-	player.vx*=k_friction
-	player.vy*=k_friction
-	player.vz*=k_friction
-	
-	--~ printh ("player.x: " .. player.x)
-	--~ printh ("player.y: " .. player.y)
-	--~ printh ("player.z: " .. player.z)
-end
-
-function update_camera()	
-	cam_x=player.x
-	cam_y=player.y
-	cam_z=player.z
-
-	cam_ax=player.ax
-	cam_ay=player.ay
-	cam_az=player.az
-
-	generate_cam_matrix_transform(cam_ax,cam_ay,cam_az)
-end
-
-function init_3d()
-	init_player()
-	init_light()
-	object_list={}
-	obstacle_list={}
-	particle_list={}
-end
-
-function update_3d()
-	--~ printh ("BEGIN_UPDATE_3D")
-	for object in all(object_list) do
-			update_visible(object)
-			transform_object(object)
-			cam_transform_object(object)
-			update_light()
-	end
-	--~ printh ("END_UPDATE_3D")
-end
-
-function draw_3d()
-	triangle_list={}
-	quicksort(object_list)
-	
-	start_timer()
-	for object in all(object_list) do
-		
-		if(object.visible and not object.background) then
-			render_object(object) --sort_faces(object)
-			--if(object.color_mode==k_colorize_dynamic or object.color_mode==k_multi_color_dynamic) color_faces(object,object.color)
-		end
-	end
-	render_time=stop_timer()
-	
-	start_timer()
-		quicksort(triangle_list)
-	sort_time=stop_timer()
-	
-	start_timer()
-		draw_triangle_list()
-	triangle_time=stop_timer()
-end
-
 
 function shade_trifill( x1,y1,x2,y2,x3,y3, color1, color2)
+	printh("BEGIN_SHADE_TRIFILL")
 
 		  local x1=band(x1,0xffff)
 		  local x2=band(x2,0xffff)
@@ -1336,267 +1672,46 @@ function shade_trifill( x1,y1,x2,y2,x3,y3, color1, color2)
 			if(band(y,1)==0)then rectfill(nsx,y3,nex,y3,color1) else rectfill(nsx,y3,nex,y3,color2) end
 		end
 
+	printh("END_SHADE_TRIFILL")
 end
 
-
-----------------------------------end copy-------------------------------------------------------
-----------------------------------electric gryphon's 3d library----------------------------------
--------------------------------------------------------------------------------------------------
-
-
-function center_text(text,x,y,c)
-	x=x-#text/2*4
-	print(text,x,y,1)
-	print(text,x+1,y,1)
-	print(text,x,y-1,1)
-	print(text,x,y+1,1)
-	
-	
-	print(text,x,y,c)
-end
-
-
-
-function init_stars()
-	star_list={}
-	for i=1,150 do
-		star_list[i]={}
-		star_list[i].x=rnd(508)
-		star_list[i].y=rnd(55)
+function draw_triangle_list()
+	printh("BEGIN_DRAW_TRIANGLE_LIST")
+	--for t in all(triangle_list) do
+	for i=1,#triangle_list do
+		local t=triangle_list[i]
+		shade_trifill( t.p1x,t.p1y,t.p2x,t.p2y,t.p3x,t.p3y, t.c1,t.c2 )
 	end
+	printh("END_DRAW_TRIANGLE_LIST")
 end
 
-function draw_stars()
-	for i=1,#star_list do
-		pset((-cam_ay*508+star_list[i].x+cur_frame/20)%508,star_list[i].y,15)
-	end
-end
-
-function draw_background()
-	rectfill(0,0,127,64,14)
-	draw_stars()
-
+function draw_3d()
+	printh("BEGIN_DRAW_3D")
+	triangle_list={}
+	quicksort(object_list)
 	
-	rectfill(0,64,127,127,5)
-	
-	for i=0,2 do
-		rectfill(0,66+i*2,127,66+i*2,6)
-		rectfill(0,60-i*2,127,60-i*2,15)
-	end
-end
-
-
-
-
-
-function start_timer()
-	timer_value=stat(1)
-end
-
-function stop_timer()
-	return stat(1)-timer_value
-end
-
-function load_factory()
-	factory_data={}
-	for i=-2,2 do
-		factory_data[i]={}
-		for j=-2,2 do
-			--if(rnd(1)>.5)then v=1 else v=2 end
-			factory_data[i][j]=1
+	start_timer()
+	for object in all(object_list) do
+		if(object.visible and not object.background) then
+			render_object(object) --sort_faces(object)
+			--if(object.color_mode==k_colorize_dynamic or object.color_mode==k_multi_color_dynamic) color_faces(object,object.color)
 		end
 	end
-	--factory_data[0][0]=0
-	--factory_data[1][0]=2
-	--factory_data[-1][0]=2
-	--factory_data[0][1]=2
-	--factory_data[0][-1]=2
+	render_time=stop_timer()
 	
-
+	start_timer()
+		quicksort(triangle_list)
+	sort_time=stop_timer()
 	
-
-	player.x=10
-	player.z=10
-	for i=-2,2 do
-		for j=-2,2 do
-			
-				if(factory_data[i][j]==1)load_object(read_vector_string(factory_v_string),read_face_string(factory_f_string),i*20,0,j*20,0,0,0,true,k_colorize_static,6)
-				if(factory_data[i][j]==2)load_object(read_vector_string(tower_v_string),read_face_string(tower_f_string),i*20,0,j*20,0,0,0,true,k_colorize_static,6)
-				
-			
-		end
-	end
-	
-	clouds={}
-	for i=1,10 do
-		clouds[i]={}
-		clouds[i].x=rnd(160)-15
-		clouds[i].y=rnd(160)-15
-	end
+	start_timer()
+		draw_triangle_list()
+	triangle_time=stop_timer()
+	printh("END_DRAW_3D")
 end
-
-
-function update_factory()
-	if(player.x>10)player.x-=20 
-	if(player.x<-10)player.x+=20
-	if(player.z>10)player.z-=20
-	if(player.z<-10)player.z+=20
-
-end
-
-function draw_factory_background()
-	cls(1)
-	
-	srand(1)
-	
-	for cloud in all(clouds) do
-		circfill((cloud.x-player.ay*400)%127,cloud.y,15,13)
-		cloud.y-=1
-		if(cloud.y<-15)then cloud.y=127 end
-	end
-	
-	rectfill(0,64,127,127,13)
-
-end
-
-function load_fox_dynamic()
-	fox_v=read_vector_string(fox_v_string)
-	fox_f=read_face_string(fox_f_string)
-	fox=load_object(fox_v,fox_f,0,0,0,0,-.35,0,false,k_colorize_dynamic,8)
-end
-
-function update_fox_dynamic()
-	fox.ay+=.01
-end
-
-function load_temple()
-	
-	init_stars()
-
-	--~ for i=1,5 do
-		--~ l=30
-		--~ x=sin(i/5)*l
-		--~ z=cos(i/5)*l
-		--~ --printh ("x: " .. (x))
-		--~ --printh ("i: " .. (i))
-		--~ --printh ("l: " .. (l))
-		--~ c=load_object(read_vector_string(column_v_string),read_face_string(column_f_string),x,0,z,0,0,0,true,k_colorize_static,9)--load models
-	--~ end
-	
-	--~ fnt=load_object(read_vector_string(fountain_v_string),read_face_string(fountain_f_string),0,0,0,0,.08,0,true,k_colorize_static,14)
-	hole=load_object(read_vector_string(hole_v_string),read_face_string(hole_f_string),0,11,0,.125,.125,.125,false,k_colorize_dynamic,12)
-		
-	--~ pyramids={}
-	--~ for i=1,5 do
-		--~ l=25
-		--~ a=i/5+.125
-		--~ x=sin(a)*l
-		--~ z=cos(a)*l
-		--~ pyramids[i]=load_object(read_vector_string(pyramid_v_string),read_face_string(pyramid_f_string),x,0,z,0,0,0,false,k_colorize_static,13)
-	--~ end
-end
-
-function update_temple()
-	hole.ay+=-.004 --dynamically adjust object parameters to make them move each frame
-	hole.az+=.001
-	hole.ax+=.002
-	hole.y=11+sin(cur_frame/100)
-	
-	--~ for i=1,5 do
-		--~ l=35
-		--~ a=i/5+.125+cur_frame/1000
-		--~ x=sin(a)*l
-		--~ z=cos(a)*l
-		--~ pyramids[i].x=sin(a)*l pyramids[i].z=cos(a)*l
-		--~ pyramids[i].y=10+sin(a-cur_frame/200)*4
-		--~ pyramids[i].ax+=.003 pyramids[i].ay+=.002 pyramids[i].az+=.004
-	--~ end
-end
-
-function draw_temple_background()
-	rectfill(0,0,127,64,14)
-	draw_stars()
-
-	
-	rectfill(0,64,127,127,5)
-	
-	for i=0,2 do
-		rectfill(0,66+i*2,127,66+i*2,6)
-		rectfill(0,60-i*2,127,60-i*2,15)
-	end
-end
-
-function init_stars()
-	star_list={}
-	for i=1,150 do
-		star_list[i]={}
-		star_list[i].x=rnd(508)
-		star_list[i].y=rnd(55)
-	end
-end
-
-function draw_stars()
-	for i=1,#star_list do
-		pset((-cam_ay*508+star_list[i].x+cur_frame/20)%508,star_list[i].y,15)
-	end
-end
-
-function draw_fox_background()
-	cls(9)
-	
-	srand(2)
-	for i=1,8 do
-		circfill((rnd(167)+cur_frame)%167-20,rnd(167),rnd(20),10)
-	end
-
-end
-
-
-
-function load_scene(init_func,update_func,background_func)
-	scene_update_func=update_func
-	scene_background_function=background_func
-	init_3d()
-	init_func()
-end
-
-scene_index=1
-scene_list={{load_fox_dynamic,update_fox_dynamic,draw_fox_background},
-			{load_temple,update_temple,draw_temple_background},
-			{load_factory,update_factory,draw_factory_background}}
-
-function _init()
-	cur_frame=0
-
-	
-	init_3d() --need to call init_3d() to set up player, camera and lights
-	load_scene(load_temple,update_temple,draw_temple_background)
-
-end
-
-
-function _update()
-	
-	if(btnp(4))then
-		scene_index+=1
-		if(scene_index>#scene_list)scene_index=1
-		load_scene(scene_list[scene_index][1],scene_list[scene_index][2],scene_list[scene_index][3])
-	end
-
-	local t=stat(1)
-	handle_buttons() -- handle default buttons for player-- this can be overwritten obviously.
-	update_player() -- update the player with default movement, stopping at obstacles
-	
-	
-	update_camera() -- update the camera based on player location and direction
-	utility_time=stat(1)-t
-	scene_update_func()
-
-end
-
 
 
 function _draw()
+	printh("BEGIN_DRAW")
 
 	local t=stat(1)
 	cur_frame+=1
@@ -1624,6 +1739,7 @@ function _draw()
 	while true do
 	end
 
+	printh("END_DRAW")
 end
 
 
