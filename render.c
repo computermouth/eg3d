@@ -1556,19 +1556,18 @@ void project_radius(float radius, float tz, float * sradius){
 void is_visible(object_t * obj){
 	
 	printf ("BEGIN_IS_VIS\n");
-	printf ("object.tz: %f\n",(obj->tz));
-	printf ("object.radius: %f\n",(obj->radius));
-	printf ("z_max: %d\n",(z_max));
-	printf ("object.tz: %f\n",(obj->tz));
-	printf ("object.radius: %f\n",(obj->radius));
-	printf ("z_clip: %d\n",(z_clip));
+	//~ printf ("object.tz: %f\n",(obj->tz));
+	//~ printf ("object.radius: %f\n",(obj->radius));
+	//~ printf ("z_max: %d\n",(z_max));
+	//~ printf ("object.tz: %f\n",(obj->tz));
+	//~ printf ("object.radius: %f\n",(obj->radius));
+	//~ printf ("z_clip: %d\n",(z_clip));
 	
-	//~ if (obj->sx == -nan) { obj->sx = -32704; }
-	printf ("object.sx: %f\n",(obj->sx));
-	printf ("object.sradius: %f\n",(obj->sradius));
+	//~ printf ("object.sx: %f\n",(obj->sx));
+	//~ printf ("object.sradius: %f\n",(obj->sradius));
 	
-	printf ("object.sy: %f\n",(obj->sy));
-	printf ("object.sradius: %f\n",(obj->sradius));
+	//~ printf ("object.sy: %f\n",(obj->sy));
+	//~ printf ("object.sradius: %f\n",(obj->sradius));
 	printf ("END_IS_VIS\n");
 	
 	obj->visible = (
@@ -1604,7 +1603,7 @@ void update_visible(object_t * object){
 	project_radius(object->radius, object->tz, &object->sradius);
 	is_visible(object);
 	
-	printf("obj->visible: %d\n", object->visible);
+	
 	printf("END_UPDATE_VIS\n");	
 }
 
@@ -1846,6 +1845,20 @@ void render_object(object_t * object){
 		float cy = .01 * (p1y + p2y + p3y) / 3;
 		float z_paint = (-1 * cx)*cx - cy*cy - cz*cz;
 		
+		printf("p1x: %f\n", p1x);
+		printf("p1y: %f\n", p1y);
+		printf("p1z: %f\n", p1z);
+		printf("p2x: %f\n", p2x);
+		printf("p2y: %f\n", p2y);
+		printf("p2z: %f\n", p2z);
+		printf("p3x: %f\n", p3x);
+		printf("p3y: %f\n", p3y);
+		printf("p3z: %f\n", p3z);
+		printf("cx: %f\n", cx);
+		printf("cy: %f\n", cy);
+		printf("cz: %f\n", cz);
+		printf("z_paint: %f\n", z_paint);
+		
 		if(object->background == 1)
 			z_paint -= 1000;
 		
@@ -1859,13 +1872,32 @@ void render_object(object_t * object){
 				float s2y = p2[4];
 				float s3x = p3[3];
 				float s3y = p3[4];
+				printf("s1x: %f\n", s1x);
+				printf("s1y: %f\n", s1y);
+				printf("s2x: %f\n", s2x);
+				printf("s2y: %f\n", s2y);
+				printf("s3x: %f\n", s3x);
+				printf("s3y: %f\n", s3y);
 				
 				if ( (s1x > 0 && s2x > 0 && s3x > 0) && (s1x < SCREEN_WIDTH && s2x < SCREEN_WIDTH && s3x < SCREEN_WIDTH) ){
+					printf("k0\n");
 					if(( (s1x-s2x)*(s3y-s2y)-(s1y-s2y)*(s3x-s2x)) < 0){
+						printf("k1\n");
 						if(object->color_mode==k_colorize_dynamic){
+							printf("k2\n");
 							p2x -= p1x;
 							p2y -= p1y;
 							p2z -= p1z;
+							p3x -= p1x;
+							p3y -= p1y;
+							p3z -= p1z;
+							
+							printf("p2x: %f\n", p2x);
+							printf("p2y: %f\n", p2y);
+							printf("p2z: %f\n", p2z);
+							printf("p3x: %f\n", p3x);
+							printf("p3y: %f\n", p3y);
+							printf("p3z: %f\n", p3z);
 							
 							float nx = p2y * p3z - p2z * p3y;
 							float ny = p2z * p3x - p2x * p3z;
@@ -1874,6 +1906,10 @@ void render_object(object_t * object){
 							nx *= 4;
 							ny *= 4;
 							nz *= 4;
+							
+							printf("nx: %f\n", nx);
+							printf("ny: %f\n", ny);
+							printf("nz: %f\n", nz);
 							
 							float inv_dist = 1 / sqrt(nx * nx + ny * ny + nz * nz);
 							nx *= inv_dist;
@@ -1887,6 +1923,9 @@ void render_object(object_t * object){
 							else mid = b * (1-k_ambient) + k_ambient;
 							
 							color_shade(object->faces[i][4], mid, &object->faces[i][4], &object->faces[i][5]);
+							
+							printf("face[3]: %d\n", object->faces[i][4]);
+							printf("face[4]: %d\n", object->faces[i][5]);
 						}
 						
 						new_triangle(s1x, s1y, s2x, s2y, s3x, s3y, z_paint, object->faces[i][k_color1], object->faces[i][k_color2]);						
