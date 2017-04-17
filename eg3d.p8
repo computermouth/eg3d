@@ -791,6 +791,8 @@ function color_shade(color,brightness)
 	local c= (color+1)*2
 	
 	--~ printh("b: "  .. b )
+	--~ printh("color: "  .. color )
+	--~ printh("brightness: "  .. brightness )
 	--~ printh("c: "  .. c )
 	--~ printh("f4: " .. (double_color_list[ c-1 ][b]))
 	--~ printh("f5: " .. (double_color_list[ c ][b]))
@@ -1419,6 +1421,16 @@ function three_point_sort(p1x,p1y,p1z,p2x,p2y,p2z,p3x,p3y,p3z)
 	if(p1z>p2z) p1z,p2z = p2z,p1z p1x,p2x = p2x,p1x p1y,p2y = p2y,p1y
 	if(p1z>p3z) p1z,p3z = p3z,p1z p1x,p3x = p3x,p1x p1y,p3y = p3y,p1y
 	if(p2z>p3z) p2z,p3z = p3z,p2z p2x,p3x = p3x,p2x p2y,p3y = p3y,p2y
+	
+	printh("p1x: " .. p1x);
+	printh("p1y: " .. p1y);
+	printh("p1z: " .. p1z);
+	printh("p2x: " .. p2x);
+	printh("p2y: " .. p2y);
+	printh("p2z: " .. p2z);
+	printh("p3x: " .. p3x);
+	printh("p3y: " .. p3y);
+	printh("p3z: " .. p3z);
 	
 	printf("END_TPS")
 	return p1x,p1y,p1z,p2x,p2y,p2z,p3x,p3y,p3z

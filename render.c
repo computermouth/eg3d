@@ -952,10 +952,12 @@ void color_shade(unsigned char color, float brightness, unsigned char * f4, unsi
 	
 	int b = (int)(brightness*10) & 0xffff;
 	unsigned char c = (color + 1) * 2;
-	*f4 = double_color_list[c - 1][b];
-	*f5 = double_color_list[c][b];
+	*f4 = double_color_list[c - 2][b - 1];
+	*f5 = double_color_list[c - 1][b - 1];
 	
 	//~ printf("b: %d\n", b);
+	//~ printf("color: %d\n", color);
+	//~ printf("brightness: %f\n", brightness);
 	//~ printf("c: %d\n", c);
 	//~ printf("f4: %d\n", *f4);
 	//~ printf("f5: %d\n", *f5);
@@ -1770,6 +1772,16 @@ void three_point_sort(
 		*p3y = tmp;
 	}
 	
+	printf("p1x: %f\n", *p1x);
+	printf("p1y: %f\n", *p1y);
+	printf("p1z: %f\n", *p1z);
+	printf("p2x: %f\n", *p2x);
+	printf("p2y: %f\n", *p2y);
+	printf("p2z: %f\n", *p2z);
+	printf("p3x: %f\n", *p3x);
+	printf("p3y: %f\n", *p3y);
+	printf("p3z: %f\n", *p3z);
+	
 	printf("END_TPS\n");
 }
 
@@ -1922,7 +1934,8 @@ void render_object(object_t * object){
 							else if ( b >= 1) mid = (1-k_ambient) + k_ambient;
 							else mid = b * (1-k_ambient) + k_ambient;
 							
-							color_shade(object->faces[i][4], mid, &object->faces[i][4], &object->faces[i][5]);
+							//~ color_shade(object->faces[i][4], mid, &object->faces[i][4], &object->faces[i][5]);
+							color_shade(object->color, mid, &object->faces[i][4], &object->faces[i][5]);
 							
 							printf("face[3]: %d\n", object->faces[i][4]);
 							printf("face[4]: %d\n", object->faces[i][5]);
