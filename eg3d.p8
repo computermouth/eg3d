@@ -1422,15 +1422,15 @@ function three_point_sort(p1x,p1y,p1z,p2x,p2y,p2z,p3x,p3y,p3z)
 	if(p1z>p3z) p1z,p3z = p3z,p1z p1x,p3x = p3x,p1x p1y,p3y = p3y,p1y
 	if(p2z>p3z) p2z,p3z = p3z,p2z p2x,p3x = p3x,p2x p2y,p3y = p3y,p2y
 	
-	printh("p1x: " .. p1x);
-	printh("p1y: " .. p1y);
-	printh("p1z: " .. p1z);
-	printh("p2x: " .. p2x);
-	printh("p2y: " .. p2y);
-	printh("p2z: " .. p2z);
-	printh("p3x: " .. p3x);
-	printh("p3y: " .. p3y);
-	printh("p3z: " .. p3z);
+	--~ printh("p1x: " .. p1x);
+	--~ printh("p1y: " .. p1y);
+	--~ printh("p1z: " .. p1z);
+	--~ printh("p2x: " .. p2x);
+	--~ printh("p2y: " .. p2y);
+	--~ printh("p2z: " .. p2z);
+	--~ printh("p3x: " .. p3x);
+	--~ printh("p3y: " .. p3y);
+	--~ printh("p3z: " .. p3z);
 	
 	printf("END_TPS")
 	return p1x,p1y,p1z,p2x,p2y,p2z,p3x,p3y,p3z
@@ -1468,8 +1468,8 @@ function render_object(object)
 	for i=1, #object.t_vertices do
 		local vertex=object.t_vertices[i]
 		vertex[4],vertex[5] = vertex[1]*k_screen_scale/vertex[3]+k_x_center,vertex[2]*k_screen_scale/vertex[3]+k_x_center
-		printh ("vertex[3]: " .. vertex[4])
-		printh ("vertex[4]: " .. vertex[5])
+		--~ printh ("vertex[3]: " .. vertex[4])
+		--~ printh ("vertex[4]: " .. vertex[5])
 		
 	end
 
@@ -1491,19 +1491,19 @@ function render_object(object)
 		local cy=.01*(p1y+p2y+p3y)/3
 		local z_paint= -cx*cx-cy*cy-cz*cz
 		
-		printh("p1x: " .. p1x)
-		printh("p1y: " .. p1y)
-		printh("p1z: " .. p1z)
-		printh("p2x: " .. p2x)
-		printh("p2y: " .. p2y)
-		printh("p2z: " .. p2z)
-		printh("p3x: " .. p3x)
-		printh("p3y: " .. p3y)
-		printh("p3z: " .. p3z)
-		printh("cx: " .. cx)
-		printh("cy: " .. cy)
-		printh("cz: " .. cz)
-		printh("z_paint: " .. z_paint)
+		--~ printh("p1x: " .. p1x)
+		--~ printh("p1y: " .. p1y)
+		--~ printh("p1z: " .. p1z)
+		--~ printh("p2x: " .. p2x)
+		--~ printh("p2y: " .. p2y)
+		--~ printh("p2z: " .. p2z)
+		--~ printh("p3x: " .. p3x)
+		--~ printh("p3y: " .. p3y)
+		--~ printh("p3z: " .. p3z)
+		--~ printh("cx: " .. cx)
+		--~ printh("cy: " .. cy)
+		--~ printh("cz: " .. cz)
+		--~ printh("z_paint: " .. z_paint)
 		
 		
 		if(object.background==true) z_paint-=1000 
@@ -1517,23 +1517,23 @@ function render_object(object)
 					local s1x,s1y = p1[4],p1[5]
 					local s2x,s2y = p2[4],p2[5]
 					local s3x,s3y = p3[4],p3[5]
-					printh("s1x: " .. s1x)
-					printh("s1y: " .. s1y)
-					printh("s2x: " .. s2x)
-					printh("s2y: " .. s2y)
-					printh("s3x: " .. s3x)
-					printh("s3y: " .. s3y)
+					--~ printh("s1x: " .. s1x)
+					--~ printh("s1y: " .. s1y)
+					--~ printh("s2x: " .. s2x)
+					--~ printh("s2y: " .. s2y)
+					--~ printh("s3x: " .. s3x)
+					--~ printh("s3y: " .. s3y)
 		
 
 					if( max(s3x,max(s1x,s2x))>0 and min(s3x,min(s1x,s2x))<128)  then
 						--only use backface culling on simple option without clipping
 						--check if triangles are backwards by cross of two vectors
-						printh("k0")
+						--~ printh("k0")
 						if(( (s1x-s2x)*(s3y-s2y)-(s1y-s2y)*(s3x-s2x)) < 0)then
-							printh("k1")
+							--~ printh("k1")
 						
 							if(object.color_mode==k_colorize_dynamic)then
-								printh("k2")
+								--~ printh("k2")
 								--nx,ny,nz = vector_cross_3d(p1x,p1y,p1z,p2x,p2y,p2z,p3x,p3y,p3z)
 								--save a bit on dynamic rendering by moving this funciton inline
 								p2x-=p1x 
@@ -1543,12 +1543,12 @@ function render_object(object)
 								p3y-=p1y 
 								p3z-=p1z
 							
-								printh("p2x: " .. p2x)
-								printh("p2y: " .. p2y)
-								printh("p2z: " .. p2z)
-								printh("p3x: " .. p3x)
-								printh("p3y: " .. p3y)
-								printh("p3z: " .. p3z)
+								--~ printh("p2x: " .. p2x)
+								--~ printh("p2y: " .. p2y)
+								--~ printh("p2z: " .. p2z)
+								--~ printh("p3x: " .. p3x)
+								--~ printh("p3y: " .. p3y)
+								--~ printh("p3z: " .. p3z)
 									
 								local nx = p2y*p3z-p2z*p3y
 								local ny = p2z*p3x-p2x*p3z
@@ -1558,9 +1558,9 @@ function render_object(object)
 								--save a bit by moving this function inline
 								nx=shl(nx,2) ny=shl(ny,2) nz=shl(nz,2)
 								
-								printh("nx: " .. nx)
-								printh("ny: " .. ny)
-								printh("nz: " .. nz)
+								--~ printh("nx: " .. nx)
+								--~ printh("ny: " .. ny)
+								--~ printh("nz: " .. nz)
 								
 								local inv_dist=1/sqrt(nx*nx+ny*ny+nz*nz)
 								nx*=inv_dist ny*=inv_dist nz*=inv_dist						
@@ -1570,8 +1570,8 @@ function render_object(object)
 								--save a bit by moving this function inline
 								face[4],face[5]=color_shade(object.color, mid( nx*t_light_x+ny*t_light_y+nz*t_light_z,0,1)*(1-k_ambient)+k_ambient )
 								
-								printh("face[3]: " .. face[4])
-								printh("face[4]: " .. face[5])
+								--~ printh("face[3]: " .. face[4])
+								--~ printh("face[4]: " .. face[5])
 							end
 								
 						
@@ -1648,8 +1648,16 @@ function render_object(object)
 	printh("END_RENDER_OBJECT")
 end
 
-function shade_trifill( x1,y1,x2,y2,x3,y3, color1, color2)
+function shade_trifill( x1,y1,x2,y2,x3,y3, tz, color1, color2)
 	printh("BEGIN_SHADE_TRIFILL")
+		  
+			printh("x1: " .. x1)
+			printh("x2: " .. x2)
+			printh("y1: " .. y1)
+			printh("y2: " .. y2)
+			printh("x3: " .. x3)
+			printh("y3: " .. y3)
+			printh("y3: " .. tz)
 
 		  local x1=band(x1,0xffff)
 		  local x2=band(x2,0xffff)
@@ -1658,6 +1666,13 @@ function shade_trifill( x1,y1,x2,y2,x3,y3, color1, color2)
 		  local x3=band(x3,0xffff)
 		  local y3=band(y3,0xffff)
 		  
+			printh("x1: " .. x1)
+			printh("x2: " .. x2)
+			printh("x3: " .. x3)
+			printh("y1: " .. y1)
+			printh("y2: " .. y2)
+			printh("y3: " .. y3)
+	
 		  local nsx,nex
 		  --sort y1,y2,y3
 		  if(y1>y2)then
@@ -1690,6 +1705,10 @@ function shade_trifill( x1,y1,x2,y2,x3,y3, color1, color2)
 			end
 			
 			max_y=min(y2,128)
+			--~ printh("min_y: " .. min_y)
+			--~ printh("max_y: " .. max_y)
+			--~ printh("nsx:   " .. y3)
+			--~ printh("nex:   " .. y3)
 			
 			for y=min_y,max_y-1 do
 
@@ -1738,7 +1757,7 @@ function draw_triangle_list()
 	--for t in all(triangle_list) do
 	for i=1,#triangle_list do
 		local t=triangle_list[i]
-		shade_trifill( t.p1x,t.p1y,t.p2x,t.p2y,t.p3x,t.p3y, t.c1,t.c2 )
+		shade_trifill( t.p1x,t.p1y,t.p2x,t.p2y,t.p3x,t.p3y, t.tz, t.c1,t.c2 )
 	end
 	printh("END_DRAW_TRIANGLE_LIST")
 end
