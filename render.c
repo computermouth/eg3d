@@ -9,8 +9,8 @@
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAX(a,b) (((a)>(b))?(a):(b))
 
-//~ SDL_Window * window = NULL;
-//~ SDL_Renderer * renderer = NULL;
+SDL_Window * window = NULL;
+SDL_Renderer * renderer = NULL;
 const int SCREEN_WIDTH = 128;
 const int SCREEN_HEIGHT = 128;
 const int k_x_center = 64;
@@ -954,9 +954,9 @@ void color_shade(unsigned char color, float brightness, unsigned char * f4, unsi
 	*f4 = double_color_list[c - 2][b - 1];
 	*f5 = double_color_list[c - 1][b - 1];
 	
-	//~ printf("b: %d\n", b);
-	//~ printf("color: %d\n", color);
-	//~ printf("brightness: %f\n", brightness);
+	printf("b: %d\n", b);
+	printf("color: %d\n", color);
+	printf("brightness: %f\n", brightness);
 	//~ printf("c: %d\n", c);
 	//~ printf("f4: %d\n", *f4);
 	//~ printf("f5: %d\n", *f5);
@@ -1227,26 +1227,26 @@ void update_temple(){
 	hole->ax += .002;
 	hole->y = 11 + pico_sin(cur_frame/100);
 		
-	//~ for(int i = 0; i < 5; i++){
-		//~ int l = 35;
-		//~ float a = i / 5 + .125 + cur_frame / 1000;
-		//~ //float x = sin(a)*l; UNUSED
-		//~ //float z = cos(a)*l; UNUSED
-		//~ pyramids[i]->x = pico_sin(a)*l;
-		//~ pyramids[i]->z = pico_cos(a)*l;
-		//~ pyramids[i]->y = 10 + pico_sin(a - cur_frame/ 200) * 4;
-		//~ pyramids[i]->ax += .003;
-		//~ pyramids[i]->ay += .002;
-		//~ pyramids[i]->az += .004;
-	//~ }
+	for(int i = 0; i < 5; i++){
+		int l = 35;
+		float a = i / 5 + .125 + cur_frame / 1000;
+		//float x = sin(a)*l; UNUSED
+		//float z = cos(a)*l; UNUSED
+		pyramids[i]->x = pico_sin(a)*l;
+		pyramids[i]->z = pico_cos(a)*l;
+		pyramids[i]->y = 10 + pico_sin(a - cur_frame/ 200) * 4;
+		pyramids[i]->ax += .003;
+		pyramids[i]->ay += .002;
+		pyramids[i]->az += .004;
+	}
 	printf("END_UPDATE_TEMPLE\n");
 }
 
 void draw_stars(){
 	printf("BEGIN_DRAW_STARS\n");
-	//~ SDL_SetRenderDrawColor( renderer, 2 * 16, 4 * 16, 6 * 16, 0xFF );
+	SDL_SetRenderDrawColor( renderer, 2 * 16, 4 * 16, 6 * 16, 0xFF );
 	for(int i = 0; i < 150; i++){
-		//~ SDL_RenderDrawPoint(renderer, star_list[i].x, star_list[i].y);
+		SDL_RenderDrawPoint(renderer, (int)((cam_ay * -1)*508+star_list[i].x+cur_frame/20)%508, star_list[i].y);
 	}
 	printf("END_DRAW_STARS\n");
 }
@@ -1254,32 +1254,32 @@ void draw_stars(){
 void draw_temple_background(){
 	
 	printf("BEGIN_DRAW_TEMPLE_BACKGROUND\n");
-	//~ SDL_Rect rectfill = { 0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT/2 };
-	//~ SDL_SetRenderDrawColor( 
-		//~ renderer, 14 * 16 , 14 * 16, 14 * 16, 
-		//~ 0xFF );		
-	//~ SDL_RenderFillRect( renderer, &rectfill );
+	SDL_Rect rectfill = { 0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT/2 };
+	SDL_SetRenderDrawColor( 
+		renderer, 14 * 16 , 14 * 16, 14 * 16, 
+		0xFF );		
+	SDL_RenderFillRect( renderer, &rectfill );
 	
 	draw_stars();
 	
-	//~ SDL_Rect rectfill_lower = { 0, SCREEN_HEIGHT/2, SCREEN_WIDTH - 1, SCREEN_HEIGHT };
-	//~ SDL_SetRenderDrawColor( 
-		//~ renderer, 5 * 16 , 5 * 16, 5 * 16, 
-		//~ 0xFF );		
-	//~ SDL_RenderFillRect( renderer, &rectfill_lower );
+	SDL_Rect rectfill_lower = { 0, SCREEN_HEIGHT/2, SCREEN_WIDTH - 1, SCREEN_HEIGHT };
+	SDL_SetRenderDrawColor( 
+		renderer, 5 * 16 , 5 * 16, 5 * 16, 
+		0xFF );		
+	SDL_RenderFillRect( renderer, &rectfill_lower );
 	
 	printf("END_DRAW_TEMPLE_BACKGROUND\n");
 }
 
 void init_sdl(){
 	
-	//~ if( SDL_Init ( SDL_INIT_VIDEO ) < 0) printf("shit!\n");
-	//~ window = SDL_CreateWindow("eg3d", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-	//~ if( window == NULL ) printf("shit!\n");
-	//~ renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-	//~ if( renderer == NULL ) printf("shit!\n");
-	//~ SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
-	//~ SDL_RenderClear( renderer );
+	if( SDL_Init ( SDL_INIT_VIDEO ) < 0) printf("shit!\n");
+	window = SDL_CreateWindow("eg3d", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+	if( window == NULL ) printf("shit!\n");
+	renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	if( renderer == NULL ) printf("shit!\n");
+	SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
+	SDL_RenderClear( renderer );
 	
 }
 
@@ -1443,17 +1443,17 @@ void matrix_inverse(){
 void handle_input(){
 	printf("BEGIN_HANDLE_INPUT\n");
 	
-	//~ SDL_Event e;
+	SDL_Event e;
 
-	//~ //Handle events on queue
-	//~ while( SDL_PollEvent( &e ) != 0 )
-	//~ {
-		//~ //User requests quit
-		//~ if( e.type == SDL_QUIT )
-		//~ {
-			//~ quit = 1;
-		//~ }
-	//~ }
+	//Handle events on queue
+	while( SDL_PollEvent( &e ) != 0 )
+	{
+		//User requests quit
+		if( e.type == SDL_QUIT )
+		{
+			quit = 1;
+		}
+	}
 	
 	generate_matrix_transform(cam_ax, cam_ay, cam_az);
 	matrix_inverse();
@@ -2033,23 +2033,13 @@ typedef union {
 void shade_trifill(triangle_t * tri){
 	printf("BEGIN_SHADE_TRIFILL\n");
 	//hell, are these supposed to be ints?
-	
-	//~ printf("tri")
-	
-	printf("1x: %f\n", tri->p1x);
-	printf("2x: %f\n", tri->p2x);
-	printf("1y: %f\n", tri->p1y);
-	printf("2y: %f\n", tri->p2y);
-	printf("3x: %f\n", tri->p3x);
-	printf("3y: %f\n", tri->p3y);
-	printf("tz: %f\n", tri->tz);
-	
-	int x1 = ((int)tri->p1x);	
-	int x2 = ((int)tri->p2x);
-	int y1 = ((int)tri->p1y);
-	int y2 = ((int)tri->p2y);
-	int x3 = ((int)tri->p3x);
-	int y3 = ((int)tri->p3y);
+		
+	int x1 = tri->p1x;	
+	int x2 = tri->p2x;
+	int y1 = tri->p1y;
+	int y2 = tri->p2y;
+	int x3 = tri->p3x;
+	int y3 = tri->p3y;
 	
 	printf("x1: %d\n", x1);
 	printf("x2: %d\n", x2);
@@ -2063,7 +2053,7 @@ void shade_trifill(triangle_t * tri){
 	if(y1 > y2){
 		tmp = y1;
 		y1 = y2;
-		y2 = y1;
+		y2 = tmp;
 		
 		tmp = x1;
 		x1 = x2;
@@ -2090,17 +2080,33 @@ void shade_trifill(triangle_t * tri){
 		x3 = tmp;
 	}
 	
-	int nsx, nex, min_y, max_y = 0;
+	printf("x1: %d\n", x1);
+	printf("x2: %d\n", x2);
+	printf("x3: %d\n", x3);
+	printf("y1: %d\n", y1);
+	printf("y2: %d\n", y2);
+	printf("y3: %d\n", y3);
+	
+	float nsx = 0;
+	float nex = 0; 
+	int min_y = 0;
+	int max_y = 0;
 	
 	if( y1 != y2 ){
-		float delta_sx = (x3 - x1)/(y3 - y1);
-		float delta_ex = (x2 - x1)/(y2 - y1);
+		//~ printf("y1 != y2\n");
+		float delta_sx = (float)(x3 - x1)/(float)(y3 - y1);
+		float delta_ex = (float)(x2 - x1)/(float)(y2 - y1);
+		
+		printf("delta_sx: %f\n", delta_sx);
+		printf("delta_ex: %f\n", delta_ex);
 		
 		if(y1 > 0){
+		//~ printf("y1 > 0\n");
 			nsx = x1;
 			nex = x1;
 			min_y = y1;
 		} else {
+		//~ printf("y1 > 0 -- else\n");
 			//top edge clip
 			nsx = x1 - delta_sx * y1;
 			nex = x1 - delta_ex * y1;
@@ -2108,24 +2114,41 @@ void shade_trifill(triangle_t * tri){
 		}
 		
 		max_y = MIN(y2, SCREEN_WIDTH);
-		//~ printf("min_y: %d\n", min_y);
-		//~ printf("max_y: %d\n", max_y);
-		//~ printf("nsx:   %d\n", y3);
-		//~ printf("nex:   %d\n", y3);
+		printf("min_y: %d\n", min_y);
+		printf("max_y: %d\n", max_y);
+		printf("nsx:   %f\n", nsx);
+		printf("nex:   %f\n", nsx);
 		
-		for(int i = min_y; i < max_y - 1; i++){
+		for(int i = min_y; i < max_y; i++){
+			//~ printf("i: %d\n", i);
 			
 			if ( (i & 1) == 0 ){
+				//~ printf("(i & 1): %d\n", (i & 1));
+				//~ printf("color1: %d\n", tri->c1);
 				//~ SDL_Rect rectfill = { nsx, i, nex, i };
-				//~ SDL_SetRenderDrawColor( 
-					//~ renderer, tri->c1 * 16 , tri->c1 * 16, tri->c1 * 16, 
-					//~ 0xFF );		
+				
+				
+				SDL_SetRenderDrawColor( 
+					renderer, tri->c1 * 16 , tri->c1 * 16, tri->c1 * 16, 
+					0xFF );
+				SDL_RenderDrawLine(renderer, nsx, i, nex, i);
+				//~ SDL_RenderDrawPoint(renderer, nsx, nex);
+				
+				
 				//~ SDL_RenderFillRect( renderer, &rectfill );
 			} else {
+				//~ printf("else (i & 1): %d\n", (i & 1));
+				//~ printf("color2: %d\n", tri->c2);
 				//~ SDL_Rect rectfill = { nsx, i, nex, i };
-				//~ SDL_SetRenderDrawColor( 
-					//~ renderer, tri->c2 * 16 , tri->c2 * 16, tri->c2 * 16, 
-					//~ 0xFF );		
+				
+				
+				SDL_SetRenderDrawColor( 
+					renderer, tri->c2 * 16 , tri->c2 * 16, tri->c2 * 16, 
+					0xFF );
+				SDL_RenderDrawLine(renderer, nsx, i, nex, i);
+				//~ SDL_RenderDrawPoint(renderer, nsx, nex);
+				
+				
 				//~ SDL_RenderFillRect( renderer, &rectfill );
 			}
 			
@@ -2140,31 +2163,59 @@ void shade_trifill(triangle_t * tri){
 	}
 	
 	if(y3 != y2){
-		float delta_sx = (x3 - x1) / (y3 - y1);
-		float delta_ex = (x3 - x2) / (y3 - y2);
+		printf("(y3 != y2)\n");
+		float delta_sx = (float)(x3 - x1) / (float)(y3 - y1);
+		float delta_ex = (float)(x3 - x2) / (float)(y3 - y2);
+		
+		printf("delta_sx: %f\n", delta_sx);
+		printf("delta_ex: %f\n", delta_ex);
 		
 		min_y = y2;
 		max_y = MIN(y3,SCREEN_HEIGHT);
+		printf("min_y: %d\n", min_y);
+		printf("max_y: %d\n", max_y);
+		printf("nsx:   %f\n", nsx);
+		printf("nex:   %f\n", nsx);
 		
 		if(y2 < 0){
+			printf("y2 < 0\n");
 			nex = x2 - delta_ex * y2;
 			nsx = x1 - delta_sx * y1;
 			min_y = 0;
 		}
 		
+		
+		
 		for(int i = min_y; i < max_y; i++){
 			
 			if ( (i & 1) == 0 ){
+				printf("(i & 1)\n");
+				//~ printf("(i & 1): %d\n", (i & 1));
+				//~ printf("color1: %d\n", tri->c1);
 				//~ SDL_Rect rectfill = { nsx, i, nex, i };
-				//~ SDL_SetRenderDrawColor( 
-					//~ renderer, tri->c1 * 16 , tri->c1 * 16, tri->c1 * 16, 
-					//~ 0xFF );		
+				
+				
+				SDL_SetRenderDrawColor( 
+					renderer, tri->c1 * 16 , tri->c1 * 16, tri->c1 * 16, 
+					0xFF );
+				SDL_RenderDrawLine(renderer, nsx, i, nex, i);
+				//~ SDL_RenderDrawPoint(renderer, nsx, nex);
+				
+				
 				//~ SDL_RenderFillRect( renderer, &rectfill );
 			} else {
+				//~ printf("else (i & 1): %d\n", (i & 1));
+				//~ printf("color2: %d\n", tri->c2);
 				//~ SDL_Rect rectfill = { nsx, i, nex, i };
-				//~ SDL_SetRenderDrawColor( 
-					//~ renderer, tri->c2 * 16 , tri->c2 * 16, tri->c2 * 16, 
-					//~ 0xFF );		
+				
+				
+				SDL_SetRenderDrawColor( 
+					renderer, tri->c2 * 16 , tri->c2 * 16, tri->c2 * 16, 
+					0xFF );
+				SDL_RenderDrawLine(renderer, nsx, i, nex, i);
+				//~ SDL_RenderDrawPoint(renderer, nsx, nex);
+				
+				
 				//~ SDL_RenderFillRect( renderer, &rectfill );
 			}
 			
@@ -2173,21 +2224,37 @@ void shade_trifill(triangle_t * tri){
 		}
 		
 	} else {
+		printf("else (y3 != y2)\n");
 		//where bottom edge is horizontal???
-		//where is the original value Y coming into scope here????
-		int i = 0; // just to get it to compile, I guess.
-		if ( (i & 1) == 0 ){
-			//~ SDL_Rect rectfill = { nsx, i, nex, i };
-			//~ SDL_SetRenderDrawColor( 
-				//~ renderer, tri->c1 * 16 , tri->c1 * 16, tri->c1 * 16, 
-				//~ 0xFF );		
-			//~ SDL_RenderFillRect( renderer, &rectfill );
-		} else {
-			//~ SDL_Rect rectfill = { nsx, i, nex, i };
-			//~ SDL_SetRenderDrawColor( 
-				//~ renderer, tri->c2 * 16 , tri->c2 * 16, tri->c2 * 16, 
-				//~ 0xFF );		
-			//~ SDL_RenderFillRect( renderer, &rectfill );
+		if ( ((int)y3 & 1) == 0 ){
+				printf("(i & 1)\n");
+				//~ printf("(i & 1): %d\n", (i & 1));
+				//~ printf("color1: %d\n", tri->c1);
+				//~ SDL_Rect rectfill = { nsx, y3, nex, y3 };
+				
+				
+				SDL_SetRenderDrawColor( 
+					renderer, tri->c1 * 16 , tri->c1 * 16, tri->c1 * 16, 
+					0xFF );
+				SDL_RenderDrawLine(renderer, nsx, y3, nex, y3);
+				//~ SDL_RenderDrawPoint(renderer, nsx, nex);
+				
+				
+				//~ SDL_RenderFillRect( renderer, &rectfill );
+			} else {
+				//~ printf("else (i & 1): %d\n", (i & 1));
+				//~ printf("color2: %d\n", tri->c2);
+				//~ SDL_Rect rectfill = { nsx, y3, nex, y3 };
+				
+				
+				SDL_SetRenderDrawColor( 
+					renderer, tri->c2 * 16 , tri->c2 * 16, tri->c2 * 16, 
+					0xFF );
+				SDL_RenderDrawLine(renderer, nsx, y3, nex, y3);
+				//~ SDL_RenderDrawPoint(renderer, nsx, nex);
+				
+				
+				//~ SDL_RenderFillRect( renderer, &rectfill );
 		}
 	}
 	
@@ -2281,9 +2348,9 @@ void cleanup(){
 		
 	if(triangle_list != NULL) free(triangle_list);
 
-	//~ SDL_DestroyRenderer( renderer );
-	//~ SDL_DestroyWindow( window );
-	//~ SDL_Quit();
+	SDL_DestroyRenderer( renderer );
+	SDL_DestroyWindow( window );
+	SDL_Quit();
 
 }
 
@@ -2293,16 +2360,16 @@ int main(){
 	
 	init();
 	
-	//~ SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
-	//~ SDL_RenderClear( renderer );
+	SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
+	SDL_RenderClear( renderer );
 	
-	//~ while (!quit){
-		//~ SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
-		//~ SDL_RenderClear( renderer );
+	while (!quit){
+		SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
+		SDL_RenderClear( renderer );
 		update();
 		draw();
-		//~ SDL_RenderPresent( renderer );
-	//~ }
+		SDL_RenderPresent( renderer );
+	}
 	
 	cleanup();
 	
