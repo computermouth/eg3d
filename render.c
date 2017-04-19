@@ -1227,18 +1227,18 @@ void update_temple(){
 	hole->ax += .002;
 	hole->y = 11 + pico_sin(cur_frame/100);
 		
-	for(int i = 0; i < 5; i++){
-		int l = 35;
-		float a = i / 5 + .125 + cur_frame / 1000;
-		//float x = sin(a)*l; UNUSED
-		//float z = cos(a)*l; UNUSED
-		pyramids[i]->x = pico_sin(a)*l;
-		pyramids[i]->z = pico_cos(a)*l;
-		pyramids[i]->y = 10 + pico_sin(a - cur_frame/ 200) * 4;
-		pyramids[i]->ax += .003;
-		pyramids[i]->ay += .002;
-		pyramids[i]->az += .004;
-	}
+	//~ for(int i = 0; i < 5; i++){
+		//~ int l = 35;
+		//~ float a = i / 5 + .125 + cur_frame / 1000;
+		//~ //float x = sin(a)*l; UNUSED
+		//~ //float z = cos(a)*l; UNUSED
+		//~ pyramids[i]->x = pico_sin(a)*l;
+		//~ pyramids[i]->z = pico_cos(a)*l;
+		//~ pyramids[i]->y = 10 + pico_sin(a - cur_frame/ 200) * 4;
+		//~ pyramids[i]->ax += .003;
+		//~ pyramids[i]->ay += .002;
+		//~ pyramids[i]->az += .004;
+	//~ }
 	printf("END_UPDATE_TEMPLE\n");
 }
 
@@ -1274,7 +1274,7 @@ void draw_temple_background(){
 void init_sdl(){
 	
 	//~ if( SDL_Init ( SDL_INIT_VIDEO ) < 0) printf("shit!\n");
-	//~ window = SDL_CreateWindow("eg3d", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+	//~ window = SDL_CreateWindow("eg3d", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 	//~ if( window == NULL ) printf("shit!\n");
 	//~ renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	//~ if( renderer == NULL ) printf("shit!\n");
@@ -2310,7 +2310,9 @@ void cleanup(){
 	if(object_list != NULL) free(object_list);
 	
 	if(obstacle_list != NULL) free(obstacle_list);
-		
+	
+	for(int i = 0; i < triangle_list_used; i++)
+		free(triangle_list[i]);
 	if(triangle_list != NULL) free(triangle_list);
 
 	//~ SDL_DestroyRenderer( renderer );
