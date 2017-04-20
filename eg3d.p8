@@ -1014,6 +1014,7 @@ function update_temple()
 	hole.az+=.001
 	hole.ax+=.002
 	hole.y=11+sin(cur_frame/100)
+	printh("hole.y: " .. hole.y)
 	
 	--~ for i=1,5 do
 		--~ l=35

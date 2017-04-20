@@ -689,7 +689,7 @@ void init_stars(){
 }
 
 float pico_sin(float in){
-	return sin(in * M_PI * -2);
+	return (sin(in * M_PI * 2 * -1));
 }
 
 float pico_cos(float in){
@@ -1225,13 +1225,12 @@ void update_temple(){
 	hole->ax += -.004;
 	hole->az += .001;
 	hole->ax += .002;
-	hole->y = 11 + pico_sin(cur_frame/100);
+	hole->y = 11 + pico_sin((float)cur_frame/100);
+	printf("hole.y: %f\n", hole->y);
 		
 	//~ for(int i = 0; i < 5; i++){
 		//~ int l = 35;
 		//~ float a = i / 5 + .125 + cur_frame / 1000;
-		//~ //float x = sin(a)*l; UNUSED
-		//~ //float z = cos(a)*l; UNUSED
 		//~ pyramids[i]->x = pico_sin(a)*l;
 		//~ pyramids[i]->z = pico_cos(a)*l;
 		//~ pyramids[i]->y = 10 + pico_sin(a - cur_frame/ 200) * 4;
