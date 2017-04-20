@@ -1172,31 +1172,31 @@ void load_temple(){
 	
 	init_stars();
 	
-	//~ // create 5 columns
-	//~ for(int i = 0; i < 5; i++){
-		//~ float l = 30;
-		//~ float x = pico_sin((float)(i+1)/5)*l;
-		//~ float z = pico_cos((float)(i+1)/5)*l;
-		//~ //printf("x: %f\n", x);
-		//~ //printf("i: %f\n", (float)(i+1));
-		//~ //printf("l: %f\n", l);
-		//~ load_object(
-			//~ column_v_string,
-			//~ (sizeof(column_v_string)/sizeof(column_v_string[0])),
-			//~ column_f_string,
-			//~ (sizeof(column_f_string)/sizeof(column_f_string[0])),
-			//~ x, 0, z, 0, 0, 0, 1, k_colorize_static, 9
-		//~ );
-	//~ }
+	// create 5 columns
+	for(int i = 0; i < 5; i++){
+		float l = 30;
+		float x = pico_sin((float)(i+1)/5)*l;
+		float z = pico_cos((float)(i+1)/5)*l;
+		//printf("x: %f\n", x);
+		//printf("i: %f\n", (float)(i+1));
+		//printf("l: %f\n", l);
+		load_object(
+			column_v_string,
+			(sizeof(column_v_string)/sizeof(column_v_string[0])),
+			column_f_string,
+			(sizeof(column_f_string)/sizeof(column_f_string[0])),
+			x, 0, z, 0, 0, 0, 1, k_colorize_static, 9
+		);
+	}
 	
-	//~ //load fountain
-	//~ load_object(
-		//~ fountain_v_string,
-		//~ (sizeof(fountain_v_string)/sizeof(fountain_v_string[0])),
-		//~ fountain_f_string,
-		//~ (sizeof(fountain_f_string)/sizeof(fountain_f_string[0])),
-		//~ 0,0,0,0,.08,0,1,k_colorize_static,14
-	//~ );
+	//load fountain
+	load_object(
+		fountain_v_string,
+		(sizeof(fountain_v_string)/sizeof(fountain_v_string[0])),
+		fountain_f_string,
+		(sizeof(fountain_f_string)/sizeof(fountain_f_string[0])),
+		0,0,0,0,.08,0,1,k_colorize_static,14
+	);
 	
 	//load hole
 	hole = load_object(
@@ -1207,20 +1207,20 @@ void load_temple(){
 		0,11,0,.125,.125,.125,0,k_colorize_dynamic,12
 	);
 	
-	//~ // create 5 pyramids
-	//~ for(int i = 0; i < 5; i++){
-		//~ float l = 25;
-		//~ float a = (float)(i+1)/5+.125;
-		//~ float x = pico_sin(a)*l;
-		//~ float z = pico_cos(a)*l;
-		//~ pyramids[i] = load_object(
-			//~ pyramid_v_string,
-			//~ (sizeof(pyramid_v_string)/sizeof(pyramid_v_string[0])),
-			//~ pyramid_f_string,
-			//~ (sizeof(pyramid_f_string)/sizeof(pyramid_f_string[0])),
-			//~ x, 0, z, 0, 0, 0, 0, k_colorize_static, 13
-		//~ );
-	//~ }
+	// create 5 pyramids
+	for(int i = 0; i < 5; i++){
+		float l = 25;
+		float a = (float)(i+1)/5+.125;
+		float x = pico_sin(a)*l;
+		float z = pico_cos(a)*l;
+		pyramids[i] = load_object(
+			pyramid_v_string,
+			(sizeof(pyramid_v_string)/sizeof(pyramid_v_string[0])),
+			pyramid_f_string,
+			(sizeof(pyramid_f_string)/sizeof(pyramid_f_string[0])),
+			x, 0, z, 0, 0, 0, 0, k_colorize_static, 13
+		);
+	}
 	
 	printf("END_LOAD_TEMPLE\n");
 }
@@ -1233,16 +1233,16 @@ void update_temple(){
 	hole->y = 11 + pico_sin((float)cur_frame/100);
 	printf("hole.y: %f\n", hole->y);
 		
-	//~ for(int i = 0; i < 5; i++){
-		//~ int l = 35;
-		//~ float a = i / 5 + .125 + cur_frame / 1000;
-		//~ pyramids[i]->x = pico_sin(a)*l;
-		//~ pyramids[i]->z = pico_cos(a)*l;
-		//~ pyramids[i]->y = 10 + pico_sin(a - cur_frame/ 200) * 4;
-		//~ pyramids[i]->ax += .003;
-		//~ pyramids[i]->ay += .002;
-		//~ pyramids[i]->az += .004;
-	//~ }
+	for(int i = 0; i < 5; i++){
+		int l = 35;
+		float a = i / 5 + .125 + cur_frame / 1000;
+		pyramids[i]->x = pico_sin(a)*l;
+		pyramids[i]->z = pico_cos(a)*l;
+		pyramids[i]->y = 10 + pico_sin(a - cur_frame/ 200) * 4;
+		pyramids[i]->ax += .003;
+		pyramids[i]->ay += .002;
+		pyramids[i]->az += .004;
+	}
 	printf("END_UPDATE_TEMPLE\n");
 }
 
@@ -1478,6 +1478,16 @@ void handle_input(){
 void update(){
 	
 	printf("BEGIN_UPDATE\n");
+	
+	//~ if(triangle_list != NULL){
+		for(int i = 0; i < triangle_list_length; i++)
+			free(triangle_list[i]);
+		free(triangle_list);
+		//~ triangle_list_length = 0;
+		//~ triangle_list_used = 0;
+		//~ triangle_list = NULL;
+	//~ }
+	
 	// INPUT HANDLING
 	//~ if(btnp(4))then
 		//~ scene_index+=1
@@ -2034,11 +2044,6 @@ void render_object(object_t * object){
 	printf("END_RENDER_OBJECT\n");
 }
 
-typedef union {
-	float f;
-	char c[sizeof(float)];
-} u;
-
 void shade_trifill(triangle_t * tri){
 	printf("BEGIN_SHADE_TRIFILL\n");
 	//hell, are these supposed to be ints?
@@ -2305,7 +2310,7 @@ void cleanup(){
 	
 	if(obstacle_list != NULL) free(obstacle_list);
 	
-	for(int i = 0; i < triangle_list_used; i++)
+	for(int i = 0; i < triangle_list_length; i++)
 		free(triangle_list[i]);
 	if(triangle_list != NULL) free(triangle_list);
 
@@ -2331,8 +2336,10 @@ int main(){
 		SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
 		SDL_RenderClear( renderer );
 	#endif
+		for(int i = 0; i < 5; i++){
 		update();
 		draw();
+		}
 	#if DRAW_SDL
 		SDL_RenderPresent( renderer );
 	}
