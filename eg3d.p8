@@ -1658,12 +1658,12 @@ function shade_trifill( x1,y1,x2,y2,x3,y3, tz, color1, color2)
 		  local x3=band(x3,0xffff)
 		  local y3=band(y3,0xffff)
 		  
-			printh("x1: " .. x1)
-			printh("x2: " .. x2)
-			printh("x3: " .. x3)
-			printh("y1: " .. y1)
-			printh("y2: " .. y2)
-			printh("y3: " .. y3)
+			--~ printh("x1: " .. x1)
+			--~ printh("x2: " .. x2)
+			--~ printh("x3: " .. x3)
+			--~ printh("y1: " .. y1)
+			--~ printh("y2: " .. y2)
+			--~ printh("y3: " .. y3)
 	
 		  local nsx,nex
 		  --sort y1,y2,y3
@@ -1682,28 +1682,18 @@ function shade_trifill( x1,y1,x2,y2,x3,y3, tz, color1, color2)
 			x2,x3=x3,x2		  
 		  end
 		  
-			printh("x1: " .. x1)
-			printh("x2: " .. x2)
-			printh("x3: " .. x3)
-			printh("y1: " .. y1)
-			printh("y2: " .. y2)
-			printh("y3: " .. y3)
-		  
 		 if(y1!=y2)then 	
-			--~ printh("y1 != y2")	 
+			printh("y1 != y2")	 
 			local delta_sx=(x3-x1)/(y3-y1)
 			local delta_ex=(x2-x1)/(y2-y1)
-			
-			printh("delta_sx: " .. delta_sx)
-			printh("delta_ex: " .. delta_ex)
-			
+						
 			if(y1>0)then
-			--~ printh("y1 > 0")	 
+			printh("y1 > 0")	 
 				nsx=x1
 				nex=x1
 				min_y=y1
 			else --top edge clip
-			--~ printh("y1 > 0 -- else")	 
+			printh("y1 > 0 -- else")	 
 				nsx=x1-delta_sx*y1
 				nex=x1-delta_ex*y1
 				min_y=0
@@ -1716,20 +1706,18 @@ function shade_trifill( x1,y1,x2,y2,x3,y3, tz, color1, color2)
 			printh("nex:   " .. nsx)
 			
 			for y=min_y,max_y-1 do
-			--~ printh("i: " .. y)	
+				printh("i: " .. y)	
 
-			--rectfill(nsx,y,nex,y,color1)
-			if(band(y,1)==0)then
-				--~ printh("(i & 1): " .. (band(y,1)))	
-				--~ printh("color1: " .. color1)	
-				rectfill(nsx,y,nex,y,color1) 
-			else 
-				--~ printh("else (i & 1): " .. (band(y,1)))	
-				--~ printh("color2: " .. color2)
-				rectfill(nsx,y,nex,y,color2) 
-			end
-			nsx+=delta_sx
-			nex+=delta_ex
+				--rectfill(nsx,y,nex,y,color1)
+				if(band(y,1)==0)then
+					printh("(i & 1): " .. (band(y,1)))
+					rectfill(nsx,y,nex,y,color1) 
+				else 
+					printh("else (i & 1): " .. (band(y,1)))
+					rectfill(nsx,y,nex,y,color2) 
+				end
+				nsx+=delta_sx
+				nex+=delta_ex
 			end
 
 		else --where top edge is horizontal
@@ -1743,15 +1731,8 @@ function shade_trifill( x1,y1,x2,y2,x3,y3, tz, color1, color2)
 			local delta_sx=(x3-x1)/(y3-y1)
 			local delta_ex=(x3-x2)/(y3-y2)
 			
-			printh("delta_sx: " .. delta_sx)
-			printh("delta_ex: " .. delta_ex)
-			
 			min_y=y2
 			max_y=min(y3,128)
-			printh("min_y: " .. min_y)
-			printh("max_y: " .. max_y)
-			printh("nsx:   " .. nsx)
-			printh("nex:   " .. nsx)
 			
 			if(y2<0)then
 				printh("y2 < 0")
@@ -1767,7 +1748,7 @@ function shade_trifill( x1,y1,x2,y2,x3,y3, tz, color1, color2)
 					printh("(i & 1)")
 					rectfill(nsx,y,nex,y,color1) 
 				else 
-					printh("else (i & 1)")
+					printh("else (i & 1)" .. (band(y,1)))
 					rectfill(nsx,y,nex,y,color2) 
 				end
 				nex+=delta_ex
@@ -1781,7 +1762,7 @@ function shade_trifill( x1,y1,x2,y2,x3,y3, tz, color1, color2)
 					printh("(i & 1)")
 				rectfill(nsx,y3,nex,y3,color1) 
 			else 
-					printh("else (i & 1)")
+					printh("else (i & 1): " .. (band(y3,1)))
 				rectfill(nsx,y3,nex,y3,color2) 
 			end
 		end

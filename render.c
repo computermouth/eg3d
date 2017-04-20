@@ -2041,12 +2041,12 @@ void shade_trifill(triangle_t * tri){
 	int x3 = tri->p3x;
 	int y3 = tri->p3y;
 	
-	printf("x1: %d\n", x1);
-	printf("x2: %d\n", x2);
-	printf("x3: %d\n", x3);
-	printf("y1: %d\n", y1);
-	printf("y2: %d\n", y2);
-	printf("y3: %d\n", y3);
+	//~ printf("x1: %d\n", x1);
+	//~ printf("x2: %d\n", x2);
+	//~ printf("x3: %d\n", x3);
+	//~ printf("y1: %d\n", y1);
+	//~ printf("y2: %d\n", y2);
+	//~ printf("y3: %d\n", y3);
 	
 	int tmp = 0;
 	
@@ -2080,33 +2080,23 @@ void shade_trifill(triangle_t * tri){
 		x3 = tmp;
 	}
 	
-	printf("x1: %d\n", x1);
-	printf("x2: %d\n", x2);
-	printf("x3: %d\n", x3);
-	printf("y1: %d\n", y1);
-	printf("y2: %d\n", y2);
-	printf("y3: %d\n", y3);
-	
 	float nsx = 0;
 	float nex = 0; 
 	int min_y = 0;
 	int max_y = 0;
 	
 	if( y1 != y2 ){
-		//~ printf("y1 != y2\n");
+		printf("y1 != y2\n");
 		float delta_sx = (float)(x3 - x1)/(float)(y3 - y1);
 		float delta_ex = (float)(x2 - x1)/(float)(y2 - y1);
-		
-		printf("delta_sx: %f\n", delta_sx);
-		printf("delta_ex: %f\n", delta_ex);
-		
+				
 		if(y1 > 0){
-		//~ printf("y1 > 0\n");
+		printf("y1 > 0\n");
 			nsx = x1;
 			nex = x1;
 			min_y = y1;
 		} else {
-		//~ printf("y1 > 0 -- else\n");
+		printf("y1 > 0 -- else\n");
 			//top edge clip
 			nsx = x1 - delta_sx * y1;
 			nex = x1 - delta_ex * y1;
@@ -2119,20 +2109,18 @@ void shade_trifill(triangle_t * tri){
 		printf("nsx:   %f\n", nsx);
 		printf("nex:   %f\n", nsx);
 		
-		for(int i = min_y; i < max_y; i++){
-			//~ printf("i: %d\n", i);
+		for(int i = min_y; i <= max_y; i++){
+			printf("i: %d\n", i);
 			
 			if ( (i & 1) == 0 ){
-				//~ printf("(i & 1): %d\n", (i & 1));
-				//~ printf("color1: %d\n", tri->c1);				
+				printf("(i & 1): %d\n", (i & 1));			
 				
 				//~ SDL_SetRenderDrawColor( 
 					//~ renderer, tri->c1 * 16 , tri->c1 * 16, tri->c1 * 16, 
 					//~ 0xFF );
 				//~ SDL_RenderDrawLine(renderer, nsx, i, nex, i);
 			} else {
-				//~ printf("else (i & 1): %d\n", (i & 1));
-				//~ printf("color2: %d\n", tri->c2);
+				printf("else (i & 1): %d\n", (i & 1));
 				
 				//~ SDL_SetRenderDrawColor( 
 					//~ renderer, tri->c2 * 16 , tri->c2 * 16, tri->c2 * 16, 
@@ -2141,7 +2129,7 @@ void shade_trifill(triangle_t * tri){
 			}
 			
 			nsx += delta_sx;
-			nex += delta_ex;			
+			nex += delta_ex;
 		}
 		
 	} else {
@@ -2155,15 +2143,8 @@ void shade_trifill(triangle_t * tri){
 		float delta_sx = (float)(x3 - x1) / (float)(y3 - y1);
 		float delta_ex = (float)(x3 - x2) / (float)(y3 - y2);
 		
-		printf("delta_sx: %f\n", delta_sx);
-		printf("delta_ex: %f\n", delta_ex);
-		
 		min_y = y2;
 		max_y = MIN(y3,SCREEN_HEIGHT);
-		printf("min_y: %d\n", min_y);
-		printf("max_y: %d\n", max_y);
-		printf("nsx:   %f\n", nsx);
-		printf("nex:   %f\n", nsx);
 		
 		if(y2 < 0){
 			printf("y2 < 0\n");
@@ -2172,14 +2153,10 @@ void shade_trifill(triangle_t * tri){
 			min_y = 0;
 		}
 		
-		
-		
-		for(int i = min_y; i < max_y; i++){
+		for(int i = min_y; i <= max_y; i++){
 			
 			if ( (i & 1) == 0 ){
 				printf("(i & 1)\n");
-				//~ printf("(i & 1): %d\n", (i & 1));
-				//~ printf("color1: %d\n", tri->c1);
 				
 				//~ SDL_SetRenderDrawColor( 
 					//~ renderer, tri->c1 * 16 , tri->c1 * 16, tri->c1 * 16, 
@@ -2187,8 +2164,7 @@ void shade_trifill(triangle_t * tri){
 				//~ SDL_RenderDrawLine(renderer, nsx, i, nex, i);
 				
 			} else {
-				//~ printf("else (i & 1): %d\n", (i & 1));
-				//~ printf("color2: %d\n", tri->c2);
+				printf("else (i & 1): %d\n", (i & 1));
 				
 				//~ SDL_SetRenderDrawColor( 
 					//~ renderer, tri->c2 * 16 , tri->c2 * 16, tri->c2 * 16, 
@@ -2197,7 +2173,7 @@ void shade_trifill(triangle_t * tri){
 			}
 			
 			nsx += delta_sx;
-			nex += delta_ex;			
+			nex += delta_ex;
 		}
 		
 	} else {
@@ -2205,16 +2181,13 @@ void shade_trifill(triangle_t * tri){
 		//where bottom edge is horizontal???
 		if ( ((int)y3 & 1) == 0 ){
 				printf("(i & 1)\n");
-				//~ printf("(i & 1): %d\n", (i & 1));
-				//~ printf("color1: %d\n", tri->c1);
 				
 				//~ SDL_SetRenderDrawColor( 
 					//~ renderer, tri->c1 * 16 , tri->c1 * 16, tri->c1 * 16, 
 					//~ 0xFF );
 				//~ SDL_RenderDrawLine(renderer, nsx, y3, nex, y3);
 			} else {
-				//~ printf("else (i & 1): %d\n", (i & 1));
-				//~ printf("color2: %d\n", tri->c2);				
+				printf("else (i & 1): %d\n", (y3 & 1));		
 				
 				//~ SDL_SetRenderDrawColor( 
 					//~ renderer, tri->c2 * 16 , tri->c2 * 16, tri->c2 * 16, 
