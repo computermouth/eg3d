@@ -9,7 +9,7 @@
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAX(a,b) (((a)>(b))?(a):(b))
 
-#define DRAW_SDL 0
+#define DRAW_SDL 1
 
 #if DRAW_SDL
 SDL_Window * window = NULL;
@@ -358,9 +358,9 @@ typedef struct {
 	float x;
 	float y;
 	float z;
-	int rx;
-	int ry;
-	int rz;
+	//~ int rx;
+	//~ int ry;
+	//~ int rz;
 	float tx;
 	float ty;
 	float tz;
@@ -493,9 +493,9 @@ object_t * new_object(){
 	obj->x = 0;
 	obj->y = 0;
 	obj->z = 0;
-	obj->rx = 0;
-	obj->ry = 0;
-	obj->rz = 0;
+	//~ obj->rx = 0;
+	//~ obj->ry = 0;
+	//~ obj->rz = 0;
 	obj->tx = 0;
 	obj->ty = 0;
 	obj->tz = 0;
@@ -1479,14 +1479,9 @@ void update(){
 	
 	printf("BEGIN_UPDATE\n");
 	
-	//~ if(triangle_list != NULL){
-		for(int i = 0; i < triangle_list_length; i++)
-			free(triangle_list[i]);
-		free(triangle_list);
-		//~ triangle_list_length = 0;
-		//~ triangle_list_used = 0;
-		//~ triangle_list = NULL;
-	//~ }
+	for(int i = 0; i < triangle_list_used; i++)
+		free(triangle_list[i]);
+	triangle_list_used = 0;
 	
 	// INPUT HANDLING
 	//~ if(btnp(4))then
@@ -2051,9 +2046,9 @@ void shade_trifill(triangle_t * tri){
 	float x1 = tri->p1x;	
 	float x2 = tri->p2x;
 	float x3 = tri->p3x;
-	int y1 = tri->p1y;
-	int y2 = tri->p2y;
-	int y3 = tri->p3y;
+	int y1 = rintf(tri->p1y);
+	int y2 = rintf(tri->p2y);
+	int y3 = rintf(tri->p3y);
 	
 	//~ printf("x1: %d\n", x1);
 	//~ printf("x2: %d\n", x2);
@@ -2062,7 +2057,7 @@ void shade_trifill(triangle_t * tri){
 	//~ printf("y2: %d\n", y2);
 	//~ printf("y3: %d\n", y3);
 	
-	int tmp = 0;
+	float tmp = 0;
 	
 	if(y1 > y2){
 		tmp = y1;
@@ -2201,7 +2196,7 @@ void shade_trifill(triangle_t * tri){
 	} else {
 		printf("else (y3 != y2)\n");
 		//where bottom edge is horizontal???
-		if ( ((int)y3 & 1) == 0 ){
+		if ( ( ((int)rintf(y3)) & 1) == 0 ){
 				printf("(i & 1)\n");
 				
 				#if DRAW_SDL
@@ -2310,7 +2305,7 @@ void cleanup(){
 	
 	if(obstacle_list != NULL) free(obstacle_list);
 	
-	for(int i = 0; i < triangle_list_length; i++)
+	for(int i = 0; i < triangle_list_used; i++)
 		free(triangle_list[i]);
 	if(triangle_list != NULL) free(triangle_list);
 
@@ -2336,10 +2331,8 @@ int main(){
 		SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
 		SDL_RenderClear( renderer );
 	#endif
-		for(int i = 0; i < 5; i++){
 		update();
 		draw();
-		}
 	#if DRAW_SDL
 		SDL_RenderPresent( renderer );
 	}
