@@ -68,7 +68,26 @@ float cam_mat02 = 0;
 float cam_mat12 = 0;
 float cam_mat22 = 0;
 
-unsigned  double_color_list[32][10] = {
+unsigned char pico_palette[][3] = {
+	{0x00, 0x00, 0x00},
+	{0x1D, 0x2B, 0x53},
+	{0x7E, 0x25, 0x53},
+	{0x00, 0x87, 0x51},
+	{0xAB, 0x52, 0x36},
+	{0x5F, 0x57, 0x4F},
+	{0xC2, 0xC3, 0xC7},
+	{0xFF, 0xF1, 0xE8},
+	{0xFF, 0x00, 0x4D},
+	{0xFF, 0xA3, 0x00},
+	{0xFF, 0xEC, 0x27},
+	{0x00, 0xE4, 0x36},
+	{0x29, 0xAD, 0xFF},
+	{0x83, 0x76, 0x9C},
+	{0xFF, 0x77, 0xA8},
+	{0xFF, 0xCC, 0xAA}
+};
+
+unsigned char double_color_list[32][10] = {
 	{0,0,0,0,0,0,0,0,0,0},
 	{0,0,0,0,0,0,0,0,0,0},
 
@@ -1249,7 +1268,7 @@ void update_temple(){
 void draw_stars(){
 	printf("BEGIN_DRAW_STARS\n");
 	#if DRAW_SDL
-	SDL_SetRenderDrawColor( renderer, 2 * 16, 4 * 16, 6 * 16, 0xFF );
+	SDL_SetRenderDrawColor( renderer, pico_palette[15][0], pico_palette[15][1], pico_palette[15][2], 0xFF );
 	for(int i = 0; i < 150; i++){
 		SDL_RenderDrawPoint(renderer, (int)((cam_ay * -1)*508+star_list[i].x+cur_frame/20)%508, star_list[i].y);
 	}
@@ -1263,7 +1282,7 @@ void draw_temple_background(){
 	#if DRAW_SDL
 	SDL_Rect rectfill = { 0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT/2 };
 	SDL_SetRenderDrawColor( 
-		renderer, 14 * 16 , 14 * 16, 14 * 16, 
+		renderer, pico_palette[14][0], pico_palette[14][1], pico_palette[14][2],
 		0xFF );		
 	SDL_RenderFillRect( renderer, &rectfill );
 	#endif
@@ -1271,9 +1290,23 @@ void draw_temple_background(){
 	#if DRAW_SDL
 	SDL_Rect rectfill_lower = { 0, SCREEN_HEIGHT/2, SCREEN_WIDTH - 1, SCREEN_HEIGHT };
 	SDL_SetRenderDrawColor( 
-		renderer, 5 * 16 , 5 * 16, 5 * 16, 
+		renderer, pico_palette[5][0], pico_palette[5][1], pico_palette[5][2],
 		0xFF );		
 	SDL_RenderFillRect( renderer, &rectfill_lower );
+	
+	for(int i = 0; i < 3; i++){
+		SDL_SetRenderDrawColor( 
+			renderer, pico_palette[6][0], pico_palette[6][1], pico_palette[6][2],
+			0xFF );		
+		SDL_RenderDrawLine(renderer, 0, (SCREEN_HEIGHT/2 + 2) + i * 2, SCREEN_WIDTH - 1, (SCREEN_HEIGHT/2 + 2) + i * 2);
+		
+		SDL_SetRenderDrawColor( 
+			renderer, pico_palette[15][0], pico_palette[15][1], pico_palette[15][2],
+			0xFF );		
+		
+		SDL_RenderDrawLine(renderer, 0, (SCREEN_HEIGHT/2 - 4) - i * 2, SCREEN_WIDTH	- 1, (SCREEN_HEIGHT/2 - 4) - i * 2);
+	}
+	
 	#endif
 	printf("END_DRAW_TEMPLE_BACKGROUND\n");
 }
@@ -2126,7 +2159,7 @@ void shade_trifill(triangle_t * tri){
 				#if DRAW_SDL		
 				
 				SDL_SetRenderDrawColor( 
-					renderer, tri->c1 * 16 , tri->c1 * 16, tri->c1 * 16, 
+					renderer, pico_palette[tri->c1][0], pico_palette[tri->c1][1], pico_palette[tri->c1][2], 
 					0xFF );
 				SDL_RenderDrawLine(renderer, rintf(nsx), i, rintf(nex), i);
 				#endif
@@ -2135,7 +2168,7 @@ void shade_trifill(triangle_t * tri){
 				#if DRAW_SDL
 				
 				SDL_SetRenderDrawColor( 
-					renderer, tri->c2 * 16 , tri->c2 * 16, tri->c2 * 16, 
+					renderer, pico_palette[tri->c2][0], pico_palette[tri->c2][1], pico_palette[tri->c2][2], 
 					0xFF );
 				SDL_RenderDrawLine(renderer, rintf(nsx), i, rintf(nex), i);
 				#endif
@@ -2173,7 +2206,7 @@ void shade_trifill(triangle_t * tri){
 				
 				#if DRAW_SDL
 				SDL_SetRenderDrawColor( 
-					renderer, tri->c1 * 16 , tri->c1 * 16, tri->c1 * 16, 
+					renderer, pico_palette[tri->c1][0], pico_palette[tri->c1][1], pico_palette[tri->c1][2], 
 					0xFF );
 				SDL_RenderDrawLine(renderer, rintf(nsx), i, rintf(nex), i);
 				#endif
@@ -2183,7 +2216,7 @@ void shade_trifill(triangle_t * tri){
 				#if DRAW_SDL
 				
 				SDL_SetRenderDrawColor( 
-					renderer, tri->c2 * 16 , tri->c2 * 16, tri->c2 * 16, 
+					renderer, pico_palette[tri->c2][0], pico_palette[tri->c2][1], pico_palette[tri->c2][2], 
 					0xFF );
 				SDL_RenderDrawLine(renderer, rintf(nsx), i, rintf(nex), i);
 				#endif
@@ -2201,7 +2234,7 @@ void shade_trifill(triangle_t * tri){
 				
 				#if DRAW_SDL
 				SDL_SetRenderDrawColor( 
-					renderer, tri->c1 * 16 , tri->c1 * 16, tri->c1 * 16, 
+					renderer, pico_palette[tri->c1][0], pico_palette[tri->c1][1], pico_palette[tri->c1][2], 
 					0xFF );
 				SDL_RenderDrawLine(renderer, rintf(nsx), y3, rintf(nex), y3);
 				#endif
@@ -2210,7 +2243,7 @@ void shade_trifill(triangle_t * tri){
 				
 				#if DRAW_SDL
 				SDL_SetRenderDrawColor( 
-					renderer, tri->c2 * 16 , tri->c2 * 16, tri->c2 * 16, 
+					renderer, pico_palette[tri->c2][0], pico_palette[tri->c2][1], pico_palette[tri->c2][2], 
 					0xFF );
 				SDL_RenderDrawLine(renderer, rintf(nsx), y3, rintf(nex), y3);
 				#endif
