@@ -37,8 +37,8 @@ int k_multi_color_static = 3;
 int k_multi_color_dynamic = 4;
 int k_preset_color = 5;
 int k_screen_scale = 80;
-int k_color1 = 4;
-int k_color2 = 5;
+int k_color1 = 3;
+int k_color2 = 4;
 float k_ambient = .3;
 float k_friction = .7;
 int z_clip = -3;
@@ -337,26 +337,6 @@ unsigned char fountain_f_string[][3] = {
 	{ 0x00, 0x02, 0x14 }
 };
 
-//~ typedef struct {
-	//~ float min_x;
-	//~ float min_y;
-	//~ float min_z;
-	//~ float max_x;
-	//~ float max_y;
-	//~ float max_z;
-	//~ float x;
-	//~ float y;
-	//~ float z;
-	//~ float ax;
-	//~ float ay;
-	//~ float az;
-	//~ float vx;
-	//~ float vy;
-	//~ float vz;
-//~ } player_t;
-
-//~ player_t player;
-
 typedef struct {
 	void *fake;
 } particle_list_t;
@@ -457,11 +437,6 @@ object_t * add_object_to_list(){
 	return return_object;
 }
 
-void del_object_from_list(int i){
-	object_list[i] = object_list[object_list_used -1];
-	object_list_used--;
-}
-
 void add_obstacle_to_list(object_t * new_obj){
 	
 	if (obstacle_list_used == obstacle_list_length){
@@ -472,11 +447,6 @@ void add_obstacle_to_list(object_t * new_obj){
 	*(obstacle_list + obstacle_list_used) = *new_obj;
 	
 	obstacle_list_used++;
-}
-
-void del_obstacle_from_list(int i){
-	obstacle_list[i] = obstacle_list[obstacle_list_used -1];
-	obstacle_list_used--;
 }
 
 triangle_t * add_triangle_to_list(){
@@ -981,9 +951,9 @@ void color_shade(unsigned char color, float brightness, unsigned char * f4, unsi
 	printf("b: %d\n", b);
 	printf("color: %d\n", color);
 	printf("brightness: %f\n", brightness);
-	//~ printf("c: %d\n", c);
-	//~ printf("f4: %d\n", *f4);
-	//~ printf("f5: %d\n", *f5);
+	printf("c: %d\n", c);
+	printf("f4: %d\n", *f4);
+	printf("f5: %d\n", *f5);
 	printf("END_COLOR_SHADE\n");
 }
 
@@ -1025,6 +995,9 @@ void color_faces(object_t * object){
 		} else {
 			color_shade(object->color, mid, &face[3], &face[4]);			
 		}
+		
+		//~ printf("face3: %d\n", face[3]);
+		//~ printf("face4: %d\n", face[4]);
 		
 	}
 	
@@ -1703,32 +1676,6 @@ void update_3d(){
 	printf("END_UPDATE_3D\n");
 }
 
-//~ void quicksort_object_list(int start, int end){
-	//~ if((end - start) < 1)
-		//~ return;
-	
-	//~ int pivot = start;
-	//~ for(int i = start + 1; i < end; i++){
-		//~ printf("t.tz: %f\n", object_list[i]->tz);
-		//~ if(object_list[i]->tz <= object_list[pivot]->tz){
-			//~ if(i == pivot + 1){
-				//~ object_t * tmp = object_list[pivot];
-				//~ object_list[pivot] = object_list[pivot + 1];
-				//~ object_list[pivot + 1] = tmp;
-			//~ } else {
-				//~ object_t * tmp = object_list[pivot];
-				//~ object_t * tmp_plus_1 = object_list[pivot + 1];
-				//~ object_list[pivot] = object_list[i];
-				//~ object_list[pivot+1] = tmp;
-				//~ object_list[i] = tmp_plus_1;
-			//~ }
-			//~ pivot++;
-		//~ }
-	//~ }
-	//~ quicksort_object_list(start, pivot - 1);
-	//~ quicksort_object_list(pivot + 1, end);	
-//~ }
-
 int cmp_object_list(const void * a, const void * b){
 	object_t * cmp_a = *(object_t**)a;
 	object_t * cmp_b = *(object_t**)b;
@@ -1754,32 +1701,6 @@ int cmp_triangle_list(const void * a, const void * b){
 	
 	return ( rc );
 }
-
-//~ void quicksort_triangle_list(int start, int end){
-	//~ if((end - start) < 1)
-		//~ return;
-	
-	//~ int pivot = start;
-	//~ for(int i = start + 1; i < end; i++){
-		//~ printf("t.tz: %f\n", triangle_list[i]->tz);
-		//~ if(triangle_list[i]->tz <= triangle_list[pivot]->tz){
-			//~ if(i == pivot + 1){
-				//~ triangle_t * tmp = triangle_list[pivot];
-				//~ triangle_list[pivot] = triangle_list[pivot + 1];
-				//~ triangle_list[pivot + 1] = tmp;
-			//~ } else {
-				//~ triangle_t * tmp = triangle_list[pivot];
-				//~ triangle_t * tmp_plus_1 = triangle_list[pivot + 1];
-				//~ triangle_list[pivot] = triangle_list[i];
-				//~ triangle_list[pivot + 1] = tmp;
-				//~ triangle_list[pivot] = tmp_plus_1;
-			//~ }
-			//~ pivot++;
-		//~ }
-	//~ }
-	//~ quicksort_triangle_list(start, pivot - 1);
-	//~ quicksort_triangle_list(pivot + 1, end);	
-//~ }
 
 void three_point_sort(
 	float * p1x, float * p1y, float * p1z, 
@@ -1995,8 +1916,6 @@ void render_object(object_t * object){
 							//~ color_shade(object->faces[i][4], mid, &object->faces[i][4], &object->faces[i][5]);
 							color_shade(object->color, mid, &object->faces[i][4], &object->faces[i][5]);
 							
-							//~ printf("face[3]: %d\n", object->faces[i][4]);
-							//~ printf("face[4]: %d\n", object->faces[i][5]);
 						}
 						
 						new_triangle(s1x, s1y, s2x, s2y, s3x, s3y, z_paint, object->faces[i][k_color1], object->faces[i][k_color2]);						
@@ -2128,17 +2047,17 @@ void shade_trifill(triangle_t * tri){
 	int max_y = 0;
 	
 	if( y1 != y2 ){
-		printf("y1 != y2\n");
+		//~ printf("y1 != y2\n");
 		float delta_sx = (x3 - x1)/(y3 - y1);
 		float delta_ex = (x2 - x1)/(y2 - y1);
 				
 		if(y1 > 0){
-		printf("y1 > 0\n");
+		//~ printf("y1 > 0\n");
 			nsx = x1;
 			nex = x1;
 			min_y = y1;
 		} else {
-		printf("y1 > 0 -- else\n");
+		//~ printf("y1 > 0 -- else\n");
 			//top edge clip
 			nsx = x1 - delta_sx * y1;
 			nex = x1 - delta_ex * y1;
@@ -2146,16 +2065,16 @@ void shade_trifill(triangle_t * tri){
 		}
 		
 		max_y = MIN(y2, SCREEN_WIDTH);
-		printf("min_y: %d\n", min_y);
-		printf("max_y: %d\n", max_y);
-		printf("nsx:   %f\n", nsx);
-		printf("nex:   %f\n", nsx);
+		//~ printf("min_y: %d\n", min_y);
+		//~ printf("max_y: %d\n", max_y);
+		//~ printf("nsx:   %f\n", nsx);
+		//~ printf("nex:   %f\n", nsx);
 		
 		for(int i = min_y; i < max_y; i++){
-			printf("i: %d\n", i);
+			//~ printf("i: %d\n", i);
 			
 			if ( (i & 1) == 0 ){
-				printf("(i & 1): %d\n", (i & 1));	
+				//~ printf("(i & 1): %d\n", (i & 1));	
 				#if DRAW_SDL		
 				
 				SDL_SetRenderDrawColor( 
@@ -2164,7 +2083,7 @@ void shade_trifill(triangle_t * tri){
 				SDL_RenderDrawLine(renderer, rintf(nsx), i, rintf(nex), i);
 				#endif
 			} else {
-				printf("else (i & 1): %d\n", (i & 1));
+				//~ printf("else (i & 1): %d\n", (i & 1));
 				#if DRAW_SDL
 				
 				SDL_SetRenderDrawColor( 
@@ -2185,7 +2104,7 @@ void shade_trifill(triangle_t * tri){
 	}
 	
 	if(y3 != y2){
-		printf("(y3 != y2)\n");
+		//~ printf("(y3 != y2)\n");
 		float delta_sx = (x3 - x1) / (y3 - y1);
 		float delta_ex = (x3 - x2) / (y3 - y2);
 		
@@ -2193,7 +2112,7 @@ void shade_trifill(triangle_t * tri){
 		max_y = MIN(y3,SCREEN_HEIGHT);
 		
 		if(y2 < 0){
-			printf("y2 < 0\n");
+			//~ printf("y2 < 0\n");
 			nex = x2 - delta_ex * y2;
 			nsx = x1 - delta_sx * y1;
 			min_y = 0;
@@ -2202,7 +2121,7 @@ void shade_trifill(triangle_t * tri){
 		for(int i = min_y; i < max_y; i++){
 			
 			if ( (i & 1) == 0 ){
-				printf("(i & 1)\n");
+				//~ printf("(i & 1)\n");
 				
 				#if DRAW_SDL
 				SDL_SetRenderDrawColor( 
@@ -2211,7 +2130,7 @@ void shade_trifill(triangle_t * tri){
 				SDL_RenderDrawLine(renderer, rintf(nsx), i, rintf(nex), i);
 				#endif
 			} else {
-				printf("else (i & 1): %d\n", (i & 1));
+				//~ printf("else (i & 1): %d\n", (i & 1));
 				
 				#if DRAW_SDL
 				
@@ -2227,10 +2146,10 @@ void shade_trifill(triangle_t * tri){
 		}
 		
 	} else {
-		printf("else (y3 != y2)\n");
+		//~ printf("else (y3 != y2)\n");
 		//where bottom edge is horizontal???
 		if ( ( ((int)rintf(y3)) & 1) == 0 ){
-				printf("(i & 1)\n");
+				//~ printf("(i & 1)\n");
 				
 				#if DRAW_SDL
 				SDL_SetRenderDrawColor( 
@@ -2239,7 +2158,7 @@ void shade_trifill(triangle_t * tri){
 				SDL_RenderDrawLine(renderer, rintf(nsx), y3, rintf(nex), y3);
 				#endif
 			} else {
-				printf("else (i & 1): %d\n", (y3 & 1));		
+				//~ printf("else (i & 1): %d\n", (y3 & 1));
 				
 				#if DRAW_SDL
 				SDL_SetRenderDrawColor( 

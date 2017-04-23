@@ -793,9 +793,9 @@ function color_shade(color,brightness)
 	printh("b: "  .. b )
 	printh("color: "  .. color )
 	printh("brightness: "  .. brightness )
-	--~ printh("c: "  .. c )
-	--~ printh("f4: " .. (double_color_list[ c-1 ][b]))
-	--~ printh("f5: " .. (double_color_list[ c ][b]))
+	printh("c: "  .. c )
+	printh("f4: " .. (double_color_list[ c-1 ][b]))
+	printh("f5: " .. (double_color_list[ c ][b]))
 	
 	printh ("END_COLOR_SHADE")
 	return double_color_list[ c-1 ][b] , double_color_list[ c ][b] 
@@ -993,8 +993,8 @@ function load_temple()
 		--~ c=load_object(read_vector_string(column_v_string),read_face_string(column_f_string),x,0,z,0,0,0,true,k_colorize_static,9)--load models
 	--~ end
 	
-	--~ fnt=load_object(read_vector_string(fountain_v_string),read_face_string(fountain_f_string),0,0,0,0,.08,0,true,k_colorize_static,14)
-	hole=load_object(read_vector_string(hole_v_string),read_face_string(hole_f_string),0,11,0,.125,.125,.125,false,k_colorize_dynamic,12)
+	fnt=load_object(read_vector_string(fountain_v_string),read_face_string(fountain_f_string),0,0,0,0,.08,0,true,k_colorize_static,14)
+	--~ hole=load_object(read_vector_string(hole_v_string),read_face_string(hole_f_string),0,11,0,.125,.125,.125,false,k_colorize_dynamic,12)
 		
 	--~ pyramids={}
 	--~ for i=1,5 do
@@ -1010,11 +1010,11 @@ end
 
 function update_temple()
 	printh("BEGIN_UPDATE_TEMPLE")
-	hole.ay+=-.004 --dynamically adjust object parameters to make them move each frame
-	hole.az+=.001
-	hole.ax+=.002
-	hole.y=11+sin(cur_frame/100)
-	printh("hole.y: " .. hole.y)
+	--~ hole.ay+=-.004 --dynamically adjust object parameters to make them move each frame
+	--~ hole.az+=.001
+	--~ hole.ax+=.002
+	--~ hole.y=11+sin(cur_frame/100)
+	--~ printh("hole.y: " .. hole.y)
 	
 	--~ for i=1,5 do
 		--~ l=35
@@ -1684,37 +1684,37 @@ function shade_trifill( x1,y1,x2,y2,x3,y3, tz, color1, color2)
 		  end
 		  
 		 if(y1!=y2)then 	
-			printh("y1 != y2")	 
+			--~ printh("y1 != y2")
 			local delta_sx=(x3-x1)/(y3-y1)
 			local delta_ex=(x2-x1)/(y2-y1)
 						
 			if(y1>0)then
-			printh("y1 > 0")	 
+			--~ printh("y1 > 0")
 				nsx=x1
 				nex=x1
 				min_y=y1
 			else --top edge clip
-			printh("y1 > 0 -- else")	 
+			--~ printh("y1 > 0 -- else")	 
 				nsx=x1-delta_sx*y1
 				nex=x1-delta_ex*y1
 				min_y=0
 			end
 			
 			max_y=min(y2,128)
-			printh("min_y: " .. min_y)
-			printh("max_y: " .. max_y)
-			printh("nsx:   " .. nsx)
-			printh("nex:   " .. nsx)
+			--~ printh("min_y: " .. min_y)
+			--~ printh("max_y: " .. max_y)
+			--~ printh("nsx:   " .. nsx)
+			--~ printh("nex:   " .. nsx)
 			
 			for y=min_y,max_y-1 do
-				printh("i: " .. y)	
+				--~ printh("i: " .. y)	
 
 				--rectfill(nsx,y,nex,y,color1)
 				if(band(y,1)==0)then
-					printh("(i & 1): " .. (band(y,1)))
+					--~ printh("(i & 1): " .. (band(y,1)))
 					rectfill(nsx,y,nex,y,color1) 
 				else 
-					printh("else (i & 1): " .. (band(y,1)))
+					--~ printh("else (i & 1): " .. (band(y,1)))
 					rectfill(nsx,y,nex,y,color2) 
 				end
 				nsx+=delta_sx
@@ -1728,7 +1728,7 @@ function shade_trifill( x1,y1,x2,y2,x3,y3, tz, color1, color2)
 
 		  
 		if(y3!=y2)then
-			printh("(y3 != y2)")
+			--~ printh("(y3 != y2)")
 			local delta_sx=(x3-x1)/(y3-y1)
 			local delta_ex=(x3-x2)/(y3-y2)
 			
@@ -1736,7 +1736,7 @@ function shade_trifill( x1,y1,x2,y2,x3,y3, tz, color1, color2)
 			max_y=min(y3,128)
 			
 			if(y2<0)then
-				printh("y2 < 0")
+				--~ printh("y2 < 0")
 				nex=x2-delta_ex*y2
 				nsx=x1-delta_sx*y1
 				min_y=0
@@ -1746,10 +1746,10 @@ function shade_trifill( x1,y1,x2,y2,x3,y3, tz, color1, color2)
 
 				--rectfill(nsx,y,nex,y,color1)
 				if(band(y,1)==0)then 
-					printh("(i & 1)")
+					--~ printh("(i & 1)")
 					rectfill(nsx,y,nex,y,color1) 
 				else 
-					printh("else (i & 1)" .. (band(y,1)))
+					--~ printh("else (i & 1)" .. (band(y,1)))
 					rectfill(nsx,y,nex,y,color2) 
 				end
 				nex+=delta_ex
@@ -1757,13 +1757,13 @@ function shade_trifill( x1,y1,x2,y2,x3,y3, tz, color1, color2)
 			 end
 			
 		else --where bottom edge is horizontal
-			printh("else (y3 != y2)")
+			--~ printh("else (y3 != y2)")
 			--rectfill(nsx,y3,nex,y3,color1)
 			if(band(y,1)==0)then 
-					printh("(i & 1)")
+					--~ printh("(i & 1)")
 				rectfill(nsx,y3,nex,y3,color1) 
 			else 
-					printh("else (i & 1): " .. (band(y3,1)))
+					--~ printh("else (i & 1): " .. (band(y3,1)))
 				rectfill(nsx,y3,nex,y3,color2) 
 			end
 		end
