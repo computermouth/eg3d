@@ -994,7 +994,7 @@ function load_temple()
 	--~ end
 	
 	fnt=load_object(read_vector_string(fountain_v_string),read_face_string(fountain_f_string),0,0,0,0,.08,0,true,k_colorize_static,14)
-	--~ hole=load_object(read_vector_string(hole_v_string),read_face_string(hole_f_string),0,11,0,.125,.125,.125,false,k_colorize_dynamic,12)
+	hole=load_object(read_vector_string(hole_v_string),read_face_string(hole_f_string),0,11,0,.125,.125,.125,false,k_colorize_dynamic,12)
 		
 	--~ pyramids={}
 	--~ for i=1,5 do
@@ -1534,7 +1534,7 @@ function render_object(object)
 							--~ printh("k1")
 						
 							if(object.color_mode==k_colorize_dynamic)then
-								--~ printh("k2")
+								printh("k2")
 								--nx,ny,nz = vector_cross_3d(p1x,p1y,p1z,p2x,p2y,p2z,p3x,p3y,p3z)
 								--save a bit on dynamic rendering by moving this funciton inline
 								p2x-=p1x 

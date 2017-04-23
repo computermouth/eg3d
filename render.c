@@ -1875,7 +1875,7 @@ void render_object(object_t * object){
 					if(( (s1x-s2x)*(s3y-s2y)-(s1y-s2y)*(s3x-s2x)) < 0){
 						//~ printf("k1\n");
 						if(object->color_mode==k_colorize_dynamic){
-							//~ printf("k2\n");
+							printf("k2\n");
 							p2x -= p1x;
 							p2y -= p1y;
 							p2z -= p1z;
@@ -1914,7 +1914,7 @@ void render_object(object_t * object){
 							else mid = b * (1-k_ambient) + k_ambient;
 							
 							//~ color_shade(object->faces[i][4], mid, &object->faces[i][4], &object->faces[i][5]);
-							color_shade(object->color, mid, &object->faces[i][4], &object->faces[i][5]);
+							color_shade(object->color, mid, &object->faces[i][3], &object->faces[i][4]);
 							
 						}
 						
