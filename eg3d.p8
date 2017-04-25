@@ -790,12 +790,12 @@ function color_shade(color,brightness)
 	local b= band(brightness*10,0xffff)
 	local c= (color+1)*2
 	
-	printh("b: "  .. b )
-	printh("color: "  .. color )
-	printh("brightness: "  .. brightness )
-	printh("c: "  .. c )
-	printh("f4: " .. (double_color_list[ c-1 ][b]))
-	printh("f5: " .. (double_color_list[ c ][b]))
+	--~ printh("b: "  .. b )
+	--~ printh("color: "  .. color )
+	--~ printh("brightness: "  .. brightness )
+	--~ printh("c: "  .. c )
+	--~ printh("f4: " .. (double_color_list[ c-1 ][b]))
+	--~ printh("f5: " .. (double_color_list[ c ][b]))
 	
 	printh ("END_COLOR_SHADE")
 	return double_color_list[ c-1 ][b] , double_color_list[ c ][b] 
@@ -994,7 +994,7 @@ function load_temple()
 	--~ end
 	
 	fnt=load_object(read_vector_string(fountain_v_string),read_face_string(fountain_f_string),0,0,0,0,.08,0,true,k_colorize_static,14)
-	hole=load_object(read_vector_string(hole_v_string),read_face_string(hole_f_string),0,11,0,.125,.125,.125,false,k_colorize_dynamic,12)
+	--~ hole=load_object(read_vector_string(hole_v_string),read_face_string(hole_f_string),0,11,0,.125,.125,.125,false,k_colorize_dynamic,12)
 		
 	--~ pyramids={}
 	--~ for i=1,5 do
@@ -1223,6 +1223,12 @@ function handle_buttons()
 		player.vy=vy
 		player.vz=vz
 	end
+	
+		player.vx=-vx
+		player.vy=-vy
+		player.vz=-vz
+	
+	printh ("player.vx: " .. player.vx)
 	
 	printh ("END_HANDLE_INPUT")
 end

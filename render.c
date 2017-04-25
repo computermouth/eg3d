@@ -388,9 +388,9 @@ typedef struct {
 	float max_x;
 	float max_y;
 	float max_z;
-	int vx;
-	int vy;
-	int vz;
+	float vx;
+	float vy;
+	float vz;
 	int age;
 	int health;
 } object_t;
@@ -948,12 +948,12 @@ void color_shade(unsigned char color, float brightness, unsigned char * f4, unsi
 	*f4 = double_color_list[c - 2][b - 1];
 	*f5 = double_color_list[c - 1][b - 1];
 	
-	printf("b: %d\n", b);
-	printf("color: %d\n", color);
-	printf("brightness: %f\n", brightness);
-	printf("c: %d\n", c);
-	printf("f4: %d\n", *f4);
-	printf("f5: %d\n", *f5);
+	//~ printf("b: %d\n", b);
+	//~ printf("color: %d\n", color);
+	//~ printf("brightness: %f\n", brightness);
+	//~ printf("c: %d\n", c);
+	//~ printf("f4: %d\n", *f4);
+	//~ printf("f5: %d\n", *f5);
 	printf("END_COLOR_SHADE\n");
 }
 
@@ -1323,7 +1323,7 @@ void update_player(){
 	printf("BEGIN_UPDATE_PLAYER\n");
 	
 	float old_x = player->x;
-	//~ float old_y = player.y; //UNUSED
+	float old_y = player->y; //UNUSED
 	float old_z = player->z;
 	
 	//~ printf("player.x: %f\n", player.x);
@@ -1355,12 +1355,12 @@ void update_player(){
 	//~ printf("player.x: %f\n", player.x);
 	//~ printf("player.y: %f\n", player.y);
 	//~ printf("player.z: %f\n", player.z);
-	//~ for(int i = 0; i < obstacle_list_used; i++){
-		//~ if(intersect_bounding_box(object_list[i])){
-			//~ player.vy = 0;
-			//~ player.y = old_y;
-		//~ }
-	//~ }
+	for(int i = 0; i < obstacle_list_used; i++){
+		if(intersect_bounding_box(object_list[i])){
+			player->vy = 0;
+			player->y = old_y;
+		}
+	}
 	
 	//~ printf("player.x: %f\n", player.x);
 	//~ printf("player.y: %f\n", player.y);
@@ -1456,6 +1456,12 @@ void matrix_inverse(){
 void handle_input(){
 	printf("BEGIN_HANDLE_INPUT\n");
 	
+	generate_matrix_transform(cam_ax, cam_ay, cam_az);
+	matrix_inverse();
+	float vx = 0;
+	float vy = 0;
+	float vz = 0;
+	
 	#if DRAW_SDL
 	SDL_Event e;
 
@@ -1464,19 +1470,59 @@ void handle_input(){
 	{
 		//User requests quit
 		if( e.type == SDL_QUIT )
-		{
 			quit = 1;
+		
+		//Buttons
+		if( e.type == SDL_KEYDOWN ){
+			switch(e.key.keysym.sym){
+				case SDLK_ESCAPE:
+					quit = 1;
+					break;
+				case SDLK_UP:
+					//~ player->ax += .01;
+					break;
+				case SDLK_DOWN:
+					//~ player->ax -= .01;
+					break;
+				case SDLK_LEFT:
+					player->ay += -.01;
+					break;
+				case SDLK_RIGHT:
+					player->ay += .01;
+					break;
+				case SDLK_w:
+					rotate_point(0, 0, -.2, &vx, &vy, &vz);
+					player->vx = vx;
+					player->vy = vy;
+					player->vz = vz;
+					break;
+				case SDLK_a:
+					rotate_point(.2, 0, 0, &vx, &vy, &vz);
+					player->vx = vx;
+					player->vy = vy;
+					player->vz = vz;
+					break;
+				case SDLK_s:
+					rotate_point(0, 0, .2, &vx, &vy, &vz);
+					player->vx = vx;
+					player->vy = vy;
+					player->vz = vz;
+					break;
+				case SDLK_d:
+					rotate_point(-.2, 0, 0, &vx, &vy, &vz);
+					player->vx = vx;
+					player->vy = vy;
+					player->vz = vz;
+					break;
+			}
 		}
+		
 	}
 	#endif
-	
-	generate_matrix_transform(cam_ax, cam_ay, cam_az);
-	matrix_inverse();
-	float vx = 0;
-	float vy = 0;
-	float vz = 0;
-	rotate_point(0, 0, .2, &vx, &vy, &vz);
-	
+					//~ player->vx = -1 * vx;
+					//~ player->vy = -1 * vy;
+					//~ player->vz = -1 * vz;
+					//~ printf("player.vx: %f\n", player->vx);
 	
 	printf("END_HANDLE_INPUT\n");
 }
